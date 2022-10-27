@@ -1,0 +1,41 @@
+  
+.text-small {
+    font-size: 0.9rem;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+a:hover, a:focus {
+    text-decoration: none;
+}
+
+.form-control {
+    background: #212529;
+    border-color: #545454;
+    color: #ffff;
+}
+
+.form-control:focus {
+    color: #ffff;
+    background: #212529;
+}
+
+.list-unstyled a{
+    color: rgb(129, 129, 129);
+}
+
+.list-unstyled a:hover{
+    color: rgb(78, 71, 169);
+}
+
+footer {
+    background: #212529;
+}
+  
+body, html {
+    height: 100%;
+}

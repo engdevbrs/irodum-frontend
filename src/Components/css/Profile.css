@@ -1,0 +1,151 @@
+.card-body .row{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#justify-tab-example-tabpane-home .card{
+    border-radius: 0px !important;
+}
+
+.upload{
+    position:absolute;
+    top: 50px;
+    z-index: 2;
+    transition: transform .4s;
+}
+.upload:hover {
+    transform: scale(1.1); 
+    cursor: pointer;/* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}
+.userphoto {
+    border: 6px solid rgb(255, 255, 255);
+    border-radius: 100px 100px;
+    filter: brightness(50%);
+    height: 190px;
+}
+
+.left-content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.perfil{
+    border-color: #fff0 !important;
+    border-radius: 10px !important;
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    text-align: center;
+}
+
+.contactos{
+    border-color: #fff0 !important;
+    border-radius: 10px !important;
+}
+
+.info{
+    border-color: #fff0 !important;
+    border-radius: 10px !important;
+}
+
+.skills{
+    border-color: #fff0 !important;
+    border-radius: 10px !important;
+}
+
+.social-media .list-group-item{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.social-media .list-group-item a{
+    color: rgb(84, 84, 84);
+    text-decoration: none;
+}
+
+.info{
+    border-color: #fff0 !important;
+    border-radius: 10px !important;
+}
+
+.denied{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.projects {
+    height:50vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.nav-tabs{
+    background-color: #F8F9FA;
+    border: 1px solid #00000027;
+}
+
+.wsp-input{
+    font-size: 1rem !important;
+    height: calc(3.5rem + 2px) !important;
+}
+
+.wsp-input::placeholder{
+    font-size: 1rem !important;
+}
+
+.comentbutton{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.solicitudbutton{
+    position: fixed;
+    z-index: 1;
+    right: 20px;
+    bottom: 50%;
+    width: 56px;
+    cursor: pointer;
+}
+
+.rating{
+    position: fixed;
+    z-index: 1;
+    right: 20px;
+    bottom: 40%;
+    width: 56px;
+    cursor: pointer;
+}
+
+.tooltip-inner {
+    background-color: #202A34 !important;
+}
+
+.btn-request{
+    border: 2px solid #5f738f !important;
+    background-color: #384451 !important;
+}
+
+.btn-request:hover{
+    border: 2px solid #384451 !important;
+    background-color: #5f738f !important;
+}
+
+@media (max-width: 450px) {
+    .solicitudbutton{
+        right: 10px;
+        bottom: 50%;
+        width: 44px;
+    }
+    .rating{
+        right: 10px;
+        bottom: 42%;
+        width: 44px;
+    }
+  }

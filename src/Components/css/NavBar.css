@@ -1,0 +1,139 @@
+.flexMain {
+  display:flex;
+  align-items: center;
+
+}
+.flex1 { flex:1 }
+.flex2 { flex:2 }
+.flex3 { flex:3 }
+  
+button.siteLink {
+  margin-left:-5px;
+  border:none;
+  padding:20px;
+  display:inline-block;
+  min-width:115px;
+}
+.whiteLink {
+  background : #212529;
+  color: #eaeaea;
+}
+.whiteLink:active {
+  color: #fff;
+  background:#212529
+}
+.blackLink {
+  color: #fff;
+  transition: all 300ms linear;
+}
+  
+.blackLink:active {
+  color: #000;
+  background:#fff
+}
+
+
+#menuDrawer {
+  background:#202a34;
+  position:fixed;
+  height:100vh;
+  overflow:auto;
+  z-index:12312;
+  top:0;
+  left:0;
+  color: #eaeaea;
+  min-width:25%;
+  max-width:320px;
+  width:100%;
+  transform : translateX(-100%);
+  transition : transform 200ms linear;
+}
+#mainNavigation {
+  transition : transform 200ms linear;
+  background : #212529;
+}
+.drawMenu > #menuDrawer {
+  transform : translateX(0%);
+}
+.fa-times {
+  cursor : pointer
+}
+a.nav-menu-item:hover {
+  margin-left:2px;
+  border-left:10px solid #fe6b68;
+  color: #aebbdc;
+}
+a.nav-menu-item{
+  transition:border 200ms linear;
+  text-decoration:none;
+  display:block;
+  padding:18px;
+  padding-left:32px;
+  color:#eaeaea;
+}
+a.nav-menu-item i{
+  color:#5f738f;
+}
+.dropdown-menu{
+  border-color: #5f738f !important;
+  background-color:#202A34 !important;
+}
+.dropdown-item {
+  background-color: #202A34 !important;
+  color:#aebbdc !important;
+}
+.dropdown-item:hover {
+  background-color: #3c4d5d !important;
+  color:#dfe3ec !important;
+}
+.signin-item {
+  text-decoration: none;
+  border: 2px solid rgb(217, 217, 217);
+  border-radius: 15px;
+  background-color: #3c4d5d !important;
+  color:#dfe3ec !important;
+  font-size: small;
+  margin-right: 10px;
+}
+#photoUser{
+  border: 2px solid rgb(217, 217, 217);
+}
+.signin-item:hover {
+  background-color: #384451 !important;
+  color:#dfe3ec !important;
+}
+select.noStyle {
+  border:none;
+  outline:none
+}
+
+.counter.counter-lg {
+  top: -24px !important;
+}
+
+.menu-pages{
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.searcher{
+  display: flex;
+  margin: 0px 10px 0px 10px;
+  flex-direction: column;
+}
+
+.search-button{
+  border: 2px solid #384451 !important;
+  background-color: #5f738f !important;
+}
+
+.search-button:hover{
+  border: 2px solid #5f738f !important;
+  background-color: #384451 !important;
+}
+
+.toast-container {
+  position: fixed;
+  right: 0px;
+  bottom: 0px;
+}

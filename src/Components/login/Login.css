@@ -1,0 +1,193 @@
+.loginContainer {
+  display: flex;
+  justify-content: center;
+}
+.loginContainer .card {
+  height: auto;
+  width: 800px;
+  background-color: #fff;
+  position: relative;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+.loginContainer .card .form {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+.loginContainer .card .left-side {
+  width: 50%;
+  background-color: #000;
+  height: 100% !important;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  overflow: hidden;
+}
+.left-side img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+.loginContainer .card .right-side {
+  width: 50%;
+  background-color: #efecf2;
+  height: 100%;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  padding: 20px;
+}
+.main {
+  display: none;
+}
+.active {
+  display: block;
+}
+.register p {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  font-size: 15px;
+  font-weight: 600;
+  color: #2a2739;
+}
+.register p a {
+  text-decoration: none;
+  color: blue;
+  margin-left: 3px;
+}
+.hello {
+  margin-top: 40px;
+  text-align: center;
+  color: #2a2739;
+}
+.hello h4 {
+  margin-top: 5px;
+}
+.input_text {
+  position: relative;
+  margin-top: 20px;
+}
+input[type="text"] {
+  height: 45px;
+  width: 100%;
+  border: none;
+  outline: 0;
+  padding: 0 10px;
+  border-radius: 10px;
+  border: 1px solid #fff;
+}
+input[type="password"] {
+  height: 45px;
+  width: 100%;
+  border: none;
+  outline: 0;
+  padding: 0 10px;
+  border-radius: 10px;
+  padding-right: 33px;
+  border: 1px solid #fff;
+}
+.input_text p {
+  margin-top: 4px;
+  margin-left: 10px;
+  color: red;
+}
+.danger {
+  display: none;
+}
+.input_text p i {
+  margin-right: 2px;
+}
+.fa-eye-slash {
+  position: absolute;
+  top: 15px;
+  right: 8px;
+  cursor: pointer;
+  color: #727286;
+}
+.fa-eye {
+  position: absolute;
+  top: 15px;
+  right: 8px;
+  cursor: pointer;
+  color: #727286;
+}
+.recovery p a{
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  text-decoration: none;
+  color: blue;
+}
+.btnLogin {
+  margin-top: 15px;
+}
+.btnLogin button {
+  height: 45px;
+  width: 100%;
+  border: none;
+  background-color: #f1221e !important;
+  transition: all 0.5s;
+  cursor: pointer;
+  font-size: 17px;
+  color: #fff;
+}
+.btnLogin button:hover {
+  background-color: #f55552 !important;
+}
+.right-side hr {
+  margin-top: 30px;
+  color: #fff;
+  border: 0;
+  border-top: 1px solid #fff;
+}
+.or {
+  text-align: center;
+}
+.or p {
+  z-index: 2;
+  background-color: #efecf2;
+  padding: 0 4px;
+}
+.boxes {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+.boxes span {
+  height: 45px;
+  width: 60px;
+  border: 1px solid #fff;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  transition: all 0.5s;
+}
+.boxes span img {
+  width: 30px;
+  cursor: pointer;
+  transition: all 0.5s;
+}
+.boxes span:hover img {
+  transform: scale(1.2);
+}
+.boxes span:hover {
+    border: 4px solid #fff;
+}
+.warning {
+  border: 1px solid red !important;
+}
+@media (max-width: 750px) {
+  .loginContainer .card {
+    max-width: 350px;
+  }
+  .loginContainer .card .right-side {
+    border-radius: 10px;
+    width: 100%;
+  }
+  .loginContainer .card .left-side {
+    display: none;
+  }
+}

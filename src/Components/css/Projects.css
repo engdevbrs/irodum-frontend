@@ -1,0 +1,20 @@
+.projects-container{
+    padding-right: 0px !important;
+    padding-left: 0px !important;
+    margin-right: 0px !important;
+    margin-left: 0px !important;
+    height: 50vh;
+}
+
+.emptyprojects{
+    height: 50vh;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+.projects-card{
+    height: 50vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+

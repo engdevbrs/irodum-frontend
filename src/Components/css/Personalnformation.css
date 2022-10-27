@@ -1,0 +1,20 @@
+.form{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.personalForm{
+    min-width: 250px;
+}
+
+.form-control{
+    background-color: #fff !important;
+    border-color: #939393 !important;
+    color: rgb(56, 55, 55) !important;
+}
+
+.form-floating label{
+    left: auto !important;
+}
