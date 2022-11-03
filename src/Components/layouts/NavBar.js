@@ -120,7 +120,8 @@ const Menu = () =>{
                       </ul>
                     </li>
                 </ul>
-                </> : <><Link to={'/login'} className="signin-item p-2"><i className="fas fa-sign-in me-2" style={{color: 'white'}}></i>Iniciar Sesión</Link></>
+                </> : <><Link to={'/crear-cuenta'} className="signin-item2 p-2"><i className="fas fa-user-plus me-2" style={{color: 'white'}}></i>Crear Cuenta</Link>
+                      <Link to={'/login'} className="signin-item p-2"><i className="fas fa-sign-in me-2" style={{color: 'white'}}></i>Iniciar Sesión</Link></>
                 }
             </div>
           </div>
@@ -137,7 +138,7 @@ const Menu = () =>{
               <Link to={'/trabajadores'}  className="nav-menu-item" onClick={() => menuToggle()}><i className="fas fa-hard-hat me-3"></i>Trabajadores</Link>
               <Link to={'/sobre-nosotros'}  className="nav-menu-item" onClick={() => menuToggle()}><i className="fas fa-exclamation-circle me-3"></i>Sobre Nosotros</Link>
               <Link to={'/preguntas-frecuentes'} className="nav-menu-item" onClick={() => menuToggle()}><i className="fas fa-question-circle me-3"></i>Preguntas Frecuentes</Link>
-              <Link to={'/crear-cuenta'} className="nav-menu-item" onClick={() => menuToggle()}><i className="fas fa-user-plus me-3"></i>Crear Cuenta</Link>
+              <Link to={'/contacto'} className="nav-menu-item" onClick={() => menuToggle()}><i className="fas fa-address-book me-3"></i>Contacto</Link>
             </div>
           </div>
         </div>
