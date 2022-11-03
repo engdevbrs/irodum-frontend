@@ -12,6 +12,7 @@ import ToDoList from './Components/profile/ToDoList';
 import UserProjects from './Components/profile/UserProjects';
 import ViewClientProfile from './Components/profile/ViewClientProfile';
 import Workers from './Components/workers/Workers';
+import Contact from './Components/layouts/Contact';
 
 
 const App = () => {
@@ -30,6 +31,7 @@ const App = () => {
                     <Route path='sobre-nosotros' element= { <About /> } />
                     <Route path='mis-proyectos' element= { <UserProjects /> } />
                     <Route path='mis-solicitudes' element= { <ToDoList /> } />
+                    <Route path='contacto' element= { <Contact /> } />
                     <Route path='*' element={ <Navigate replace to = "/"/> } />
                 </Route>
             </Routes>
