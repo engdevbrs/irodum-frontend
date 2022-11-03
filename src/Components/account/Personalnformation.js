@@ -200,7 +200,7 @@ const PersonalInformation = () => {
         dv = (parseInt(dv,10) === 0) ? 11 : dv;
         
         // Validar que el Cuerpo coincide con su Dígito Verificador
-        if(dvEsperado !== dv){ 
+        if(dvEsperado !== parseInt(dv,10)){ 
             setRutValid(true)
             setCustomValidity("RUT Inválido"); 
             return true; 

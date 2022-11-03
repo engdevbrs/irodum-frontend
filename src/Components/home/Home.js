@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import '../css/Home.css';
 import slide1 from '../assets/slide1.jpg';
-import slide2 from '../assets/slide2.jpg';
+import slide2 from '../assets/slide2.jpeg';
 import slide3 from '../assets/slide3.jpg';
 import united from '../assets/united.png';
 import tools from '../assets/tools.png';
@@ -11,36 +11,74 @@ import ingeniero from '../assets/ingeniero.png';
 import benefits from '../assets/benefits.png';
 import vidalaboral from '../assets/vida-laboral.png';
 import curriculum from '../assets/curriculum.png';
-import { Container } from 'react-bootstrap';
+import { Carousel, Container } from 'react-bootstrap';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import Categories from './Categories';
 
 const Home = () => {
+  const [index, setIndex] = useState(0);
+
+  const handleSelect = (selectedIndex, e) => {
+    setIndex(selectedIndex);
+  };
 
   return (
     <>
       <header className="bg-dark py-5">
           <Container className="px-5">
               <Row className="gx-5 align-items-center justify-content-center">
-                  <Col className="col-lg-8 col-xl-7 col-xxl-6">
-                      <div className="my-5 text-center text-xl-start">
-                          <h1 className="display-5 fw-bolder text-white mb-2">Una nueva forma de encontar oportunidades</h1>
-                          <p className="lead fw-normal text-white-50 mb-4">Registro rápido y sencillo, presenta a la comunidad tus habilidades de manera gratuita!</p>
-                          <div className="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
-                              <Link to={'/crear-cuenta'} className="btn btn-primary btn-lg px-4 me-sm-3">Comenzar</Link>
-                              <Link to={'/sobre-nosotros'} className="btn btn-outline-light btn-lg px-4">Aprender Más</Link>
-                          </div>
+                <Container>
+                  <div className="row height d-flex justify-content-center align-items-center">
+                    <div className="col-lg-8 col-xl-7 col-xxl-6">
+                      <div className="form">
+                        <input type="text" className="form-control form-input" placeholder="Buscar trabajador..." />
+                        <span className="left-pan"><i className="fa fa-search"></i></span>
                       </div>
-                  </Col>
-                  <Col className="col-xl-5 col-xxl-6 d-none d-xl-block text-center">
-                    <img className="img-fluid rounded-3 my-5" src={slide1} alt="..."/>
-                  </Col>
+                    </div>
+                  </div>
+                </Container>
+                <Col className="col-lg-8 col-xl-7 col-xxl-6">
+                    <div className="my-5 text-center text-xl-start">
+                        <h1 className="display-5 fw-bolder text-white mb-2">Una nueva forma de encontar oportunidades</h1>
+                        <p className="lead fw-normal text-white-50 mb-4">Registro rápido y sencillo, crea tu perfil de trabajador y presenta a la comunidad tus habilidades de manera gratuita!</p>
+                        <div className="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
+                            <Link to={'/crear-cuenta'} className="btn btn-primary btn-lg px-4 me-sm-3">Comenzar</Link>
+                            <Link to={'/sobre-nosotros'} className="btn btn-outline-light btn-lg px-4">Aprender Más</Link>
+                        </div>
+                    </div>
+                </Col>
+                <Col className="col-xl-5 col-xxl-6 d-none d-xl-block">
+                      <Carousel activeIndex={index} onSelect={handleSelect}>
+                      <Carousel.Item>
+                      <img className="img-fluid rounded-3 my-5" src={slide1} alt="..."/>
+                      <Carousel.Caption>
+                        <h3>Visibilidad a nivel nacional</h3>
+                        <p>Tu perfil podrá ser visitado desde cualquier parte de Chile.</p>
+                      </Carousel.Caption>
+                      </Carousel.Item>
+                      <Carousel.Item>
+                      <img className="img-fluid rounded-3 my-5" src={slide2} alt="..."/>
+                      <Carousel.Caption>
+                        <h3>Oportunidades laborales</h3>
+                        <p>Aumentarán tus probabilidades de adquirir nuevos trabajos.</p>
+                      </Carousel.Caption>
+                      </Carousel.Item>
+                      <Carousel.Item>
+                      <img className="img-fluid rounded-3 my-5" src={slide3} alt="..."/>
+                      <Carousel.Caption>
+                        <h3>Fácil comunicación</h3>
+                        <p>Tus clientes podrán tomar contacto contigo fácilmente.</p>
+                      </Carousel.Caption>
+                      </Carousel.Item>
+                      </Carousel>
+                </Col>
               </Row>
           </Container>
       </header>
-      <Container className="mt-4 px-3">
+      <Container className="mt-5">
         <Row lg={2} className='information row row-cols-1 row-cols-md-2 g-4'>
         <Col>
         <h2 className="our-fundation fw-bolder mt-2" style={{color: '#5f738f'}}>Irodum.com</h2>
@@ -55,12 +93,13 @@ const Home = () => {
         </Col>
         </Row>
       </Container>
+      <Categories />
       <Container className="mt-5 mb-5">
         <div className='d-flex justify-content-center'>
-          <hr style={{width: '80%', height: '2px'}} />
+          <hr style={{width: '70%', height: '2px'}} />
         </div>
       </Container>
-      <Container className="benefits mt-4 px-3">
+      <Container className="benefits mt-4">
           <Row >
               <div className="col-lg-4 mb-5 mb-lg-0"><h2 className="fw-bolder mb-0" style={{color: '#5f738f'}}>Potencia tus ofertas laborales</h2></div>
               <div className="col-lg-8">
@@ -98,10 +137,10 @@ const Home = () => {
       </Container>
       <Container className="mt-5 mb-5">
         <div className='d-flex justify-content-center'>
-          <hr style={{width: '80%', height: '2px'}} />
+          <hr style={{width: '70%', height: '2px'}} />
         </div>
       </Container>
-      <Container className="mt-4 px-3">
+      <Container className="mt-4">
         <Row xs={1} className='mb-5'>
         <Col className='col-lg-4 col-md-6 col-sm-12 mt-3'>
           <Card className="card-features shadow h-100 p-3">
