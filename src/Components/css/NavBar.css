@@ -90,18 +90,32 @@ a.nav-menu-item i{
   text-decoration: none;
   border: 2px solid rgb(217, 217, 217);
   border-radius: 15px;
+  background-color: #bb4442 !important;
+  color:#dfe3ec !important;
+  font-size: small;
+  margin-right: 10px;
+}
+.signin-item:hover {
+  background-color: #a03c3a !important;
+  color:#dfe3ec !important;
+}
+.signin-item2 {
+  text-decoration: none;
+  border: 2px solid rgb(217, 217, 217);
+  border-radius: 15px;
   background-color: #3c4d5d !important;
   color:#dfe3ec !important;
   font-size: small;
   margin-right: 10px;
 }
-#photoUser{
-  border: 2px solid rgb(217, 217, 217);
-}
-.signin-item:hover {
+.signin-item2:hover {
   background-color: #384451 !important;
   color:#dfe3ec !important;
 }
+#photoUser{
+  border: 2px solid rgb(217, 217, 217);
+}
+
 select.noStyle {
   border:none;
   outline:none
@@ -136,4 +150,26 @@ select.noStyle {
   position: fixed;
   right: 0px;
   bottom: 0px;
+}
+
+@media (max-width: 560px) {
+  
+  .signin-item {
+    font-size: 12px;
+  }
+
+  .signin-item2 {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 450px) {
+  
+  .signin-item {
+    font-size: 10px;
+  }
+
+  .signin-item2 {
+    font-size: 10px;
+  }
 }
