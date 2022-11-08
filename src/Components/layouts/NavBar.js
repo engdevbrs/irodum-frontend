@@ -152,7 +152,7 @@ const Menu = () =>{
           </Toast.Header>
           <Toast.Body>Tienes {projectsData.length} peticiones de trabajo, revisa tu bandeja de solicitudes.</Toast.Body>
         </Toast>
-      </ToastContainer>
+        </ToastContainer>
         <Footer/>
       </>
   )

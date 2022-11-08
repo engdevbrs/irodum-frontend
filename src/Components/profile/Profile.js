@@ -357,7 +357,7 @@ const Profile = () => {
                                             <Tab eventKey="home" title="Rating">
                                                 <Card style={{height: '50vh'}}>
                                                     <Card.Body>
-                                                    <p className="mt-4 mb-1" >Responsabilidad</p>
+                                                    <p className="mb-1" >Responsabilidad</p>
                                                     <div className="progress rounded" style={{height: '5px'}}>
                                                         <div className="progress-bar" role="progressbar" style={{width:'80%'}} aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
                                                     </div>

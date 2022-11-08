@@ -21,11 +21,11 @@
     align-items: center;
 }
 
-.form{
+.worksearcher-form{
     position: relative;
 }
 
-.form span{
+.worksearcher-form span{
     position: absolute;
     right: 17px;
     padding: 2px;
@@ -37,18 +37,37 @@
 }
 
 .left-pan i{
-   padding-left: 10px;
+   padding-left: 15px;
 }
 
-.form-input{
+.worksearcher{
     height: 55px;
     text-indent: 33px;
     border-radius: 10px;
 }
 
-.form-input:focus{
+.worksearcher:focus{
     box-shadow: none;
     border:none;
+}
+
+.sugerencias{
+    margin-top: -8px;
+    text-decoration: none;
+    list-style: none;
+    background-color: white;
+    border-radius: 0px 0px 10px 10px;
+    position: sticky;
+}
+
+.sugerencias li{
+    text-align: center;
+}
+
+.sugerencias li:hover{
+    cursor: pointer;
+    background-color: rgb(226, 226, 226);
+    border-radius: 0px 0px 10px 10px;
 }
 
 @media (max-width: 450px) {

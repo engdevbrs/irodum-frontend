@@ -13,7 +13,7 @@ import UserProjects from './Components/profile/UserProjects';
 import ViewClientProfile from './Components/profile/ViewClientProfile';
 import Workers from './Components/workers/Workers';
 import Contact from './Components/layouts/Contact';
-
+import { HomeContextProvider } from './Components/contexts/WorkerContext';
 
 const App = () => {
     return (
@@ -21,9 +21,9 @@ const App = () => {
         <BrowserRouter>
             <Routes>
                 <Route path='' element= { <LoginContextProvider><Menu/></LoginContextProvider>}>
-                    <Route index element= { <Home />} />
+                    <Route index element= { <HomeContextProvider><Home /></HomeContextProvider>} />
                     <Route path='crear-cuenta' element= { <CreateAccount />  } />
-                    <Route path='trabajadores' element= { <Workers /> } />
+                    <Route path='trabajadores' element= { <HomeContextProvider><Workers /></HomeContextProvider> } />
                     <Route path='perfil' element= { <Profile /> } />
                     <Route path='/trabajadores/perfil/vista/:id' element= { <ViewClientProfile /> } />
                     <Route path='login' element= { <Login /> } />

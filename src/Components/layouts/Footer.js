@@ -42,9 +42,9 @@ const Footer = () => {
                     </div>
                     <div>
                         <div className="col-12 text-end">
-                            <a class="fs-5 px-2 link-dark" href="#!"><img src={twitter} alt='twitter' style={{'width': '32px'}}/></a>
-                            <a class="fs-5 px-2 link-dark" href="#!"><img src={facebook} alt='facebook' style={{'width': '32px'}}/></a>
-                            <a class="fs-5 px-2 link-dark" href="#!"><img src={instagram} alt='instagram' style={{'width': '32px'}}/></a>                      
+                            <a class="fs-5 px-2 link-dark" href="#!"><img src={twitter} alt='twitter' style={{'width': '24px'}}/></a>
+                            <a class="fs-5 px-2 link-dark" href="#!"><img src={facebook} alt='facebook' style={{'width': '24px'}}/></a>
+                            <a class="fs-5 px-2 link-dark" href="#!"><img src={instagram} alt='instagram' style={{'width': '24px'}}/></a>                      
                         </div>
                     </div>
                 </div>
