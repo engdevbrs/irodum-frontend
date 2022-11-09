@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import instagram from '../assets/instagram.png'
 import facebook from '../assets/facebook.png'
 import twitter from '../assets/twitter.png'
+import logotipo from '../assets/logotipo.png'
 
 const Footer = () => {
     return (
@@ -12,6 +13,9 @@ const Footer = () => {
         <footer className="w-100 py-4 flex-shrink-0">
             <div className="container py-4">
                 <div className="row gy-4 gx-4">
+                    <div className="col-12 logotipo">
+                        <Link to="/"><img src={logotipo} alt='logotipo' style={{'width': '16rem'}}/></Link>                    
+                    </div>
                     <div className="col-lg-4 col-md-4">
                         <h5 className="text-white mb-3">Enlaces rápidos</h5>
                         <ul className="list-unstyled text-muted">
@@ -41,10 +45,13 @@ const Footer = () => {
                         </form>
                     </div>
                     <div>
-                        <div className="col-12 text-end">
+                        <div className="col-12 text-center">
                             <a class="fs-5 px-2 link-dark" href="#!"><img src={twitter} alt='twitter' style={{'width': '24px'}}/></a>
                             <a class="fs-5 px-2 link-dark" href="#!"><img src={facebook} alt='facebook' style={{'width': '24px'}}/></a>
-                            <a class="fs-5 px-2 link-dark" href="#!"><img src={instagram} alt='instagram' style={{'width': '24px'}}/></a>                      
+                            <a class="fs-5 px-2 link-dark" href="#!"><img src={instagram} alt='instagram' style={{'width': '24px'}}/></a>                    
+                        </div>
+                        <div className="col-12 mt-2 text-center">       
+                            <span style={{color: 'white'}}>Copyright &copy; Todos los derechos reservados</span>              
                         </div>
                     </div>
                 </div>

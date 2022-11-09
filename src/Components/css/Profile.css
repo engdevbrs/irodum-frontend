@@ -137,6 +137,11 @@
     background-color: #5f738f !important;
 }
 
+.responsabilidad{
+    display: flex;
+    flex-direction: column;
+}
+
 @media (max-width: 450px) {
     .solicitudbutton{
         right: 10px;
@@ -147,5 +152,8 @@
         right: 10px;
         bottom: 42%;
         width: 44px;
+    }
+    .modal-footer{
+        justify-content: center !important;
     }
   }

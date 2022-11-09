@@ -1,3 +1,16 @@
 #categories .carousel-item {
     transition: .4s ease-in-out !important;
 }
+
+.categories-button{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+@media (max-width: 450px) {
+    .categories-view{
+        text-align: center;
+    }
+}

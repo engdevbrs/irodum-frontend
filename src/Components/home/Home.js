@@ -84,7 +84,7 @@ const Home = () => {
                   <div className="row height d-flex justify-content-center align-items-center">
                     <div className="col-lg-8 col-xl-7 col-xxl-6">
                       <div className="form worksearcher-form">
-                        <input type="text" id='worksearcher' className="worksearcher" placeholder="Buscar trabajador..." />
+                        <input type="text" id='worksearcher' className="worksearcher" placeholder="Ej: Carpintero" />
                         <span className="left-pan"><i className="fas fa-search" style={{cursor: 'pointer'}} onClick={e => searchingWorker(e)}></i></span>
                       </div>
                       <div id='sugerencias' className="sugerencias"></div>
@@ -145,7 +145,7 @@ const Home = () => {
         </Row>
       </Container>
       <Categories />
-      <Container className="mt-5 mb-5">
+      <Container className="mb-5">
         <div className='d-flex justify-content-center'>
           <hr style={{width: '70%', height: '2px'}} />
         </div>

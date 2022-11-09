@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Rating } from 'react-simple-star-rating'
 import Axios  from 'axios'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -13,11 +14,11 @@ import rating from '../assets/rating.png';
 const ViewClientProfile = () => {
 
     const { id } = useParams();
-    const navigate = useNavigate()
     const [ dataUser, setDataUser ] = useState([])
     const [ response, setResponse ] = useState([])
     const [show, setShow] = useState(true);
     const [showModal, setShowModal] = useState(false);
+    const [showModalComment, setShowModalComment] = useState(false);
 
     const [localidades, setLocalidades] = useState([]);
     const [ciudades, setCiudades] = useState([]);
@@ -38,6 +39,7 @@ const ViewClientProfile = () => {
     const [cityValid, setCityValid] = useState(false);
     const [comunneValid, setComunneValid] = useState(false);
     const [descriptWorkValid, setDescriptWorkValid] = useState(false);
+    const [noRanked, setNoRanked] = useState(false);
 
     const [nombreValidMsge, setNombreValidMsge] = useState([]);
     const [apellidosValidMsge, setApellidosValidMsge] = useState([]);
@@ -53,16 +55,29 @@ const ViewClientProfile = () => {
     const [descriptWorkValidMsge, setDescriptWorkValidMsge] = useState([]);
     const [switchCharge, setSwitchCharge] = useState(false)
     const [showAlert, setShowAlert] = useState(false)
-    const [alertVariant, setAlertVariant] = useState([])
     const [ responseRequest, setResponseRequest ] = useState([])
+    const [ratingScoreResp, setRatingScoreResp] = useState(0)
+    const [ratingScoreHones, setRatingScoreHones] = useState(0)
+    const [ratingScoreCuidad, setRatingScoreCuidad] = useState(0)
+    const [ratingScorePunt, setRatingScorePunt] = useState(0)
+    const [ratingScorePrecio, setRatingScorePrecio] = useState(0)
+
 
     const handleClose = () => {
 
         setShowModal(false)
         setShowAlert(false)
-        setAlertVariant('')
         clearForm()
     }
+    const handleShow = () => setShowModal(true);
+
+    const handleCloseComment = () => {
+
+        setShowModalComment(false)
+        setShowAlert(false)
+        clearFormComment()
+    }
+    const handleShowComment = () => setShowModalComment(true);
 
     const clearForm = () => {
 
@@ -112,7 +127,30 @@ const ViewClientProfile = () => {
 
     }
 
-    const handleShow = () => setShowModal(true);
+    const clearFormComment = () => {
+
+        document.getElementById('commentForm').reset()
+
+        setNombreValid(false)
+        setNombreValidMsge('')
+
+        setApellidosValid(false)
+        setApellidosValidMsge('')
+
+        setEmailValid(false)
+        setEmailValidMsge('')
+
+
+        setDescriptWorkValid(false)
+        setDescriptWorkValidMsge('')
+
+        setRatingScoreCuidad(0)
+        setRatingScoreResp(0)
+        setRatingScorePunt(0)
+        setRatingScoreHones(0)
+        setRatingScorePrecio(0)
+
+    }
 
     const handleChange = (e) => {
         if(e.target.name === 'clientName'){
@@ -270,7 +308,6 @@ const ViewClientProfile = () => {
                 if(result.status === 200){
                     setResponseRequest(result.status)
                     setShowAlert(true)
-                    setAlertVariant('success')
                     clearForm()
                     Axios.post('http://54.174.104.208:3001/api/requestEmail',arrayValues)
                     .then((result) => {
@@ -283,9 +320,73 @@ const ViewClientProfile = () => {
                 }
             }).catch(error => {
                 setResponseRequest(error.response.status)
-                setAlertVariant('danger')
                 setShowAlert(true)
             });
+        }
+    }
+
+    const handleSubmitComment = () =>{
+
+        let arrayValues = [];
+
+        let scoreObject = {
+            responsabilidad: null,
+            puntualidad: null,
+            honestidad: null,
+            cuidadoso: null,
+            precio: null
+        }
+
+        const formValues = document.getElementsByClassName('commentForm')[0].elements;
+
+        let checkNameValue = checkName(document.getElementById('clientName').value);
+        let checkLastNameValue = checkLastName(document.getElementById('clientLastname').value);
+        let checkEmailValue = checkEmail(document.getElementById('clientEmail').value);
+        let checkDescriptWorkValue = checkDescriptWork(document.getElementById('descriptWork').value);
+
+        let ratingValidation =  ratingScoreResp !== 0 && ratingScorePunt !== 0 && ratingScoreHones !== 0 && ratingScoreCuidad !== 0 
+                                && ratingScorePrecio !== 0
+
+        ratingValidation === true ? setNoRanked(false) : setNoRanked(true)
+
+        let validation = (checkNameValue === false && checkLastNameValue === false && checkEmailValue === false && checkEmailValue === false 
+            && checkDescriptWorkValue === false && ratingValidation === true);
+        
+
+        if(validation){
+
+            [...formValues].forEach((elements) =>{
+                arrayValues.push(elements.value)
+            })
+
+            scoreObject = {
+                responsabilidad: ratingScoreResp,
+                puntualidad: ratingScorePunt,
+                honestidad: ratingScoreHones,
+                cuidadoso: ratingScoreCuidad,
+                precio: ratingScorePrecio
+            }
+            arrayValues.push(scoreObject)
+            console.log(arrayValues);
+            // Axios.post('http://54.174.104.208:3001/api/request-work',arrayValues)
+            // .then((result) => {
+            //     if(result.status === 200){
+            //         setResponseRequest(result.status)
+            //         setShowAlert(true)
+            //         clearForm()
+            //         Axios.post('http://54.174.104.208:3001/api/requestEmail',arrayValues)
+            //         .then((result) => {
+            //             if(result.status === 200){
+            //                 console.log(result);
+            //             }
+            //         }).catch(error => {
+            //             console.log(error);
+            //         });
+            //     }
+            // }).catch(error => {
+            //     setResponseRequest(error.response.status)
+            //     setShowAlert(true)
+            // });
         }
     }
 
@@ -598,10 +699,30 @@ const ViewClientProfile = () => {
       );
 
     const renderTooltip2 = (props) => (
-        <Tooltip id="button-tooltip" {...props} hidden={showModal}>
+        <Tooltip id="button-tooltip" {...props} hidden={showModalComment}>
           Calificar Trabajador
         </Tooltip>
       );
+
+    const handleRatingResp = (rate) => {
+        setRatingScoreResp(rate)
+    }
+
+    const handleRatingPunt = (rate) => {
+        setRatingScorePunt(rate)
+    }
+
+    const handleRatingHones = (rate) => {
+        setRatingScoreHones(rate)
+    }
+
+    const handleRatingCuidad = (rate) => {
+        setRatingScoreCuidad(rate)
+    }
+
+    const handleRatingPrecio = (rate) => {
+        setRatingScorePrecio(rate)
+    }
     
     useEffect(() =>{
         Axios.get("http://54.174.104.208:3001/api/localidades").then((res)=>{
@@ -781,7 +902,7 @@ const ViewClientProfile = () => {
                             delay={{ show: 250, hide: 400 }}
                             overlay={renderTooltip2}
                             >
-                                <img className='rating' src={rating} alt="rating img" />
+                                <img className='rating' src={rating} alt="rating img" onClick={handleShowComment}/>
                             </OverlayTrigger>
                             <Modal className='modalrequest' show={showModal} onHide={handleClose} size="lg" centered style={{padding: '0px'}}>
                                 <Modal.Header closeButton>
@@ -1013,6 +1134,148 @@ const ViewClientProfile = () => {
                                     Enviar Solicitud
                                 </Button>
                                 <Button variant="danger" onClick={handleClose}>
+                                    Cerrar
+                                </Button>
+                                </Modal.Footer>
+                            </Modal>
+                            <Modal className='modalcomment' show={showModalComment} onHide={handleCloseComment} size="lg" centered style={{padding: '0px'}}>
+                                <Modal.Header closeButton>
+                                <Modal.Title>Evaluación de Trabajo</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                <Form id='commentForm' className='commentForm'>
+                                    <div className='form-floating'>
+                                        <p>Califique al trabajador <strong>{element.nameUser}</strong> según su experiencia.</p>
+                                    </div>
+                                    <Row>
+                                        <div className='form-floating col-md-5 mb-3'>
+                                            <input type='text' className='form-control' id='clientName' name='clientName' placeholder='Nombre' 
+                                            onChange={handleChange} />
+                                            <label htmlFor='clientName'>Nombre<span className='mb-1' style={{color: 'red'}}>*</span></label>
+                                            {
+                                                nombreValid === true ? <Form.Text className='mb-1'>
+                                                    <span className='mb-1' style={{color: 'red'}}>{nombreValidMsge}</span></Form.Text> : nombreValidMsge
+                                            }
+                                        </div>
+                                        <div className='form-floating col-md-7 mb-3'>
+                                            <input type='text' className='form-control' id='clientLastname' name='clientLastname' placeholder='Apellido1 Apellido2'
+                                            onChange={handleChange}/>
+                                            <label htmlFor='clientLastname'>Apellidos<span className='mb-1' style={{color: 'red'}}>*</span></label>
+                                            {
+                                                apellidosValid === true ? <Form.Text className='mb-1'>
+                                                    <span className='mb-1' style={{color: 'red'}}>{apellidosValidMsge}</span></Form.Text> : apellidosValidMsge
+                                            }
+                                        </div>
+                                    </Row>
+                                    <Row>
+                                        <div className='form-floating col-md-5 mb-3'>
+                                            <input type='email' className='form-control' id='clientEmail' name='clientEmail' placeholder='correo@gmail.com'
+                                            onChange={handleChange}/>
+                                            <label htmlFor='clientEmail'>Correo electrónico<span className='mb-1' style={{color: 'red'}}>*</span></label>
+                                            {
+                                                emailValid === true ? <Form.Text className='mb-1'>
+                                                <span className='mb-1' style={{color: 'red'}}>{emailValidMsge}</span></Form.Text> : emailValidMsge
+                                            }
+                                        </div>
+                                        <div className='form-floating mb-3'>
+                                            <textarea className='form-control' id='descriptWork' name='descriptWork' style={{ height: '100px' }}
+                                            placeholder='Comentario sobre el Trabajador' maxLength={250} onChange={handleChange}></textarea>
+                                            <label htmlFor='descriptWork'>Comentario sobre el trabajador<span className='mb-1' style={{color: 'red'}}>*</span></label>
+                                            {
+                                                descriptWorkValid === true ? <Form.Text className='mb-1'>
+                                                <span className='mb-1' style={{color: 'red'}}>{'Por favor, ingrese un comentario sobre este trabajador.'}</span></Form.Text> : descriptWorkValidMsge
+                                            }
+                                        </div>
+                                        <div className="mb-3">
+                                            <label for="formFileMultiple" className="form-label">Evidencias del trabajo <span style={{color: 'red'}}>(8 fotos máximo)</span></label>
+                                            <input className="form-control" type="file" id="formFileMultiple" multiple />
+                                            <Form.Text style={{color: '#5f738f'}}>Éste campo es opcional</Form.Text>
+                                        </div>
+                                        <div className="mb-3">
+                                        <h5 className="mb-3" style={{color: '#384451'}}>Del 1 al 5, como calificaría usted el trabajo realizado por {element.nameUser}</h5>
+                                        <div id='responsabilidad'>
+                                            <h6 style={{color: '#384451'}}>Responsabilidad: </h6>
+                                            <Rating
+                                                onClick={handleRatingResp}
+                                                ratingValue={ratingScoreResp}
+                                                size={32}
+                                                label
+                                                transition
+                                                fillColor='orange'
+                                                emptyColor='gray'
+                                                className='resp'
+                                            />
+                                            <hr/>
+                                        </div>
+                                        <div id='puntualidad'>
+                                            <h6 style={{color: '#384451'}}>Puntualidad: </h6>
+                                            <Rating
+                                                onClick={handleRatingPunt}
+                                                ratingValue={ratingScorePunt}
+                                                size={32}
+                                                label
+                                                transition
+                                                fillColor='orange'
+                                                emptyColor='gray'
+                                                className='punt'
+                                            />
+                                            <hr/>
+                                        </div>
+                                        <div id='honestidad'>
+                                            <h6 style={{color: '#384451'}}>Honestidad: </h6>
+                                            <Rating
+                                                onClick={handleRatingHones}
+                                                ratingValue={ratingScoreHones}
+                                                size={32}
+                                                label
+                                                transition
+                                                fillColor='orange'
+                                                emptyColor='gray'
+                                                className='hones'
+                                            />
+                                            <hr/>
+                                        </div>
+                                        <div id='cuidadoso'>
+                                            <h6 style={{color: '#384451'}}>Cuidadoso: </h6>
+                                            <Rating
+                                                onClick={handleRatingCuidad}
+                                                ratingValue={ratingScoreCuidad}
+                                                size={32}
+                                                label
+                                                transition
+                                                fillColor='orange'
+                                                emptyColor='gray'
+                                                className='cuidad'
+                                            />
+                                            <hr/>
+                                        </div>
+                                        <div id='preciojusto'>
+                                            <h6 style={{color: '#384451'}}>Precio : </h6>
+                                            <Rating
+                                                onClick={handleRatingPrecio}
+                                                ratingValue={ratingScorePrecio}
+                                                size={32}
+                                                label
+                                                transition
+                                                fillColor='orange'
+                                                emptyColor='gray'
+                                                className='precio'
+                                            />
+                                            <hr/>
+                                        </div>
+                                        </div>
+                                        {
+                                            noRanked === true ? <Form.Text className='mb-1'>
+                                            <span className='mb-1' style={{color: 'red'}}>{`Por favor, califique las aptitudes de ${element.nameUser}`}</span></Form.Text> : ''
+                                        }
+                                    </Row>
+                                </Form>
+                                </Modal.Body>
+                                <Modal.Footer>
+                                <Button className='btn-request' onClick={handleSubmitComment}>
+                                    Publicar Evaluación
+                                </Button>
+                                <Button variant="danger" onClick={handleCloseComment}>
                                     Cerrar
                                 </Button>
                                 </Modal.Footer>
