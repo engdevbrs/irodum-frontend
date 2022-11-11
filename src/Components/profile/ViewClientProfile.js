@@ -10,6 +10,7 @@ import Comments from './Comments'
 import ViewClientProjects from './ViewClientProjects'
 import solicitudbutton from '../assets/solicitud-button.png';
 import rating from '../assets/rating.png';
+import Ratings from './Ratings'
 
 const ViewClientProfile = () => {
 
@@ -62,6 +63,7 @@ const ViewClientProfile = () => {
     const [ratingScorePunt, setRatingScorePunt] = useState(0)
     const [ratingScorePrecio, setRatingScorePrecio] = useState(0)
     const [commentsWorker, setCommentsWorker] = useState([])
+    const [ratingScore, setRatingScore] = useState(0);
     const [ updateProgress, setUpdateProgress ] = useState(0)
     const [ hiddenProgress, showProgress ] = useState(true)
 
@@ -384,7 +386,7 @@ const ViewClientProfile = () => {
             }
             formFileMultiple.append('params', JSON.stringify(arrayValues))
 
-            Axios.post('http://localhost:3001/api/rating-worker',formFileMultiple, config)
+            Axios.post('http://54.174.104.208:3001/api/rating-worker',formFileMultiple, config)
             .then((result) => {
                 if(result.status === 200){
                     console.log(result.status);
@@ -740,6 +742,14 @@ const ViewClientProfile = () => {
         Axios.get("http://54.174.104.208:3001/api/localidades").then((res)=>{
             setLocalidades(res.data);
         }); 
+        Axios.get("http://54.174.104.208:3001/api/worker/ratings/" + id)
+          .then((result) => {
+              if(result.status === 200){
+                setRatingScore(result.data)
+              }
+          }).catch(error => {
+            setResponse(error.response.status)
+        });
         Axios.get("http://54.174.104.208:3001/api/view/profile/" + id)
           .then((result) => {
               if(result.status === 200){
@@ -748,7 +758,7 @@ const ViewClientProfile = () => {
           }).catch(error => {
                 setResponse(error.response.status)
         });
-        Axios.get("http://localhost:3001/api/worker/evaluations/" + id)
+        Axios.get("http://54.174.104.208:3001/api/worker/evaluations/" + id)
           .then((result) => {
               if(result.status === 200){
                     setCommentsWorker(result.data)
@@ -756,6 +766,8 @@ const ViewClientProfile = () => {
           }).catch(error => {
             setResponse(error.response.status)
         });
+        
+
     },[switchCharge])
 
     return(
@@ -777,6 +789,14 @@ const ViewClientProfile = () => {
                         dateFormatted = new Date(element.bornDate)
                     }
                     todayDate.setFullYear( todayDate.getFullYear() - dateFormatted.getFullYear())
+                    let sumaTotal = null;
+                    if(ratingScore.length > 0){
+                        ratingScore.forEach(element => {
+                            let ratingParse = JSON.parse(element.aptitudRating)
+                            let sumaRating = (ratingParse.cuidadoso + ratingParse.honestidad + ratingParse.precio + ratingParse.puntualidad + ratingParse.responsabilidad) / 5;
+                            sumaTotal = (sumaTotal + sumaRating) / ratingScore.length;
+                        });
+                    }
                     return(
                         <>
                             <Container className='profile-container shadow-lg rounded-3 mt-3 mb-5 p-4'>
@@ -791,6 +811,17 @@ const ViewClientProfile = () => {
                                 </Alert></Row> : <></>
                             }
                             <Row>
+                                <Col lg={12} className='shadow-lg rounded-1 p-2 text-center' style={{backgroundColor: '#202A34'}}>
+                                    <h5 style={{color: 'rgb(226 226 226)'}}>Calificación</h5>
+                                    <Rating
+                                        initialValue={sumaTotal}
+                                        size={32}
+                                        fillColor='orange'
+                                        emptyColor='gray'
+                                        allowFraction={true}
+                                        readonly={true}
+                                    />
+                                </Col>
                                 <Col lg={12} className='shadow-lg rounded-1 p-2'>
                                     <h5>Información Personal</h5>
                                     <Row md={1} lg={1} className='rounded-4 mt-3 mb-3'>
@@ -869,33 +900,9 @@ const ViewClientProfile = () => {
                                     <h5>Clasificación Laboral</h5>
                                     <Tabs defaultActiveKey="home" id="justify-tab-example">
                                         <Tab eventKey="home" title="Rating">
-                                            <Card>
-                                                <Card.Body>
-                                                <p className="mb-1" >Responsabilidad</p>
-                                                <div className="progress rounded" style={{height: '5px'}}>
-                                                    <div className="progress-bar" role="progressbar" style={{width:'80%'}} aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <p className="mt-4 mb-1" >Puntualidad</p>
-                                                <div className="progress rounded" style={{height: '5px'}}>
-                                                    <div className="progress-bar" role="progressbar" style={{width:'72%'}} aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <p className="mt-4 mb-1" >Honestidad</p>
-                                                <div className="progress rounded" style={{height: '5px'}}>
-                                                    <div className="progress-bar" role="progressbar" style={{width:'89%'}} aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <p className="mt-4 mb-1" >Cuidadoso</p>
-                                                <div className="progress rounded" style={{height: '5px'}}>
-                                                    <div className="progress-bar" role="progressbar" style={{width:'55%'}} aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <p className="mt-4 mb-1" >Precio justo</p>
-                                                <div className="progress rounded mb-2" style={{height: '5px'}}>
-                                                    <div className="progress-bar" role="progressbar" style={{width:'66%'}} aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                </Card.Body>
-                                                <Card.Footer>
-                                                    Calificación total: 4.5
-                                                </Card.Footer>
-                                            </Card>
+                                        <Col className={ratingScore.length > 0 ? '' : 'projects m-0'}>
+                                        <Ratings data={ratingScore} />
+                                        </Col>
                                         </Tab> 
                                         <Tab eventKey="proyects" title="Proyectos">
                                         <Col className='projects m-0'>

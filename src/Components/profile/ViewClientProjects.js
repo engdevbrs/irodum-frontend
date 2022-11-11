@@ -82,7 +82,7 @@ const ViewClientProjects = ({id}) => {
             <h5><strong>Éste usuario no tiene trabajos para mostrar</strong></h5>
             <div>
             <img className='mt-4' variant="top" src={emptyprojects} 
-                alt={'project'} style={{height: '250px', width: 'auto'}}/>
+                alt={'project'} style={{height: '200px', width: 'auto'}}/>
             </div> 
         </Card>
       </Row>
