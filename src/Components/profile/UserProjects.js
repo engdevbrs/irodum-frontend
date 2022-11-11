@@ -102,7 +102,7 @@ const UserProjects = () => {
           let percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
           setUpdateProgress(percentCompleted)
         }
-      };
+    };
 
     const clearFormUpload = () => {
         document.getElementById('clientname').value = ""

@@ -61,6 +61,9 @@ const ViewClientProfile = () => {
     const [ratingScoreCuidad, setRatingScoreCuidad] = useState(0)
     const [ratingScorePunt, setRatingScorePunt] = useState(0)
     const [ratingScorePrecio, setRatingScorePrecio] = useState(0)
+    const [commentsWorker, setCommentsWorker] = useState([])
+    const [ updateProgress, setUpdateProgress ] = useState(0)
+    const [ hiddenProgress, showProgress ] = useState(true)
 
 
     const handleClose = () => {
@@ -327,6 +330,8 @@ const ViewClientProfile = () => {
 
     const handleSubmitComment = () =>{
 
+        const formFileMultiple = new FormData();
+
         let arrayValues = [];
 
         let scoreObject = {
@@ -338,6 +343,8 @@ const ViewClientProfile = () => {
         }
 
         const formValues = document.getElementsByClassName('commentForm')[0].elements;
+
+        let formFiles = document.getElementById('formFileMultiple');
 
         let checkNameValue = checkName(document.getElementById('clientName').value);
         let checkLastNameValue = checkLastName(document.getElementById('clientLastname').value);
@@ -356,7 +363,9 @@ const ViewClientProfile = () => {
         if(validation){
 
             [...formValues].forEach((elements) =>{
-                arrayValues.push(elements.value)
+                if(elements.type !== "file"){
+                    arrayValues.push(elements.value)
+                }
             })
 
             scoreObject = {
@@ -366,29 +375,32 @@ const ViewClientProfile = () => {
                 cuidadoso: ratingScoreCuidad,
                 precio: ratingScorePrecio
             }
+
+            arrayValues.push(dataUser[0].email)
             arrayValues.push(scoreObject)
-            console.log(arrayValues);
-            // Axios.post('http://54.174.104.208:3001/api/request-work',arrayValues)
-            // .then((result) => {
-            //     if(result.status === 200){
-            //         setResponseRequest(result.status)
-            //         setShowAlert(true)
-            //         clearForm()
-            //         Axios.post('http://54.174.104.208:3001/api/requestEmail',arrayValues)
-            //         .then((result) => {
-            //             if(result.status === 200){
-            //                 console.log(result);
-            //             }
-            //         }).catch(error => {
-            //             console.log(error);
-            //         });
-            //     }
-            // }).catch(error => {
-            //     setResponseRequest(error.response.status)
-            //     setShowAlert(true)
-            // });
+
+            for(let i = 0; i < (formFiles.files).length; i++){
+                formFileMultiple.append('formFileMultiple',formFiles.files[i])
+            }
+            formFileMultiple.append('params', JSON.stringify(arrayValues))
+
+            Axios.post('http://localhost:3001/api/rating-worker',formFileMultiple, config)
+            .then((result) => {
+                if(result.status === 200){
+                    console.log(result.status);
+                }
+            }).catch(error => {
+                console.log(error);
+            });
         }
     }
+
+    let config = {
+        onUploadProgress: function(progressEvent) {
+          let percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+          setUpdateProgress(percentCompleted)
+        }
+    };
 
     const checkName = (name) =>{
         const regName = new RegExp(/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/g);
@@ -735,7 +747,15 @@ const ViewClientProfile = () => {
               }
           }).catch(error => {
                 setResponse(error.response.status)
-          });
+        });
+        Axios.get("http://localhost:3001/api/worker/evaluations/" + id)
+          .then((result) => {
+              if(result.status === 200){
+                    setCommentsWorker(result.data)
+              }
+          }).catch(error => {
+            setResponse(error.response.status)
+        });
     },[switchCharge])
 
     return(
@@ -884,7 +904,7 @@ const ViewClientProfile = () => {
                                         </Tab>
                                         <Tab eventKey="comments" title="Comentarios">
                                         <Col className='projects m-0'>
-                                            <Comments />
+                                            <Comments data={commentsWorker} />
                                         </Col>
                                         </Tab> 
                                     </Tabs>
@@ -1187,7 +1207,7 @@ const ViewClientProfile = () => {
                                             }
                                         </div>
                                         <div className="mb-3">
-                                            <label for="formFileMultiple" className="form-label">Evidencias del trabajo <span style={{color: 'red'}}>(8 fotos máximo)</span></label>
+                                            <label for="formFileMultiple" className="form-label">Evidencias del trabajo <span style={{color: 'red'}}>(4 fotos máximo)</span></label>
                                             <input className="form-control" type="file" id="formFileMultiple" multiple />
                                             <Form.Text style={{color: '#5f738f'}}>Éste campo es opcional</Form.Text>
                                         </div>
