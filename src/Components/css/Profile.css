@@ -8,6 +8,10 @@
     border-radius: 0px !important;
 }
 
+.tabprof .card{
+    border-radius: 0px !important;
+}
+
 .upload{
     position:absolute;
     top: 50px;
@@ -79,6 +83,12 @@
     align-items: center;
 }
 
+.noprojects {
+    height:50vh;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
 .projects {
     height:50vh;
     overflow-y: scroll;
@@ -121,6 +131,10 @@
     bottom: 40%;
     width: 56px;
     cursor: pointer;
+}
+
+.tooltip{
+    z-index: 3 !important;
 }
 
 .tooltip-inner {

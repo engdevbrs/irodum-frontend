@@ -29,7 +29,7 @@ const ViewClientProjects = ({id}) => {
 
   return (
     <>
-    <Container className='projects-container' fluid>
+    <Container className={projectsData.length > 0 ? '' : 'projects-container' }>
     <div id='denied' className="container mt-5 mb-5" hidden={!loading}>
             <div className="denied">
                 <div className="wrapper text-center">
@@ -45,7 +45,7 @@ const ViewClientProjects = ({id}) => {
       <>
       <Row xs={1} md={2} lg={2} xl={3} className="projects-card p-2" style={{backgroundColor: '#F8F9FA'}} hidden={loading}>
       {
-      projectsData.length > 0 ? projectsData.map(value =>{
+      projectsData.map(value =>{
             let dateFormatted = null
             if(value.workDate){
                 dateFormatted = new Date(value.workDate)
@@ -72,20 +72,18 @@ const ViewClientProjects = ({id}) => {
                 </Col>
                 </>
             )
-          }) : <></>
+        })
       }
-        </Row></>
-        : 
-        <>
-        <Row className="emptyprojects" style={{backgroundColor: '#F8F9FA'}} hidden={loading}>
-        <Card className='shadow d-flex align-items-center justify-content-center text-center'>
-            <h5><strong>Éste usuario no tiene trabajos para mostrar</strong></h5>
-            <div>
-            <img className='mt-4' variant="top" src={emptyprojects} 
-                alt={'project'} style={{height: '200px', width: 'auto'}}/>
-            </div> 
-        </Card>
-      </Row>
+      </Row></>
+      : 
+      <>
+      <Card className='shadow d-flex align-items-center justify-content-center text-center'>
+          <h5 className='mt-2'><strong>Éste usuario no tiene trabajos para mostrar</strong></h5>
+          <div>
+          <img className='mt-4' variant="top" src={emptyprojects} 
+              alt={'project'} style={{height: '200px', width: 'auto', padding: '15px'}}/>
+          </div> 
+      </Card>
       </>
     }
     </Container>

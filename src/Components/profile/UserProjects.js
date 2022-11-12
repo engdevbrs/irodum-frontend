@@ -89,6 +89,7 @@ const UserProjects = () => {
                             getProjects(token)
                             Swal.fire('Su foto ha sido actualizada con éxito!', '', 'success')
                             showProgress(true)
+                            setUpdateProgress(0)
                         }
                     }).catch(error => {
                         Swal.fire('No pudimos subir éste proyecto', '', 'warning')

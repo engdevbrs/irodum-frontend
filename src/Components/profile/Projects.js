@@ -29,48 +29,52 @@ const Projects = () => {
 
   return (
     <>
-    <Container className='projects-container' fluid>
-    <Row className="emptyprojects" style={{backgroundColor: '#F8F9FA'}} hidden={projectsData.length > 0 ? true : false}>
-      <Card className='shadow d-flex align-items-center justify-content-center text-center'>
-          <h5><strong>Actualmente no haz subido ningún trabajo</strong></h5>
+    <Container className={projectsData.length > 0 ? '' : 'projects-container'}>
+    {
+    projectsData.length > 0 ? 
+    <Row xs={1} md={1} lg={1} xl={2} className="projects-card p-2" style={{backgroundColor: '#F8F9FA'}}>
+    {
+      projectsData.map(value =>{
+        let dateFormatted = null
+        if(value.workDate){
+            dateFormatted = new Date(value.workDate)
+        }
+        return(
+            <>
+            <Col>
+              <Card className='mt-2'>
+                <div className="d-flex align-items-center justify-content-center">
+                    <Card.Img variant="top" src={'http://54.174.104.208:3001/' + value.imageName} 
+                    alt={'project'} style={{height: '200px'}}/>
+                </div>
+                <Card.Body>
+                    <Card.Title>Descripción del trabajo</Card.Title>
+                    <Card.Text>{value.workResume}</Card.Text>
+                </Card.Body>
+                <Card.Footer>
+                <Row>
+                    <Col className='col-8 text-start'><small className="text-muted">Realizado a {value.clientName}</small></Col>
+                    <Col className='col-4 text-end'><small className="text-muted">{"El dia " + dateFormatted.toLocaleDateString()}</small></Col>
+                </Row>
+                </Card.Footer>
+              </Card>
+            </Col>
+            </>
+        )
+      })
+    }
+    </Row>
+     : <>
+        <Card className='shadow d-flex align-items-center justify-content-center text-center'>
+          <h5 className='mt-2'><strong>Actualmente no haz subido ningún trabajo</strong></h5>
           <div>
-          <img variant="top" src={emptywork} 
-              alt={'project'} style={{height: '250px', width: 'auto'}}/>
+          <img className='mt-4' src={emptywork} 
+              alt={'project'} style={{height: '200px', width: 'auto'}}/>
           </div> 
       </Card>
-    </Row>
-    <Row xs={1} md={1} lg={1} xl={2} className="projects-card p-2" style={{backgroundColor: '#F8F9FA'}} hidden={projectsData.length > 0 ? false : true}>
-    {
-    projectsData.length > 0 ? projectsData.map(value =>{
-          let dateFormatted = null
-          if(value.workDate){
-              dateFormatted = new Date(value.workDate)
-          }
-          return(
-              <>
-              <Col>
-                <Card className='mt-2'>
-                  <div className="d-flex align-items-center justify-content-center">
-                      <Card.Img variant="top" src={'http://54.174.104.208:3001/' + value.imageName} 
-                      alt={'project'} style={{height: '200px'}}/>
-                  </div>
-                  <Card.Body>
-                      <Card.Title>Descripción del trabajo</Card.Title>
-                      <Card.Text>{value.workResume}</Card.Text>
-                  </Card.Body>
-                  <Card.Footer>
-                  <Row>
-                      <Col className='col-8 text-start'><small className="text-muted">Realizado a {value.clientName}</small></Col>
-                      <Col className='col-4 text-end'><small className="text-muted">{"El dia " + dateFormatted.toLocaleDateString()}</small></Col>
-                  </Row>
-                  </Card.Footer>
-                </Card>
-              </Col>
-              </>
-          )
-        }) : <></>
+      </>
     }
-      </Row>
+      
     </Container>
     </>
   )

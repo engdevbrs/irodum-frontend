@@ -69,15 +69,13 @@ const Ratings = ({data}) => {
               </>
           </Card>
          : <>
-        <Row className={data.length > 0 ? '' : 'emptyprojects'} style={{backgroundColor: '#F8F9FA'}}>
-            <Card className='shadow d-flex align-items-center justify-content-center text-center'>
-                <h5><strong>Éste trabajador aún no ha sido evaluado</strong></h5>
+        <Card className='shadow d-flex align-items-center justify-content-center text-center'>
+                <h5 className='mt-2'><strong>Éste trabajador aún no ha sido evaluado</strong></h5>
                 <div>
-                <img className='mt-4' variant="top" src={rate} 
+                <img className='mt-4' src={rate} 
                     alt={'project'} style={{height: '200px', width: 'auto'}}/>
                 </div> 
             </Card>
-        </Row>
         </>
         }
         </Container>

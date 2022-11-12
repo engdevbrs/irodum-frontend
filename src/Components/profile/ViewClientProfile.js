@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 import { Rating } from 'react-simple-star-rating'
 import Axios  from 'axios'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import '../css/Profile.css'
-import { Alert, Button, Card, Container, Form, InputGroup, Modal, Nav, OverlayTrigger, Tab, Tabs, Tooltip } from 'react-bootstrap'
+import { Alert, Button, ProgressBar, Container, Form, InputGroup, Modal, Nav, OverlayTrigger, Tab, Tabs, Tooltip } from 'react-bootstrap'
 import Comments from './Comments'
 import ViewClientProjects from './ViewClientProjects'
 import solicitudbutton from '../assets/solicitud-button.png';
@@ -15,6 +17,7 @@ import Ratings from './Ratings'
 const ViewClientProfile = () => {
 
     const { id } = useParams();
+    const MySwal = withReactContent(Swal)
     const [ dataUser, setDataUser ] = useState([])
     const [ response, setResponse ] = useState([])
     const [show, setShow] = useState(true);
@@ -56,6 +59,7 @@ const ViewClientProfile = () => {
     const [descriptWorkValidMsge, setDescriptWorkValidMsge] = useState([]);
     const [switchCharge, setSwitchCharge] = useState(false)
     const [showAlert, setShowAlert] = useState(false)
+    const [showAlertComment, setShowAlertComment] = useState(false)
     const [ responseRequest, setResponseRequest ] = useState([])
     const [ratingScoreResp, setRatingScoreResp] = useState(0)
     const [ratingScoreHones, setRatingScoreHones] = useState(0)
@@ -79,7 +83,7 @@ const ViewClientProfile = () => {
     const handleCloseComment = () => {
 
         setShowModalComment(false)
-        setShowAlert(false)
+        setShowAlertComment(false)
         clearFormComment()
     }
     const handleShowComment = () => setShowModalComment(true);
@@ -386,14 +390,29 @@ const ViewClientProfile = () => {
             }
             formFileMultiple.append('params', JSON.stringify(arrayValues))
 
-            Axios.post('http://54.174.104.208:3001/api/rating-worker',formFileMultiple, config)
-            .then((result) => {
-                if(result.status === 200){
-                    console.log(result.status);
-                }
-            }).catch(error => {
-                console.log(error);
-            });
+            MySwal.fire({
+                title: 'Estás seguro de subir esta evaluación?',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: `Evaluar`,
+                denyButtonText: `Cancelar`,
+                }).then((result) => {
+                    if(result.isConfirmed){
+                        showProgress(false)
+                        Axios.post('http://54.174.104.208:3001/api/rating-worker',formFileMultiple, config)
+                        .then((result) => {
+                            if(result.status === 200){
+                                setShowAlertComment(true)
+                                setResponse(result.status)
+                                showProgress(true)
+                                setUpdateProgress(0)
+                            }
+                        }).catch(error => {
+                            setResponse(error.response.status)
+                            setShowAlertComment(true)
+                        });
+                    }
+                })
         }
     }
 
@@ -707,13 +726,13 @@ const ViewClientProfile = () => {
     }
 
     const renderTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props} hidden={showModal}>
+        <Tooltip id="button-tooltip" {...props} >
             Enviar solicitud
         </Tooltip>
       );
 
     const renderTooltip2 = (props) => (
-        <Tooltip id="button-tooltip" {...props} hidden={showModalComment}>
+        <Tooltip id="button-tooltip" {...props}>
           Calificar Trabajador
         </Tooltip>
       );
@@ -794,7 +813,7 @@ const ViewClientProfile = () => {
                         ratingScore.forEach(element => {
                             let ratingParse = JSON.parse(element.aptitudRating)
                             let sumaRating = (ratingParse.cuidadoso + ratingParse.honestidad + ratingParse.precio + ratingParse.puntualidad + ratingParse.responsabilidad) / 5;
-                            sumaTotal = (sumaTotal + sumaRating) / ratingScore.length;
+                            sumaTotal = (sumaTotal + sumaRating);
                         });
                     }
                     return(
@@ -814,7 +833,7 @@ const ViewClientProfile = () => {
                                 <Col lg={12} className='shadow-lg rounded-1 p-2 text-center' style={{backgroundColor: '#202A34'}}>
                                     <h5 style={{color: 'rgb(226 226 226)'}}>Calificación</h5>
                                     <Rating
-                                        initialValue={sumaTotal}
+                                        initialValue={ratingScore.length > 0 ? (sumaTotal / ratingScore.length) : 0}
                                         size={32}
                                         fillColor='orange'
                                         emptyColor='gray'
@@ -847,7 +866,7 @@ const ViewClientProfile = () => {
                                             <Col sm={3}>
                                             <p className="mb-0">Celular</p>
                                             </Col>
-                                            <Col sm={9}><p className="text-muted mb-0"><strong>9 </strong>{element.cellphone}</p>
+                                            <Col sm={9}><p className="text-muted mb-0" style={{ cursor: 'pointer'}} onClick={handleShow} ><strong>9 </strong>{element.cellphone}</p>
                                             </Col>
                                         </Row>
                                         <hr/>
@@ -855,7 +874,7 @@ const ViewClientProfile = () => {
                                             <Col sm={3}>
                                             <p className="mb-0">Email</p>
                                             </Col>
-                                            <Col sm={9}><p className="text-muted mb-0">{element.email}</p>
+                                            <Col sm={9}><p className="text-muted mb-0" style={{ cursor: 'pointer'}} onClick={handleShow} >{element.email}</p>
                                             </Col>
                                         </Row>
                                         <hr/>
@@ -899,20 +918,14 @@ const ViewClientProfile = () => {
                                     </Row>
                                     <h5>Clasificación Laboral</h5>
                                     <Tabs defaultActiveKey="home" id="justify-tab-example">
-                                        <Tab eventKey="home" title="Rating">
-                                        <Col className={ratingScore.length > 0 ? '' : 'projects m-0'}>
-                                        <Ratings data={ratingScore} />
-                                        </Col>
+                                        <Tab className='tabprof' eventKey="home" title="Rating">
+                                            <Ratings data={ratingScore} />
                                         </Tab> 
-                                        <Tab eventKey="proyects" title="Proyectos">
-                                        <Col className='projects m-0'>
+                                        <Tab className='tabprof' eventKey="proyects" title="Proyectos">
                                             <ViewClientProjects id={id}/>
-                                        </Col>
                                         </Tab>
-                                        <Tab eventKey="comments" title="Comentarios">
-                                        <Col className='projects m-0'>
+                                        <Tab className='tabprof' eventKey="comments" title="Comentarios">
                                             <Comments data={commentsWorker} />
-                                        </Col>
                                         </Tab> 
                                     </Tabs>
                                 </Col>
@@ -1294,6 +1307,27 @@ const ViewClientProfile = () => {
                                         {
                                             noRanked === true ? <Form.Text className='mb-1'>
                                             <span className='mb-1' style={{color: 'red'}}>{`Por favor, califique las aptitudes de ${element.nameUser}`}</span></Form.Text> : ''
+                                        }
+                                    </Row>
+                                    <div className="mb-2" hidden={hiddenProgress}>
+                                        <ProgressBar className='profprogress' now={updateProgress} label={`${updateProgress}%`}/>
+                                    </div>
+                                    <Row>
+                                        {
+                                            showAlertComment === true ? <div className='form-floating mb-3'><Alert key={response === 200 ? 'success' : 'danger'} variant={response === 200 ? 'success' : 'danger'}>
+                                            {response === 200 ? 
+                                            <>
+                                                <i className="far fa-check-circle" style={{fontSize:'24px'}}></i>
+                                                <span>{' '}Su evaluación ha sido enviada con éxito..
+                                                    <p className="mt-1">Muchas gracias por colaborar con la comunidad, su calificación será de ayuda para futuros clientes.</p>
+                                                </span>
+                                            </>
+                                            : 
+                                            <>
+                                            <i className="far fa-times-circle" style={{fontSize:'24px'}}></i>
+                                            <span>{' '}Lo sentimos, su solicitud no pudo ser procesada, pruebe nuevamente o intentelo mas tarde.</span>
+                                            </>}
+                                        </Alert></div> : ''
                                         }
                                     </Row>
                                 </Form>

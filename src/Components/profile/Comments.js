@@ -6,7 +6,7 @@ import comment from '../assets/comment.png'
 const Comments = ({data}) => {
   return (
     <>
-    <Container className="comments-container">
+    <Container className={data.length > 0 ? '' : 'comments-container'}>
       {
         data.length > 0 ? 
         <>
@@ -32,25 +32,21 @@ const Comments = ({data}) => {
                 </Card.Header>
                 <Card.Body>
                 <Row>
-                  <p className='text-start p-2'><strong>Comentario: </strong>{value.workerComment}</p>
-                  <Container className='shadow-lg rounded' fluid>
-                    <Row>
+                    <p className='text-start p-2'><strong>Comentario: </strong>{value.workerComment}</p>
                     <h6 className='text-start p-2'><strong>Evidencias del trabajo</strong></h6>
                     <hr/>
                 {
                   comment.map(image =>{
                     return(
                       <>
-                        <div className="col-lg-4 col-md-6 col-sm-12 mb-4 mb-lg-2 p-2">
-                              <img className='img-comment shadow-sm rounded' src={'http://54.174.104.208:3001/' + image.originalname} 
-                              alt={'project'} style={{ height: '10rem', width: '16rem'}}/>
+                        <div className="col-lg-4 col-md-6 col-sm-12 mb-4 mb-lg-2">
+                        <img className='img-comment shadow rounded' src={'http://54.174.104.208:3001/' + image.originalname} 
+                              alt={'project'}/>
                         </div>
                       </>
                     )
                   })
                 }
-                </Row>
-                </Container>
                 </Row>
                 </Card.Body>
                 <Card.Footer className='d-flex justify-content-start' style={{ color: 'rgb(226 226 226)', backgroundColor: '#202A34' }}><p><strong>Puntuación: </strong>{sumaRating}</p></Card.Footer>
@@ -62,15 +58,13 @@ const Comments = ({data}) => {
         </Row>
         </> : 
         <>
-        <Row className="emptyprojects" style={{backgroundColor: '#F8F9FA'}}>
         <Card className='shadow d-flex align-items-center justify-content-center text-center'>
-            <h5><strong>Éste usuario aún no ha recibido comentarios</strong></h5>
+            <h5 className='mt-2'><strong>Éste usuario aún no ha recibido comentarios</strong></h5>
             <div>
-            <img className='mt-4' variant="top" src={comment} 
-                alt={'project'} style={{height: '200px', width: 'auto'}}/>
+            <img className='mt-4' src={comment} 
+                alt={'project'} style={{height: '200px', width: 'auto', padding: '15px'}}/>
             </div> 
         </Card>
-      </Row>
         </>
       }
     </Container>

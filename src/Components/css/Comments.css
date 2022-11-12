@@ -11,3 +11,14 @@
     margin-right: 0px !important;
     margin-left: 0px !important;
 }
+
+.img-comment{ 
+    width: 80%;
+    height: 150px
+}
+
+@media (max-width: 450px) {
+    .img-comment{
+        height: 100px
+    }
+}

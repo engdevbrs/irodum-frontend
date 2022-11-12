@@ -51,7 +51,7 @@ const Footer = () => {
                             <a class="fs-5 px-2 link-dark" href="#!"><img src={instagram} alt='instagram' style={{'width': '24px'}}/></a>                    
                         </div>
                         <div className="col-12 mt-2 text-center">       
-                            <span style={{color: 'white'}}>Copyright &copy; Todos los derechos reservados</span>              
+                            <span style={{color: 'rgb(180 180 180)'}}>Copyright &copy; Todos los derechos reservados</span>              
                         </div>
                     </div>
                 </div>

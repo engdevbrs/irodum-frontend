@@ -18,6 +18,7 @@ import perfil from '../assets/perfil.png'
 import uploadPhoto from '../assets/upload-photo.png'
 import Projects from './Projects'
 import Comments from './Comments'
+import Ratings from './Ratings'
 
 const Profile = () => {
 
@@ -35,6 +36,8 @@ const Profile = () => {
     const [ enableSave, setEnableSave ] = useState(false)
     const [ updateProgress, setUpdateProgress ] = useState(0)
     const [ hiddenProgress, showProgress ] = useState(true)
+    const [ratingScore, setRatingScore] = useState(0);
+    const [commentsWorker, setCommentsWorker] = useState([])
     
     const handleChangePhoto = () =>{
         const token = localStorage.getItem('accessToken');
@@ -149,6 +152,22 @@ const Profile = () => {
                     setDataUser(result.data)
                     localStorage.setItem('userPhoto', "http://54.174.104.208:3001/api/images/" + result.data[0].userPhoto)
                     setGetPhoto(result.data[0].userPhoto)
+                    Axios.get("http://54.174.104.208:3001/api/worker/ratings/" + result.data[0].id)
+                    .then((result) => {
+                        if(result.status === 200){
+                            setRatingScore(result.data)
+                        }
+                    }).catch(error => {
+                        setResponse(error.response.status)
+                    });
+                    Axios.get("http://54.174.104.208:3001/api/worker/evaluations/" + result.data[0].id)
+                    .then((result) => {
+                        if(result.status === 200){
+                                setCommentsWorker(result.data)
+                        }
+                    }).catch(error => {
+                        setResponse(error.response.status)
+                    });
               }
           }).catch(error => {
                 setResponse(error.response.status)
@@ -354,41 +373,14 @@ const Profile = () => {
                                             </Card.Body>
                                         </Card>
                                         <Tabs defaultActiveKey="home" id="justify-tab-example">
-                                            <Tab eventKey="home" title="Rating">
-                                                <Card style={{height: '50vh'}}>
-                                                    <Card.Body>
-                                                    <p className="mb-1" >Responsabilidad</p>
-                                                    <div className="progress rounded" style={{height: '5px'}}>
-                                                        <div className="progress-bar" role="progressbar" style={{width:'80%'}} aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                    <p className="mt-4 mb-1" >Puntualidad</p>
-                                                    <div className="progress rounded" style={{height: '5px'}}>
-                                                        <div className="progress-bar" role="progressbar" style={{width:'72%'}} aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                    <p className="mt-4 mb-1" >Honestidad</p>
-                                                    <div className="progress rounded" style={{height: '5px'}}>
-                                                        <div className="progress-bar" role="progressbar" style={{width:'89%'}} aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                    <p className="mt-4 mb-1" >Cuidadoso</p>
-                                                    <div className="progress rounded" style={{height: '5px'}}>
-                                                        <div className="progress-bar" role="progressbar" style={{width:'55%'}} aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                    <p className="mt-4 mb-1" >Precio justo</p>
-                                                    <div className="progress rounded mb-2" style={{height: '5px'}}>
-                                                        <div className="progress-bar" role="progressbar" style={{width:'66%'}} aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                    </Card.Body>
-                                                </Card>
+                                            <Tab className='tabprof' eventKey="home" title="Rating">
+                                                <Ratings data={ratingScore} />
                                             </Tab>  
-                                            <Tab eventKey="proyects" title="Proyectos">
-                                            <Col className='projects m-0'>
+                                            <Tab className='tabprof' eventKey="proyects" title="Proyectos">
                                                 <Projects />
-                                            </Col>
                                             </Tab>
-                                            <Tab eventKey="comments" title="Comentarios">
-                                            <Col className='projects m-0'>
-                                                <Comments />
-                                            </Col>
+                                            <Tab className='tabprof' eventKey="comments" title="Comentarios">
+                                                <Comments data={commentsWorker}/>
                                             </Tab> 
                                         </Tabs>
                                     </Col>
@@ -402,6 +394,7 @@ const Profile = () => {
     }
 
     useEffect(() =>{
+        
         document.getElementById('menuHolder').scrollIntoView();
         setTimeout(() =>{
             const getToken = localStorage.getItem('accessToken');
