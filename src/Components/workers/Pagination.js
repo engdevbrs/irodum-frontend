@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Container, Row } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
 import perfil from '../assets/perfil.png'

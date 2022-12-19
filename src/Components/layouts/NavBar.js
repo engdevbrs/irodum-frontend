@@ -150,7 +150,9 @@ const Menu = () =>{
           <Toast.Header style={{backgroundColor:'#7A3838',color: '#dfe3ec'}}>
             <strong className="me-auto">Hola, {userName}</strong>
           </Toast.Header>
-          <Toast.Body>Tienes {projectsData.length} peticiones de trabajo, revisa tu bandeja de solicitudes.</Toast.Body>
+          <Toast.Body>Tienes {projectsData.length} peticiones de trabajo, revisa tu bandeja de solicitudes 
+          haciendo click <Link to={'/mis-solicitudes'} style={{ color: '#dfe3ec' }} onClick={() => setShow(false)}><strong>AQUÍ</strong>.</Link>
+          </Toast.Body>
         </Toast>
         </ToastContainer>
         <Footer/>

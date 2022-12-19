@@ -15,7 +15,7 @@ const Categories = () => {
     <Container>
         <Row>
             <div className="col-lg-10 col-md-8 col-sm-8 categories-view">
-            <h2 className="fw-bolder mb-2" style={{color: '#5f738f'}}>¿Buscas alguna categoría especial?</h2>
+            <h2 className="fw-bolder mb-2" style={{color: '#5f738f'}}>En Irodum tenemos diferentes categorías de trabajo</h2>
             <h4 className="mb-3" style={{color: '#5f738f'}}>Estas son las más populares</h4>
             </div>
             <div className="col-lg-2 col-md-4 col-sm-4 mt-3">

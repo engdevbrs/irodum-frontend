@@ -14,6 +14,8 @@ import ViewClientProfile from './Components/profile/ViewClientProfile';
 import Workers from './Components/workers/Workers';
 import Contact from './Components/layouts/Contact';
 import { HomeContextProvider } from './Components/contexts/WorkerContext';
+import RequestRecoverPassword from './Components/account/RequestRecoverPassword';
+import RecoverPassword from './Components/login/RequestPassword';
 
 const App = () => {
     return (
@@ -27,6 +29,8 @@ const App = () => {
                     <Route path='perfil' element= { <Profile /> } />
                     <Route path='/trabajadores/perfil/vista/:id' element= { <ViewClientProfile /> } />
                     <Route path='login' element= { <Login /> } />
+                    <Route path='/solicitud-recuperar-clave' element= { <RequestRecoverPassword /> } />
+                    <Route path='/resetear-password/:id/:token' element= { <RecoverPassword /> } />
                     <Route path='preguntas-frecuentes' element= { <FAQ /> } />
                     <Route path='sobre-nosotros' element= { <About /> } />
                     <Route path='mis-proyectos' element= { <UserProjects /> } />

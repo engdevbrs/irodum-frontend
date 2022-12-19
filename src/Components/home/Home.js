@@ -102,7 +102,7 @@ const Home = () => {
                     </div>
                 </Col>
                 <Col className="col-xl-5 col-xxl-6 d-none d-xl-block">
-                      <Carousel activeIndex={index} onSelect={handleSelect}>
+                      <Carousel controls={false} indicators={false}>
                       <Carousel.Item>
                       <img className="img-fluid rounded-3 my-5" src={slide1} alt="..."/>
                       <Carousel.Caption>

@@ -7,12 +7,13 @@ import Axios  from 'axios'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import '../css/Profile.css'
-import { Alert, Button, ProgressBar, Container, Form, InputGroup, Modal, Nav, OverlayTrigger, Tab, Tabs, Tooltip } from 'react-bootstrap'
+import { Alert, Button, ProgressBar, Container, Form, InputGroup, Modal, Nav, OverlayTrigger, Tab, Tabs, Tooltip, Card, Table } from 'react-bootstrap'
 import Comments from './Comments'
 import ViewClientProjects from './ViewClientProjects'
 import solicitudbutton from '../assets/solicitud-button.png';
 import rating from '../assets/rating.png';
 import Ratings from './Ratings'
+import SpecialitiesClient from './ClientSpecialitiesView'
 
 const ViewClientProfile = () => {
 
@@ -46,6 +47,7 @@ const ViewClientProfile = () => {
     const [noRanked, setNoRanked] = useState(false);
 
     const [nombreValidMsge, setNombreValidMsge] = useState([]);
+    const [especialitiesWorker, setEspecialitiesWorker] = useState([])
     const [apellidosValidMsge, setApellidosValidMsge] = useState([]);
     const [cellphoneValidMsge, setCellphoneValidMsge] = useState([]);
     const [emailValidMsge, setEmailValidMsge] = useState([]);
@@ -70,7 +72,8 @@ const ViewClientProfile = () => {
     const [ratingScore, setRatingScore] = useState(0);
     const [ updateProgress, setUpdateProgress ] = useState(0)
     const [ hiddenProgress, showProgress ] = useState(true)
-
+    const [ incorrectTypeImage, setIncorrectTypeImage ] = useState(false)
+    const [ incorrectLengthImage, setIncorrectLengthImage ] = useState(false)
 
     const handleClose = () => {
 
@@ -81,9 +84,11 @@ const ViewClientProfile = () => {
     const handleShow = () => setShowModal(true);
 
     const handleCloseComment = () => {
-
         setShowModalComment(false)
         setShowAlertComment(false)
+        setNoRanked(false)
+        setUpdateProgress(0)
+        showProgress(true)
         clearFormComment()
     }
     const handleShowComment = () => setShowModalComment(true);
@@ -257,6 +262,25 @@ const ViewClientProfile = () => {
         }
     }
 
+    const onchangeWorkImage = (e) =>{
+        let imgLength = e.files.length;
+        if(imgLength > 4 ){
+            setIncorrectLengthImage(true)
+            setIncorrectTypeImage(false)
+            return true
+        }else{
+            setIncorrectLengthImage(false)
+            for(let i =0; i < imgLength; i++){
+                if(e.files[i].type === "image/jpeg" || e.files[i].type === "image/jpg" || e.files[i].type === "image/png"){
+                    setIncorrectTypeImage(false)
+                }else{
+                    setIncorrectTypeImage(true)
+                    return true
+                }
+            }
+        }
+    }
+
     const handleSubmit = () =>{
 
         let validation = null
@@ -363,7 +387,7 @@ const ViewClientProfile = () => {
         ratingValidation === true ? setNoRanked(false) : setNoRanked(true)
 
         let validation = (checkNameValue === false && checkLastNameValue === false && checkEmailValue === false && checkEmailValue === false 
-            && checkDescriptWorkValue === false && ratingValidation === true);
+            && checkDescriptWorkValue === false && ratingValidation === true && incorrectLengthImage === false && incorrectTypeImage === false);
         
 
         if(validation){
@@ -402,14 +426,48 @@ const ViewClientProfile = () => {
                         Axios.post('http://54.174.104.208:3001/api/rating-worker',formFileMultiple, config)
                         .then((result) => {
                             if(result.status === 200){
-                                setShowAlertComment(true)
-                                setResponse(result.status)
-                                showProgress(true)
-                                setUpdateProgress(0)
+                                Swal.fire({
+                                    title: '<strong>Calificación Enviada</strong>',
+                                    icon: 'success',
+                                    html:`<span>Su evaluación ha sido enviada con éxito..
+                                        <p className="mt-1">Muchas gracias por colaborar con la comunidad, su calificación será de ayuda para futuros clientes.</p>
+                                    </span>`,
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'Aceptar'
+                                  }).then((result) => {
+                                    if(result.isConfirmed){
+                                        handleCloseComment()
+                                    }
+                                })
+                                Axios.get("http://54.174.104.208:3001/api/worker/ratings/" + id)
+                                .then((result) => {
+                                    if(result.status === 200){
+                                        setRatingScore(result.data)
+                                    }
+                                }).catch(error => {
+                                    setResponse(error.response.status)
+                                });
+                                Axios.get("http://54.174.104.208:3001/api/worker/evaluations/" + id)
+                                .then((result) => {
+                                    if(result.status === 200){
+                                            setCommentsWorker(result.data)
+                                    }
+                                }).catch(error => {
+                                    setResponse(error.response.status)
+                                });
                             }
                         }).catch(error => {
                             setResponse(error.response.status)
-                            setShowAlertComment(true)
+                            Swal.fire({
+                                icon: 'error',
+                                    html:`<p className="mt-1">Lo sentimos, su solicitud no pudo ser procesada, intente de nuevo o más tarde...</p>`,
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'Aceptar'
+                              }).then((result) => {
+                                if(result.isConfirmed){
+                                    handleCloseComment()
+                                }
+                            })
                         });
                     }
                 })
@@ -785,6 +843,15 @@ const ViewClientProfile = () => {
           }).catch(error => {
             setResponse(error.response.status)
         });
+
+        Axios.get("http://54.174.104.208:3001/api/download/speciality/" + id)
+        .then((result) => {
+            if(result.status === 200){
+                setEspecialitiesWorker(result.data)
+            }
+        }).catch(error => {
+            setEspecialitiesWorker([])
+        });
         
 
     },[switchCharge])
@@ -830,17 +897,20 @@ const ViewClientProfile = () => {
                                 </Alert></Row> : <></>
                             }
                             <Row>
-                                <Col lg={12} className='shadow-lg rounded-1 p-2 text-center' style={{backgroundColor: '#202A34'}}>
+                                <div className='rounded-1 p-2 text-center' style={{backgroundColor: '#202A34'}}>
                                     <h5 style={{color: 'rgb(226 226 226)'}}>Calificación</h5>
-                                    <Rating
-                                        initialValue={ratingScore.length > 0 ? (sumaTotal / ratingScore.length) : 0}
-                                        size={32}
-                                        fillColor='orange'
-                                        emptyColor='gray'
-                                        allowFraction={true}
-                                        readonly={true}
-                                    />
-                                </Col>
+                                    <div className='d-flex align-items-center justify-content-center'>
+                                        <Rating
+                                            initialValue={ratingScore.length > 0 ? (sumaTotal / ratingScore.length).toFixed(1) : 0}
+                                            size={32}
+                                            fillColor='orange'
+                                            emptyColor='gray'
+                                            allowFraction={true}
+                                            readonly={true}
+                                        /><span style={{color: 'rgb(226 226 226)', fontSize: '16px', fontWeight: '600'}}>({ratingScore.length > 0 ? (sumaTotal / ratingScore.length).toFixed(2) : 0})</span>
+                                    </div>
+                                    <span style={{color: 'rgb(226 226 226)', fontSize: '16px', fontWeight: '600'}}>({ratingScore.length} calificaciones)</span>
+                                </div>
                                 <Col lg={12} className='shadow-lg rounded-1 p-2'>
                                     <h5>Información Personal</h5>
                                     <Row md={1} lg={1} className='rounded-4 mt-3 mb-3'>
@@ -916,6 +986,52 @@ const ViewClientProfile = () => {
                                         <hr/>
                                     </Col>
                                     </Row>
+                                    {
+                                    especialitiesWorker.length > 0 ?
+                                        <div className="mb-5">
+                                            <h5 className="mb-1">Especialidades</h5>
+                                            <Table className="text-left" responsive="md" bordered striped hover >
+                                            <thead>
+                                                <tr>
+                                                    <th style={{fontWeight: '600'}}>Descripción</th>
+                                                    <th style={{fontWeight: '600'}}>Archivo</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {
+                                                
+                                                especialitiesWorker.map(value =>{
+                                                    let descriptSpec = JSON.parse(value.especialityDescript)
+                                                    let specialityToString = Buffer.from(value.especialityDoc)
+                                                    let speciality = JSON.parse(specialityToString)
+                                                    let arrayEspecialities = []
+                                                    let objectEspeciality = {
+                                                        idEspeciality: null,
+                                                        descript: null,
+                                                        image: null,
+                                                        fileType: null
+                                                    }
+
+                                                    objectEspeciality.idEspeciality = value.idworkerEspeciality
+                                                    objectEspeciality.descript = descriptSpec[0]
+                                                    objectEspeciality.image = speciality[0]
+                                                    objectEspeciality.fileType = value.fileType
+                                                    arrayEspecialities.push(objectEspeciality)
+
+                                                        return(
+                                                            <>
+                                                                <tr>
+                                                                <SpecialitiesClient data={arrayEspecialities} />  
+                                                                </tr>                                                          
+                                                            </>
+                                                        )
+                                                })
+                                            }
+                                            </tbody>
+                                            </Table>
+                                        </div>
+                                    : <></>
+                                    }
                                     <h5>Clasificación Laboral</h5>
                                     <Tabs defaultActiveKey="home" id="justify-tab-example">
                                         <Tab className='tabprof' eventKey="home" title="Rating">
@@ -924,7 +1040,7 @@ const ViewClientProfile = () => {
                                         <Tab className='tabprof' eventKey="proyects" title="Proyectos">
                                             <ViewClientProjects id={id}/>
                                         </Tab>
-                                        <Tab className='tabprof' eventKey="comments" title="Comentarios">
+                                        <Tab className='tabprof' eventKey="comments" title={`Comentarios (${commentsWorker.length})`}>
                                             <Comments data={commentsWorker} />
                                         </Tab> 
                                     </Tabs>
@@ -1227,9 +1343,14 @@ const ViewClientProfile = () => {
                                             }
                                         </div>
                                         <div className="mb-3">
-                                            <label for="formFileMultiple" className="form-label">Evidencias del trabajo <span style={{color: 'red'}}>(4 fotos máximo)</span></label>
-                                            <input className="form-control" type="file" id="formFileMultiple" multiple />
+                                            <label htmlFor="formFileMultiple" className="form-label">Evidencias del trabajo <span style={{color: 'red'}}>(4 fotos máximo)</span></label>
+                                            <input className="form-control" type="file" id="formFileMultiple" onChange={e => onchangeWorkImage(e.target)} multiple />
                                             <Form.Text style={{color: '#5f738f'}}>Éste campo es opcional</Form.Text>
+                                            <div>
+                                            {
+                                            incorrectTypeImage === true ? <Form.Text style={{color:'red'}}>El archivo debe ser: .JPG .JPEG .PNG</Form.Text> : 
+                                            incorrectLengthImage === true ? <Form.Text style={{color:'red'}}>Sólo se permiten 4 fotos por comentario.</Form.Text> : ''}
+                                            </div>
                                         </div>
                                         <div className="mb-3">
                                         <h5 className="mb-3" style={{color: '#384451'}}>Del 1 al 5, como calificaría usted el trabajo realizado por {element.nameUser}</h5>
@@ -1312,24 +1433,6 @@ const ViewClientProfile = () => {
                                     <div className="mb-2" hidden={hiddenProgress}>
                                         <ProgressBar className='profprogress' now={updateProgress} label={`${updateProgress}%`}/>
                                     </div>
-                                    <Row>
-                                        {
-                                            showAlertComment === true ? <div className='form-floating mb-3'><Alert key={response === 200 ? 'success' : 'danger'} variant={response === 200 ? 'success' : 'danger'}>
-                                            {response === 200 ? 
-                                            <>
-                                                <i className="far fa-check-circle" style={{fontSize:'24px'}}></i>
-                                                <span>{' '}Su evaluación ha sido enviada con éxito..
-                                                    <p className="mt-1">Muchas gracias por colaborar con la comunidad, su calificación será de ayuda para futuros clientes.</p>
-                                                </span>
-                                            </>
-                                            : 
-                                            <>
-                                            <i className="far fa-times-circle" style={{fontSize:'24px'}}></i>
-                                            <span>{' '}Lo sentimos, su solicitud no pudo ser procesada, pruebe nuevamente o intentelo mas tarde.</span>
-                                            </>}
-                                        </Alert></div> : ''
-                                        }
-                                    </Row>
                                 </Form>
                                 </Modal.Body>
                                 <Modal.Footer>

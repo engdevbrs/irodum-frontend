@@ -8,10 +8,6 @@
     border-radius: 0px !important;
 }
 
-.tabprof .card{
-    border-radius: 0px !important;
-}
-
 .upload{
     position:absolute;
     top: 50px;
@@ -139,6 +135,15 @@
 
 .tooltip-inner {
     background-color: #202A34 !important;
+}
+
+.specButton{
+    background-color: #5F738F !important;
+    border-color: #5F738F !important;
+}
+
+.specButton:hover{
+    background-color: #445266 !important;
 }
 
 .btn-request{

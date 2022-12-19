@@ -53,19 +53,23 @@ const ViewClientProjects = ({id}) => {
             return(
                 <>
                 <Col>
-                  <Card className='mt-3 mb-3'>
-                    <div className="d-flex align-items-center justify-content-center">
-                        <Card.Img variant="top" src={'http://54.174.104.208:3001/' + value.imageName} 
+                  <Card className='mt-3 mb-3 rounded-3'>
+                    <Card.Header style={{ color: 'rgb(226 226 226)', backgroundColor: '#202A34' , fontSize: '14px'}}>
+                    <Row>
+                        <Col className='col-8 text-start'>Realizado a {value.clientName}</Col>
+                        <Col className='col-4 text-end'>{"El dia " + dateFormatted.toLocaleDateString()}</Col>
+                    </Row> 
+                    </Card.Header>
+                    <img src={'http://54.174.104.208:3001/' + value.imageName} 
                         alt={'project'} style={{height: '200px'}}/>
-                    </div>
                     <Card.Body>
                         <Card.Title>Descripción del trabajo</Card.Title>
                         <Card.Text>{value.workResume}</Card.Text>
                     </Card.Body>
-                    <Card.Footer>
+                    <Card.Footer style={{ color: 'rgb(226 226 226)', backgroundColor: '#202A34', fontSize: '14px' }}>
                     <Row>
-                        <Col className='col-8 text-start'><small className="text-muted">Realizado a {value.clientName}</small></Col>
-                        <Col className='col-4 text-end'><small className="text-muted">{"El dia " + dateFormatted.toLocaleDateString()}</small></Col>
+                        <Col className='col-6 text-start'>Celular: {value.clientCell}</Col>
+                        <Col className='col-6 text-end'>{value.clientEmail !== "" ? "Email: " + value.clientEmail : ""}</Col>
                     </Row>
                     </Card.Footer>
                   </Card>
@@ -77,13 +81,13 @@ const ViewClientProjects = ({id}) => {
       </Row></>
       : 
       <>
-      <Card className='shadow d-flex align-items-center justify-content-center text-center'>
+      <div className='shadow d-flex align-items-center justify-content-center text-center' style={{height: '50vh'}}>
           <h5 className='mt-2'><strong>Éste usuario no tiene trabajos para mostrar</strong></h5>
           <div>
           <img className='mt-4' variant="top" src={emptyprojects} 
               alt={'project'} style={{height: '200px', width: 'auto', padding: '15px'}}/>
           </div> 
-      </Card>
+      </div>
       </>
     }
     </Container>

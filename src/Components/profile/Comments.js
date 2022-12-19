@@ -19,14 +19,14 @@ const Comments = ({data}) => {
             let sumaRating = (ratingParse.cuidadoso + ratingParse.honestidad + ratingParse.precio + ratingParse.puntualidad + ratingParse.responsabilidad) / 5;
             return(
               <>
-              <Card className='shadow-lg mb-5' style={{ padding: '0px', border: 'none'}}>
-                <Card.Header style={{ color: 'rgb(226 226 226)', backgroundColor: '#5F738F' }}>
+              <Card className='shadow-lg mb-5' style={{ padding: '0px'}}>
+                <Card.Header style={{ color: 'rgb(226 226 226)', backgroundColor: '#202A34' }}>
                     <Row xs={1} sm={1} md={2}>
-                      <Col>
-                        <strong>{value.workerName + " " + value.workerLastName}</strong>
+                      <Col className='text-xl-start'>
+                        Comentario realizado por: {value.workerName + " " + value.workerLastName}
                       </Col>
-                      <Col>
-                        <small>Hace 2 meses</small>
+                      <Col className='text-xl-end'>
+                        El día: {value.dateComment}
                       </Col>
                     </Row> 
                 </Card.Header>
@@ -49,7 +49,13 @@ const Comments = ({data}) => {
                 }
                 </Row>
                 </Card.Body>
-                <Card.Footer className='d-flex justify-content-start' style={{ color: 'rgb(226 226 226)', backgroundColor: '#202A34' }}><p><strong>Puntuación: </strong>{sumaRating}</p></Card.Footer>
+                <Card.Footer style={{ color: 'rgb(226 226 226)', backgroundColor: '#202A34' }}>
+                  <Row>
+                      <Col className='text-sm-center text-xl-start'>
+                        Puntuación total del trabajo: {sumaRating}
+                      </Col>
+                    </Row>
+                  </Card.Footer>
               </Card>
               </>
             )
@@ -58,7 +64,7 @@ const Comments = ({data}) => {
         </Row>
         </> : 
         <>
-        <Card className='shadow d-flex align-items-center justify-content-center text-center'>
+        <Card className='shadow rounded-0 d-flex align-items-center justify-content-center text-center' style={{height: '50vh'}}>
             <h5 className='mt-2'><strong>Éste usuario aún no ha recibido comentarios</strong></h5>
             <div>
             <img className='mt-4' src={comment} 

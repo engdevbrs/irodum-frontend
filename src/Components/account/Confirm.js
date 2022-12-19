@@ -11,7 +11,6 @@ const Confirm = () => {
   const [ result, setResult] = useState([]);
   const [ loadingrequest, setLoadingRequest] = useState(true); 
 
-  //3.92.68.154 AWS LOCAL
   const handleCreate =  async () => {
     Axios.post("http://54.174.104.208:3001/api/create-user", userData)
       .then((result) => {
@@ -50,36 +49,37 @@ const Confirm = () => {
               <img src={loadingrequestgf} alt="imagen de confirmación" style={{width: '15rem'}}/>
             </div>
             <div className="success-account mb-3">
-              Estamos verificando tus datos...
+              Estamos verificando sus datos...
             </div>
         </div>
     </div>
     {
       result !== 200 ? <div className="container mt-5 mb-5" hidden={loadingrequest}>
-                                  <div className="final d-flex justify-content-center" style={{height: '50vh'}}>
-                                    <div className="wrapper mb-4">
-                                      <img src={finalerror} alt="imagen de confirmación" style={{width: '10rem'}}/>
-                                    </div>
-                                    <div className="mt-3 congrats">
-                                      UPS! Lo sentimos, su cuenta no pudo ser creada
-                                    </div>
-                                    <div className="success-account mb-3">
-                                      Verifique sus datos y vuelva a intentar.
-                                    </div>
-                                  </div>
-                                </div> : <div className="container mt-5 mb-5" hidden={loadingrequest}>
-                                          <div className="final">
-                                            <div className="wrapper mb-4">
-                                              <img src={finalcheck} alt="imagen de confirmación" style={{width: '10rem'}}/>
-                                            </div>
-                                            <div className="mt-3 congrats">
-                                              Felicidades!
-                                            </div>
-                                            <div className="success-account mb-3">
-                                              Tu cuenta ha sido creada con éxito.
-                                            </div>
-                                          </div>
-                                        </div>
+                          <div className="final d-flex justify-content-center" style={{height: '50vh'}}>
+                            <div className="wrapper mb-4">
+                              <img src={finalerror} alt="imagen de confirmación" style={{width: '10rem'}}/>
+                            </div>
+                            <div className="mt-3 congrats">
+                              UPS! Lo sentimos, su cuenta no pudo ser creada
+                            </div>
+                            <div className="success-account mb-3">
+                              Verifique sus datos y vuelva a intentar.
+                            </div>
+                          </div>
+                        </div> : 
+                        <div className="container mt-5 mb-5" hidden={loadingrequest}>
+                          <div className="final">
+                            <div className="wrapper mb-4">
+                              <img src={finalcheck} alt="imagen de confirmación" style={{width: '10rem'}}/>
+                            </div>
+                            <div className="mt-3 congrats">
+                              Felicidades!
+                            </div>
+                            <div className="success-account mb-3">
+                              Tu cuenta ha sido creada con éxito.
+                            </div>
+                          </div>
+                        </div>
     }
     </>
   )
