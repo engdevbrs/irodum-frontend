@@ -6,7 +6,8 @@ import Axios  from 'axios'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import '../css/Profile.css'
-import { Button, Card, Container, Form, ListGroup, Nav, ProgressBar, Tab, Tabs } from 'react-bootstrap'
+import { Button, Card, Container, Form, ListGroup, Modal, Nav, OverlayTrigger, ProgressBar, Tab, Table, Tabs, Tooltip } from 'react-bootstrap'
+import { Rating } from 'react-simple-star-rating'
 import web from '../assets/web.png'
 import instagram from '../assets/instagram.png'
 import facebook from '../assets/facebook.png'
@@ -18,6 +19,9 @@ import perfil from '../assets/perfil.png'
 import uploadPhoto from '../assets/upload-photo.png'
 import Projects from './Projects'
 import Comments from './Comments'
+import Ratings from './Ratings'
+import speciality from '../assets/speciality.png';
+import Specialities from './Specialities'
 
 const Profile = () => {
 
@@ -34,8 +38,19 @@ const Profile = () => {
     const [ getPhoto, setGetPhoto ] = useState(false)
     const [ enableSave, setEnableSave ] = useState(false)
     const [ updateProgress, setUpdateProgress ] = useState(0)
+    const [ updateProgressSpec, setUpdateProgressSpec ] = useState(0)
     const [ hiddenProgress, showProgress ] = useState(true)
-    
+    const [ hiddenProgressSpec, showProgressSpec ] = useState(true)
+    const [ratingScore, setRatingScore] = useState(0);
+    const [commentsWorker, setCommentsWorker] = useState([])
+    const [especialitiesWorker, setEspecialitiesWorker] = useState([])
+    const [ descriptSpeciality, setDescriptSpeciality ] = useState(true)
+    const [ specialityForm, setSpecialityForm ] = useState(false)
+    const [ descriptSpecialityMsge, setDescriptSpecialityMsge ] = useState([])
+    const [ specialityFormMsge, setSpecialityFormMsge ] = useState([])
+    const [showModalSpeciality, setShowModalSpeciality] = useState(false);
+    const [ specialityRows, setSpecialityRows ] = useState(1)
+
     const handleChangePhoto = () =>{
         const token = localStorage.getItem('accessToken');
         let imagefile = document.getElementById('formFile');
@@ -64,7 +79,7 @@ const Profile = () => {
                     }).then((result) => {
                         if(result.status === 200){
                             const token = localStorage.getItem('accessToken');
-                            setCancelButton(true);
+                            setCancelButton(false);
                             setSavePhoto(false)
                             deletePrevUserPhoto()
                             Swal.fire('Su foto ha sido actualizada con éxito!', '', 'success')
@@ -80,7 +95,85 @@ const Profile = () => {
                 setSavePhoto(true)
             })
     }
-    
+
+    const uploadSpeciality = (e) =>{
+
+        e.preventDefault();
+
+        let arrayValues = [];
+        const token = localStorage.getItem('accessToken');
+        const specialityFormFile = new FormData();
+        const formValues = document.getElementsByClassName('SpecialityForm')[0].elements;
+
+        specialityFormFile.append('specialityFormFile',document.getElementById('specialityFormFile').files[0]);
+
+        [...formValues].forEach((elements) =>{
+            if(elements.type !== "file"){
+                arrayValues.push(elements.value)
+            }
+        })
+        specialityFormFile.append('authorization', token)
+        specialityFormFile.append('params', JSON.stringify(arrayValues))
+
+        MySwal.fire({
+            title: '¿Estás seguro de agregar ésta especialidad?',
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: `Agregar`,
+            denyButtonText: `Cancelar`,
+            }).then((result) => {
+                if(result.isConfirmed){
+                    showProgressSpec(false)
+                    Axios.post('http://54.174.104.208:3001/api/upload/speciality',specialityFormFile, config)
+                    .then((result) => {
+                        if(result.status === 200){
+                            Swal.fire({
+                                title: '<strong>Especialidad Guardada</strong>',
+                                icon: 'success',
+                                html:`<span>Su especialidad fue almacenada con éxito..
+                                    <p className="mt-1">Ésta será visible para todas las personas que visiten su perfil.</p>
+                                </span>`,
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'Aceptar'
+                              }).then((result) => {
+                                if(result.isConfirmed){
+                                    //document.getElementById('SpecialityForm').reset()
+                                    handleCloseSpeciality()
+                                }
+                            })
+                            Axios.get("http://54.174.104.208:3001/api/download/speciality/" + dataUser[0].id)
+                                .then((result) => {
+                                    if(result.status === 200){
+                                        setEspecialitiesWorker(result.data)
+                                    }
+                                }).catch(error => {
+                                    setEspecialitiesWorker([])
+                                });
+                        }
+                    }).catch(error => {
+                        showProgressSpec(true)
+                        setResponse(error.response.status)
+                        Swal.fire({
+                            icon: 'error',
+                                html:`<p className="mt-1">Lo sentimos, su especialidad no pudo ser guardada, intente de nuevo o más tarde...</p>`,
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'Aceptar'
+                          }).then((result) => {
+                            if(result.isConfirmed){
+                                handleCloseSpeciality()
+                            }
+                        })
+                    });
+                }
+            })
+    }
+
+    let config = {
+        onUploadProgress: function(progressEvent) {
+          let percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+          setUpdateProgressSpec(percentCompleted)
+        }
+    };
 
     const deletePrevUserPhoto = () =>{
         Axios.delete('http://54.174.104.208:3001/api/images/delete/' + getPhoto)
@@ -149,12 +242,91 @@ const Profile = () => {
                     setDataUser(result.data)
                     localStorage.setItem('userPhoto', "http://54.174.104.208:3001/api/images/" + result.data[0].userPhoto)
                     setGetPhoto(result.data[0].userPhoto)
+                    Axios.get("http://54.174.104.208:3001/api/worker/ratings/" + result.data[0].id)
+                        .then((result) => {
+                            if(result.status === 200){
+                                setRatingScore(result.data)
+                            }
+                        }).catch(error => {
+                            setResponse(error.response.status)
+                        });
+                    Axios.get("http://54.174.104.208:3001/api/worker/evaluations/" + result.data[0].id)
+                        .then((result) => {
+                            if(result.status === 200){
+                                    setCommentsWorker(result.data)
+                            }
+                        }).catch(error => {
+                            setResponse(error.response.status)
+                        });
+                    Axios.get("http://54.174.104.208:3001/api/download/speciality/" + result.data[0].id)
+                        .then((result) => {
+                            if(result.status === 200){
+                                setEspecialitiesWorker(result.data)
+                            }
+                        }).catch(error => {
+                            setEspecialitiesWorker([])
+                        });
               }
+              
           }).catch(error => {
                 setResponse(error.response.status)
                 setLoading(false)
                 clearTimeout()
           });
+    }
+
+    const handleCloseSpeciality = () => {
+
+        setShowModalSpeciality(false)
+        setDescriptSpeciality(true)
+        setUpdateProgressSpec(0)
+        setSpecialityRows(1)
+        showProgressSpec(true)
+    }
+
+    const handleShowSpeciality = () => setShowModalSpeciality(true);
+
+    const checkSpecialityFormFile = (descriptSp) =>{        
+        if(descriptSp.value !== ""){
+            if(descriptSp.files[0].type === "image/jpeg" || descriptSp.files[0].type === "image/jpg" 
+                || descriptSp.files[0].type === "image/png" || descriptSp.files[0].type === "application/pdf"){
+                    setSpecialityFormMsge('')
+                    setSpecialityForm(false)
+                    return false
+            }else{
+                setSpecialityFormMsge('Por favor, ingrese una imagen JPEG, JPG o PNG o un archivo PDF.')
+                setSpecialityForm(true)
+                return true
+            }
+        }
+    }
+
+    const checkDescriptSpeciality = (descriptSp) =>{
+
+        let descriptWork = descriptSp.value
+        const regdescriptWork = new RegExp(/[`!@#$%^&*()_+\-=\[\]{};':"\\|<>\/?~´]/);
+
+        if(descriptWork !== '' && descriptWork !== null && descriptWork !== undefined){
+            if(!regdescriptWork.test(descriptWork)){
+                if(descriptWork.length < 20){
+                    setDescriptSpecialityMsge('Por favor, ingrese al menos 20 letras para describir su especialidad.')
+                    setDescriptSpeciality(true)
+                    return true
+                }else{
+                    setDescriptSpecialityMsge('')
+                    setDescriptSpeciality(false)
+                    return false
+                }
+            }else{
+                setDescriptSpecialityMsge('Por favor, ingrese sólo letras o números.')
+                setDescriptSpeciality(true)
+                return true
+            }
+        }else{
+            setDescriptSpecialityMsge('Por favor, ingrese una breve descripción de su especialidad.')
+            setDescriptSpeciality(true)
+            return true
+        }
     }
 
     const onchangeCell = (e) =>{
@@ -173,12 +345,6 @@ const Profile = () => {
     }
 
     const deniedAccess = () => {
-        if(response === 403 || response === 500){
-            setTimeout(() => {
-                localStorage.removeItem("accessToken");
-                return document.location.href="/login"; 
-            }, 5000);
-        }
         return(
         <div className="container mt-5 mb-5" hidden={loading}>
             <div className="denied" style={{height: '60vh'}}>
@@ -213,6 +379,14 @@ const Profile = () => {
             </div>
             {
                 dataUser.map((element,key) =>{
+                    let sumaTotal = null;
+                    if(ratingScore.length > 0){
+                        ratingScore.forEach(element => {
+                            let ratingParse = JSON.parse(element.aptitudRating)
+                            let sumaRating = (ratingParse.cuidadoso + ratingParse.honestidad + ratingParse.precio + ratingParse.puntualidad + ratingParse.responsabilidad) / 5;
+                            sumaTotal = (sumaTotal + sumaRating);
+                        });
+                    }
                     return(
                         <>
                             <Container className='profile-container shadow-lg rounded-4 mt-3 mb-5 p-4' style={element.userColor !== undefined ? { 'backgroundColor': element.userColor} : {'backgroundColor': {colorCard}}}>
@@ -227,10 +401,21 @@ const Profile = () => {
                                             <h6 style={{color: 'grey'}}>
                                             {element.workareaUser}
                                             </h6>
+                                            <div className='d-flex align-items-center justify-content-center'>
+                                            <Rating
+                                                initialValue={ratingScore.length > 0 ? (sumaTotal / ratingScore.length).toFixed(1) : 0}
+                                                size={32}
+                                                fillColor='orange'
+                                                emptyColor='gray'
+                                                allowFraction={true}
+                                                readonly={true}
+                                            /><span style={{fontSize: '16px', fontWeight: '600'}}>({ratingScore.length > 0 ? (sumaTotal / ratingScore.length).toFixed(2) : 0})</span>
+                                            </div>
+                                            <span style={{fontSize: '16px', fontWeight: '600'}}>({ratingScore.length} evaluaciones)</span>
                                             <div className="mb-2" hidden={hiddenProgress}>
                                                 <ProgressBar className='profprogress' now={updateProgress} label={`${updateProgress}%`}/>
                                             </div>
-                                            <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                                            <div className="d-grid gap-2 d-sm-flex justify-content-sm-center mt-2">
                                                 {
                                                     savePhoto !== true ? <><Button variant={inputs === true ? 'success' : 'primary'} onClick={(e) => {handleButton(e.target); setInputs(true)}} 
                                                     disabled={validationCell !== true ? false : true}>
@@ -251,6 +436,10 @@ const Profile = () => {
                                             {
                                                 enableSave === true ? <Form.Text><span style={{color: 'red',fontWeight:'bold' }}>Debes seleccionar una imagen para tu perfil</span></Form.Text> : <></>
                                             }
+                                            <div className="d-grid gap-2 d-sm-flex justify-content-sm-center mt-2">
+                                                <Button className='specButton' onClick={handleShowSpeciality}>Agregar Especialidad
+                                                </Button>
+                                            </div>
                                         </Card.Body>
                                         </Card>
                                         <Card className='contactos shadow mb-4 mb-lg-0'>
@@ -294,105 +483,173 @@ const Profile = () => {
                                         </Card>
                                     </Col>
                                     <Col lg={8} className=''>
-                                        <Card className='info mb-4 shadow'>
-                                            <Card.Body>
-                                            <Row>
+                                    <Card className='info mb-4 shadow'>
+                                        <Card.Body>
+                                        <h5 className="mb-4">Información personal</h5>
+                                        <Row>
+                                            <Col sm={3}>
+                                            <p className="mb-0">Nombre completo</p>
+                                            </Col>
+                                            <Col sm={9}>
+                                            <p className="text-muted mb-0">{element.nameUser + " " + element.lastnamesUser}</p>
+                                            </Col>
+                                        </Row>
+                                        <hr/>
+                                        <Row >
+                                            <Col sm={3}>
+                                            <p className="mb-0">Email</p>
+                                            </Col>
+                                            <Col sm={9}>
+                                                <p className="text-muted mb-0">{element.email}</p>
+                                            </Col>
+                                        </Row>
+                                        <hr/>
+                                        <Row >
+                                            <Col sm={3}>
+                                            <p className="mb-0">Número de contacto</p>
+                                            </Col>
+                                            <Col sm={9}>
+                                            {inputs === true ? <div className='form-floating col-12'>
+                                                <input type='number' className='form-control' onChange={(e) => onchangeCell(e.target)} id='floatingCell' name='cell' 
+                                                defaultValue={element.cellphone !== undefined ? element.cellphone : ''} maxLength={9} placeholder='floatingCell' required/>
+                                                <label htmlFor='cell'>Nuevo celular</label>
+                                                {
+                                                    validationCell !== true ? '' : 
+                                                    <Form.Text style={{color: 'red'}}>Ingrese sólo 8 números</Form.Text>
+                                                }
+                                            </div> : <p className="text-muted mb-0">{element.cellphone}</p>}
+                                            </Col>
+                                        </Row>
+                                        <hr/>
+                                        <Row >
+                                            <Col sm={3}>
+                                            <p className="mb-0">Lugar de residencia</p>
+                                            </Col>
+                                            <Col sm={9}>
+                                            <p className="text-muted mb-0">{element.regionUser + ", " + element.cityUser + ", " + element.communeUser}</p>
+                                            </Col>
+                                        </Row>
+                                        {
+                                            inputs === true ? <><hr/>
+                                            <Row className="mb-3">
                                                 <Col sm={3}>
-                                                <p className="mb-0">Nombre completo</p>
+                                                    <label for="colorInput" className="form-label">Elija el color de su tarjeta</label>
                                                 </Col>
                                                 <Col sm={9}>
-                                                <p className="text-muted mb-0">{element.nameUser + " " + element.lastnamesUser}</p>
+                                                    <Form.Text><p style={{color: '#349568'}}>Procure usar tonos claros</p></Form.Text>
+                                                    <input type="color" className="form-control form-control-color" id="colorInput" name='colorInput' onChange={(e) => setColorCard(e.target.value)} defaultValue={element.userColor !== undefined ? element.userColor : colorCard} title="Elija su color favorito"/>
                                                 </Col>
-                                            </Row>
+                                            </Row></> : <></>
+                                        }
+                                        </Card.Body>
+                                    </Card>
+                                    {
+                                    especialitiesWorker.length > 0 ?
+                                    <Card className='info mb-4 shadow'>
+                                        <Card.Body>
+                                            <h5 className="mb-2">Especialidades</h5>
                                             <hr/>
-                                            <Row >
-                                                <Col sm={3}>
-                                                <p className="mb-0">Email</p>
-                                                </Col>
-                                                <Col sm={9}>
-                                                    <p className="text-muted mb-0">{element.email}</p>
-                                                </Col>
-                                            </Row>
-                                            <hr/>
-                                            <Row >
-                                                <Col sm={3}>
-                                                <p className="mb-0">Número de contacto</p>
-                                                </Col>
-                                                <Col sm={9}>
-                                                {inputs === true ? <div className='form-floating col-12'>
-                                                    <input type='number' className='form-control' onChange={(e) => onchangeCell(e.target)} id='floatingCell' name='cell' 
-                                                    defaultValue={element.cellphone !== undefined ? element.cellphone : ''} maxLength={9} placeholder='floatingCell' required/>
-                                                    <label htmlFor='cell'>Nuevo celular</label>
-                                                    {
-                                                        validationCell !== true ? '' : 
-                                                        <Form.Text style={{color: 'red'}}>Ingrese sólo 8 números</Form.Text>
-                                                    }
-                                                </div> : <p className="text-muted mb-0">{element.cellphone}</p>}
-                                                </Col>
-                                            </Row>
-                                            <hr/>
-                                            <Row >
-                                                <Col sm={3}>
-                                                <p className="mb-0">Lugar de residencia</p>
-                                                </Col>
-                                                <Col sm={9}>
-                                                <p className="text-muted mb-0">{element.regionUser + ", " + element.cityUser + ", " + element.communeUser}</p>
-                                                </Col>
-                                            </Row>
+                                            <Table className="text-left" responsive="md">
+                                            <thead>
+                                                <tr>
+                                                    <th style={{fontWeight: '600'}}>Descripción</th>
+                                                    <th style={{fontWeight: '600'}}>Archivo</th>
+                                                    <th style={{fontWeight: '600'}} className="text-center">Acción</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
                                             {
-                                               inputs === true ? <><hr/>
-                                               <Row className="mb-3">
-                                                    <Col sm={3}>
-                                                        <label for="colorInput" className="form-label">Elija el color de su tarjeta</label>
-                                                    </Col>
-                                                    <Col sm={9}>
-                                                        <Form.Text><p style={{color: '#349568'}}>Procure usar tonos claros</p></Form.Text>
-                                                        <input type="color" className="form-control form-control-color" id="colorInput" name='colorInput' onChange={(e) => setColorCard(e.target.value)} defaultValue={element.userColor !== undefined ? element.userColor : colorCard} title="Elija su color favorito"/>
-                                                    </Col>
-                                               </Row></> : <></>
+                                                
+                                                especialitiesWorker.map(value =>{
+                                                    let descriptSpec = JSON.parse(value.especialityDescript)
+                                                    let specialityToString = Buffer.from(value.especialityDoc)
+                                                    let speciality = JSON.parse(specialityToString)
+                                                    let arrayEspecialities = []
+                                                    let objectEspeciality = {
+                                                        idEspeciality: null,
+                                                        descript: null,
+                                                        image: null,
+                                                        fileType: null
+                                                    }
+
+                                                    objectEspeciality.idEspeciality = value.idworkerEspeciality
+                                                    objectEspeciality.descript = descriptSpec[0]
+                                                    objectEspeciality.image = speciality[0]
+                                                    objectEspeciality.fileType = value.fileType
+                                                    arrayEspecialities.push(objectEspeciality)
+
+                                                        return(
+                                                            <>
+                                                                <tr>
+                                                                <Specialities data={arrayEspecialities} id={element.id}/>  
+                                                                </tr>                                                          
+                                                            </>
+                                                        )
+                                                })
                                             }
-                                            </Card.Body>
-                                        </Card>
+                                            </tbody>
+                                            </Table>
+                                        </Card.Body>
+                                    </Card>
+                                    : <></>
+                                    }
+                                        
                                         <Tabs defaultActiveKey="home" id="justify-tab-example">
-                                            <Tab eventKey="home" title="Rating">
-                                                <Card style={{height: '50vh'}}>
-                                                    <Card.Body>
-                                                    <p className="mt-4 mb-1" >Responsabilidad</p>
-                                                    <div className="progress rounded" style={{height: '5px'}}>
-                                                        <div className="progress-bar" role="progressbar" style={{width:'80%'}} aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                    <p className="mt-4 mb-1" >Puntualidad</p>
-                                                    <div className="progress rounded" style={{height: '5px'}}>
-                                                        <div className="progress-bar" role="progressbar" style={{width:'72%'}} aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                    <p className="mt-4 mb-1" >Honestidad</p>
-                                                    <div className="progress rounded" style={{height: '5px'}}>
-                                                        <div className="progress-bar" role="progressbar" style={{width:'89%'}} aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                    <p className="mt-4 mb-1" >Cuidadoso</p>
-                                                    <div className="progress rounded" style={{height: '5px'}}>
-                                                        <div className="progress-bar" role="progressbar" style={{width:'55%'}} aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                    <p className="mt-4 mb-1" >Precio justo</p>
-                                                    <div className="progress rounded mb-2" style={{height: '5px'}}>
-                                                        <div className="progress-bar" role="progressbar" style={{width:'66%'}} aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                    </Card.Body>
-                                                </Card>
+                                            <Tab className='tabprof' eventKey="home" title="Rating">
+                                                <Ratings data={ratingScore} />
                                             </Tab>  
-                                            <Tab eventKey="proyects" title="Proyectos">
-                                            <Col className='projects m-0'>
+                                            <Tab className='tabprof' eventKey="proyects" title="Proyectos">
                                                 <Projects />
-                                            </Col>
                                             </Tab>
-                                            <Tab eventKey="comments" title="Comentarios">
-                                            <Col className='projects m-0'>
-                                                <Comments />
-                                            </Col>
+                                            <Tab className='tabprof' eventKey="comments" title={`Comentarios (${commentsWorker.length})`}>
+                                                <Comments data={commentsWorker}/>
                                             </Tab> 
                                         </Tabs>
                                     </Col>
                                 </Row>
+                                <Modal className='modalSpeciality' show={showModalSpeciality} onHide={handleCloseSpeciality} size="lg" centered style={{padding: '0px'}}>
+                                <Modal.Header closeButton>
+                                <Modal.Title>Agregue especialidades a su perfil laboral</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                <Form id='SpecialityForm' className='SpecialityForm'>
+                                    <Row>
+                                        <div className='container'>
+                                            <div className="card p-4 mb-3">
+                                                <div className="mb-3">
+                                                    <label htmlFor="specialityFormFile" className="form-label">¿Tienes algún certificado?</label>
+                                                    <input id={'specialityFormFile'} className="form-control specialityFormFile" type="file" onChange={e => checkSpecialityFormFile(e.target)} />
+                                                    {
+                                                        specialityForm === true ? 
+                                                        <span style={{color : 'red', fontSize: '14px'}}>{specialityFormMsge}</span> : <Form.Text> Este campo es opcional.</Form.Text>
+                                                    }
+                                                </div>
+                                                <div className='mb-3'>
+                                                    <label >Describa su especialidad<span className='mb-2' style={{color: 'red'}}> *</span></label>
+                                                    <textarea id={'descriptSpeciality'} className='descriptSpeciality form-control' name='descriptSpeciality' style={{ height: '100px' }}
+                                                    placeholder='Comentario sobre el Trabajador' maxLength={250} onChange={e => checkDescriptSpeciality(e.target)}></textarea>
+                                                    {
+                                                        descriptSpeciality === true ? 
+                                                        <span style={{color : 'red', fontSize: '14px'}}>{descriptSpecialityMsge}</span> : <></>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </Row>
+                                    <div className="mb-2" hidden={hiddenProgressSpec}>
+                                        <ProgressBar className='profprogress' now={updateProgressSpec} label={`${updateProgressSpec}%`}/>
+                                    </div>
+                                </Form>
+                                </Modal.Body>
+                                <Modal.Footer className='d-flex justify-content-end align-items-center'>
+                                <Button className='btn-request' disabled={descriptSpeciality === false && specialityForm === false ? false : true} onClick={uploadSpeciality}>
+                                    Agregar especialidad
+                                </Button>
+                                <Button variant="danger" onClick={handleCloseSpeciality}>
+                                    Cerrar
+                                </Button>
+                                </Modal.Footer>
+                            </Modal>
                             </Container>
                         </>
                     )
@@ -402,6 +659,7 @@ const Profile = () => {
     }
 
     useEffect(() =>{
+        
         document.getElementById('menuHolder').scrollIntoView();
         setTimeout(() =>{
             const getToken = localStorage.getItem('accessToken');

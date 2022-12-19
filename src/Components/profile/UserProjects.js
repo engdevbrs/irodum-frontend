@@ -22,11 +22,16 @@ const UserProjects = () => {
     const [ emptyDate, setEmptyDate ] = useState(true)
     const [ emptyImage, setEmptyImage ] = useState(true)
     const [ emptyWorkResume, setEmptyWorkResume ] = useState(true)
+    const [ emptyCellClient, setEmptyCellClient ] = useState(true)
     const [ shortResume, setShortResume ] = useState(true)
     const [ incorrectTypeImage, setIncorrectTypeImage ] = useState(true)
     const [ incorrectSizeImage, setIncorrectSizeImage ] = useState(true)
     const [ updateProgress, setUpdateProgress ] = useState(0)
     const [ hiddenProgress, showProgress ] = useState(true)
+    const [cellphoneValid, setCellphoneValid] = useState(false);
+    const [emailValid, setEmailValid] = useState(false);
+    const [cellphoneValidMsge, setCellphoneValidMsge] = useState([]);
+    const [emailValidMsge, setEmailValidMsge] = useState([]);
 
     const deleteUserProject = (e) =>{
         const token = localStorage.getItem('accessToken');
@@ -63,10 +68,15 @@ const UserProjects = () => {
         const workdate = document.getElementById('workdate').value
         const workresume = document.getElementById('workresume').value
         const photofile = document.getElementById('photofile').files[0]
+        const clientePhone = document.getElementById('clientPhone').value
+        const clientEmail = document.getElementById('clientEmail').value
+
         const uploadInfo = {
             name: clientname,
             workresume: workresume,
-            date: workdate
+            date: workdate,
+            phone: clientePhone,
+            email: clientEmail
         }
         const formFile = new FormData()
         formFile.append('photofile', photofile)
@@ -89,6 +99,7 @@ const UserProjects = () => {
                             getProjects(token)
                             Swal.fire('Su foto ha sido actualizada con éxito!', '', 'success')
                             showProgress(true)
+                            setUpdateProgress(0)
                         }
                     }).catch(error => {
                         Swal.fire('No pudimos subir éste proyecto', '', 'warning')
@@ -97,18 +108,63 @@ const UserProjects = () => {
             })
     }
 
+    const checkEmail = (email) =>{
+        const regEmail = new RegExp(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
+        if(email.length > 0){
+            if(!regEmail.test(email)){
+                setEmailValidMsge('Correo electrónico no válido.')
+                setEmailValid(true)
+                return true
+            }else{
+                setEmailValidMsge('')
+                setEmailValid(false)
+                return false
+            }
+        }else{
+            setEmailValidMsge('')
+            setEmailValid(false)
+            return false
+        }
+    }
+
+    const checkCellphone = (cell) =>{
+        const regCell = new RegExp('^[0-9]+$');
+        if(cell.length === 0){
+            setEmptyCellClient(true)
+            setCellphoneValidMsge('')
+            setCellphoneValid(false)
+        }else if(cell.length === 8 && regCell.test(cell)){
+            setCellphoneValidMsge('')
+            setCellphoneValid(false)
+            setEmptyCellClient(false)
+            return false
+        }else if(cell.length < 8 && cell.length > 0 && regCell.test(cell)){
+            setCellphoneValidMsge('Ingrese los 8 números de su número de celular.')
+            setEmptyCellClient(false)
+            setCellphoneValid(true)
+            return true
+        }else if(cell.length <= 8 && cell.length > 0  && !regCell.test(cell)){
+            setCellphoneValidMsge('Número de celular no válido.')
+            setEmptyCellClient(false)
+            setCellphoneValid(true)
+            return true
+        }
+    }
+
     let config = {
         onUploadProgress: function(progressEvent) {
           let percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
           setUpdateProgress(percentCompleted)
         }
-      };
+    };
 
     const clearFormUpload = () => {
         document.getElementById('clientname').value = ""
         document.getElementById('workdate').value = ""
         document.getElementById('workresume').value = ""
         document.getElementById('photofile').value = ""
+        document.getElementById('clientPhone').value = ""
+        document.getElementById('clientEmail').value = ""
         showProgress(true)
         setUpdateProgress(0)
     }
@@ -263,6 +319,25 @@ const UserProjects = () => {
                                     { emptyDate === true ? <Form.Text style={{color:'red'}}>Éste campo es obligatorio</Form.Text> : ''}
                                 </Form.Group>
                                 <Form.Group className="mb-3">
+                                    <Form.Label>Celular del cliente</Form.Label>
+                                    <Form.Control id='clientPhone' name='clientPhone' placeholder='Ej: 12345678' size="md" maxLength='8' onChange={e => checkCellphone(e.target.value)}
+                                    disabled={projectsData.length >= 8 ? true : false}/>
+                                    { emptyCellClient === true ? <Form.Text style={{color:'red'}}>Éste campo es obligatorio</Form.Text> : ''}
+                                    {
+                                        cellphoneValid === true ? <Form.Text className='mb-1'>
+                                        <span className='mb-1' style={{color: 'red'}}>{cellphoneValidMsge}</span></Form.Text> : cellphoneValidMsge
+                                    }
+                                </Form.Group>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Email del cliente</Form.Label>
+                                    <Form.Control id='clientEmail' name='clientEmail' size="md" placeholder='correo@gmail.com' onChange={e => checkEmail(e.target.value)}
+                                    disabled={projectsData.length >= 8 ? true : false}/>
+                                    {
+                                        emailValid === true ? <Form.Text className='mb-1'>
+                                        <span className='mb-1' style={{color: 'red'}}>{emailValidMsge}</span></Form.Text> : emailValidMsge
+                                    }
+                                </Form.Group>
+                                <Form.Group className="mb-3">
                                     <Form.Label>Breve descripción de éste trabajo</Form.Label>
                                     <Form.Control id='workresume' name='workresume' as="textarea" rows={3} placeholder="Escriba aquí.." onChange={e => onchangeWorkResume(e.target.value)}
                                     disabled={projectsData.length >= 8 ? true : false}/>
@@ -284,7 +359,7 @@ const UserProjects = () => {
                                 </div>
                                 <div className="d-grid gap-2 mb-1">
                                     <Button className='buttonproject' 
-                                        disabled={(emptyName || emptyDate || emptyImage || emptyWorkResume || shortResume || incorrectTypeImage || incorrectSizeImage || projectsData.length >= 8) === true ? true : false}
+                                        disabled={(emptyName || emptyDate || emptyImage || emptyCellClient || emptyWorkResume || shortResume || incorrectTypeImage || incorrectSizeImage || emailValid || cellphoneValid || projectsData.length >= 8) === true ? true : false}
                                         onClick={e => uploadProject(e)}
                                         >Subir Trabajo</Button>
                                     <Button variant="danger">Cancelar
@@ -317,19 +392,23 @@ const UserProjects = () => {
                                                 <>
                                                 <Col className='mb-2'>
                                                     <Card className='cardproject rounded-3'>
-                                                        <div className="d-flex align-items-center justify-content-center">
-                                                            <Card.Img variant="top" src={'http://54.174.104.208:3001/' + value.imageName} 
+                                                        <Card.Header style={{ color: 'rgb(226 226 226)', backgroundColor: '#202A34' , fontSize: '14px'}}>
+                                                            <Row>
+                                                                <Col className='col-12 text-start'>Realizado a {value.clientName}</Col>
+                                                                <Col className='col-12 text-start'>{"El dia " + dateFormatted.toLocaleDateString()}</Col>
+                                                            </Row> 
+                                                        </Card.Header>
+                                                            <img src={'http://54.174.104.208:3001/' + value.imageName} 
                                                             alt={'project'} style={{height: '200px'}}/>
-                                                        </div>
                                                         <i className='deletephoto fas fa-trash' value={value.id_img} key={value.id_img} onClick={e => deleteUserProject(e.target.attributes)}></i>
                                                         <Card.Body>
                                                             <Card.Title>Descripción del trabajo</Card.Title>
                                                             <Card.Text>{value.workResume}</Card.Text>
                                                         </Card.Body>
-                                                        <Card.Footer>
+                                                        <Card.Footer style={{ color: 'rgb(226 226 226)', backgroundColor: '#202A34' , fontSize: '14px'}}>
                                                         <Row>
-                                                            <Col className='col-6 text-start'><small className="text-muted">Realizado a {value.clientName}</small></Col>
-                                                            <Col className='col-6 text-end'><small className="text-muted">{"El dia " + dateFormatted.toLocaleDateString()}</small></Col>
+                                                            <Col className='col-6 text-start'>Celular: {value.clientCell}</Col>
+                                                            <Col className='col-6 text-end'>{value.clientEmail !== "" ? "Email: " + value.clientEmail : ""}</Col>
                                                         </Row>
                                                         </Card.Footer>
                                                     </Card>

@@ -1,23 +1,29 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+import { Rating } from 'react-simple-star-rating'
 import Axios  from 'axios'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import '../css/Profile.css'
-import { Alert, Button, Card, Container, Form, InputGroup, Modal, Nav, OverlayTrigger, Tab, Tabs, Tooltip } from 'react-bootstrap'
+import { Alert, Button, ProgressBar, Container, Form, InputGroup, Modal, Nav, OverlayTrigger, Tab, Tabs, Tooltip, Card, Table } from 'react-bootstrap'
 import Comments from './Comments'
 import ViewClientProjects from './ViewClientProjects'
 import solicitudbutton from '../assets/solicitud-button.png';
 import rating from '../assets/rating.png';
+import Ratings from './Ratings'
+import SpecialitiesClient from './ClientSpecialitiesView'
 
 const ViewClientProfile = () => {
 
     const { id } = useParams();
-    const navigate = useNavigate()
+    const MySwal = withReactContent(Swal)
     const [ dataUser, setDataUser ] = useState([])
     const [ response, setResponse ] = useState([])
     const [show, setShow] = useState(true);
     const [showModal, setShowModal] = useState(false);
+    const [showModalComment, setShowModalComment] = useState(false);
 
     const [localidades, setLocalidades] = useState([]);
     const [ciudades, setCiudades] = useState([]);
@@ -38,8 +44,10 @@ const ViewClientProfile = () => {
     const [cityValid, setCityValid] = useState(false);
     const [comunneValid, setComunneValid] = useState(false);
     const [descriptWorkValid, setDescriptWorkValid] = useState(false);
+    const [noRanked, setNoRanked] = useState(false);
 
     const [nombreValidMsge, setNombreValidMsge] = useState([]);
+    const [especialitiesWorker, setEspecialitiesWorker] = useState([])
     const [apellidosValidMsge, setApellidosValidMsge] = useState([]);
     const [cellphoneValidMsge, setCellphoneValidMsge] = useState([]);
     const [emailValidMsge, setEmailValidMsge] = useState([]);
@@ -53,16 +61,37 @@ const ViewClientProfile = () => {
     const [descriptWorkValidMsge, setDescriptWorkValidMsge] = useState([]);
     const [switchCharge, setSwitchCharge] = useState(false)
     const [showAlert, setShowAlert] = useState(false)
-    const [alertVariant, setAlertVariant] = useState([])
+    const [showAlertComment, setShowAlertComment] = useState(false)
     const [ responseRequest, setResponseRequest ] = useState([])
+    const [ratingScoreResp, setRatingScoreResp] = useState(0)
+    const [ratingScoreHones, setRatingScoreHones] = useState(0)
+    const [ratingScoreCuidad, setRatingScoreCuidad] = useState(0)
+    const [ratingScorePunt, setRatingScorePunt] = useState(0)
+    const [ratingScorePrecio, setRatingScorePrecio] = useState(0)
+    const [commentsWorker, setCommentsWorker] = useState([])
+    const [ratingScore, setRatingScore] = useState(0);
+    const [ updateProgress, setUpdateProgress ] = useState(0)
+    const [ hiddenProgress, showProgress ] = useState(true)
+    const [ incorrectTypeImage, setIncorrectTypeImage ] = useState(false)
+    const [ incorrectLengthImage, setIncorrectLengthImage ] = useState(false)
 
     const handleClose = () => {
 
         setShowModal(false)
         setShowAlert(false)
-        setAlertVariant('')
         clearForm()
     }
+    const handleShow = () => setShowModal(true);
+
+    const handleCloseComment = () => {
+        setShowModalComment(false)
+        setShowAlertComment(false)
+        setNoRanked(false)
+        setUpdateProgress(0)
+        showProgress(true)
+        clearFormComment()
+    }
+    const handleShowComment = () => setShowModalComment(true);
 
     const clearForm = () => {
 
@@ -112,7 +141,30 @@ const ViewClientProfile = () => {
 
     }
 
-    const handleShow = () => setShowModal(true);
+    const clearFormComment = () => {
+
+        document.getElementById('commentForm').reset()
+
+        setNombreValid(false)
+        setNombreValidMsge('')
+
+        setApellidosValid(false)
+        setApellidosValidMsge('')
+
+        setEmailValid(false)
+        setEmailValidMsge('')
+
+
+        setDescriptWorkValid(false)
+        setDescriptWorkValidMsge('')
+
+        setRatingScoreCuidad(0)
+        setRatingScoreResp(0)
+        setRatingScorePunt(0)
+        setRatingScoreHones(0)
+        setRatingScorePrecio(0)
+
+    }
 
     const handleChange = (e) => {
         if(e.target.name === 'clientName'){
@@ -210,6 +262,25 @@ const ViewClientProfile = () => {
         }
     }
 
+    const onchangeWorkImage = (e) =>{
+        let imgLength = e.files.length;
+        if(imgLength > 4 ){
+            setIncorrectLengthImage(true)
+            setIncorrectTypeImage(false)
+            return true
+        }else{
+            setIncorrectLengthImage(false)
+            for(let i =0; i < imgLength; i++){
+                if(e.files[i].type === "image/jpeg" || e.files[i].type === "image/jpg" || e.files[i].type === "image/png"){
+                    setIncorrectTypeImage(false)
+                }else{
+                    setIncorrectTypeImage(true)
+                    return true
+                }
+            }
+        }
+    }
+
     const handleSubmit = () =>{
 
         let validation = null
@@ -270,7 +341,6 @@ const ViewClientProfile = () => {
                 if(result.status === 200){
                     setResponseRequest(result.status)
                     setShowAlert(true)
-                    setAlertVariant('success')
                     clearForm()
                     Axios.post('http://54.174.104.208:3001/api/requestEmail',arrayValues)
                     .then((result) => {
@@ -283,11 +353,133 @@ const ViewClientProfile = () => {
                 }
             }).catch(error => {
                 setResponseRequest(error.response.status)
-                setAlertVariant('danger')
                 setShowAlert(true)
             });
         }
     }
+
+    const handleSubmitComment = () =>{
+
+        const formFileMultiple = new FormData();
+
+        let arrayValues = [];
+
+        let scoreObject = {
+            responsabilidad: null,
+            puntualidad: null,
+            honestidad: null,
+            cuidadoso: null,
+            precio: null
+        }
+
+        const formValues = document.getElementsByClassName('commentForm')[0].elements;
+
+        let formFiles = document.getElementById('formFileMultiple');
+
+        let checkNameValue = checkName(document.getElementById('clientName').value);
+        let checkLastNameValue = checkLastName(document.getElementById('clientLastname').value);
+        let checkEmailValue = checkEmail(document.getElementById('clientEmail').value);
+        let checkDescriptWorkValue = checkDescriptWork(document.getElementById('descriptWork').value);
+
+        let ratingValidation =  ratingScoreResp !== 0 && ratingScorePunt !== 0 && ratingScoreHones !== 0 && ratingScoreCuidad !== 0 
+                                && ratingScorePrecio !== 0
+
+        ratingValidation === true ? setNoRanked(false) : setNoRanked(true)
+
+        let validation = (checkNameValue === false && checkLastNameValue === false && checkEmailValue === false && checkEmailValue === false 
+            && checkDescriptWorkValue === false && ratingValidation === true && incorrectLengthImage === false && incorrectTypeImage === false);
+        
+
+        if(validation){
+
+            [...formValues].forEach((elements) =>{
+                if(elements.type !== "file"){
+                    arrayValues.push(elements.value)
+                }
+            })
+
+            scoreObject = {
+                responsabilidad: ratingScoreResp,
+                puntualidad: ratingScorePunt,
+                honestidad: ratingScoreHones,
+                cuidadoso: ratingScoreCuidad,
+                precio: ratingScorePrecio
+            }
+
+            arrayValues.push(dataUser[0].email)
+            arrayValues.push(scoreObject)
+
+            for(let i = 0; i < (formFiles.files).length; i++){
+                formFileMultiple.append('formFileMultiple',formFiles.files[i])
+            }
+            formFileMultiple.append('params', JSON.stringify(arrayValues))
+
+            MySwal.fire({
+                title: 'Estás seguro de subir esta evaluación?',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: `Evaluar`,
+                denyButtonText: `Cancelar`,
+                }).then((result) => {
+                    if(result.isConfirmed){
+                        showProgress(false)
+                        Axios.post('http://54.174.104.208:3001/api/rating-worker',formFileMultiple, config)
+                        .then((result) => {
+                            if(result.status === 200){
+                                Swal.fire({
+                                    title: '<strong>Calificación Enviada</strong>',
+                                    icon: 'success',
+                                    html:`<span>Su evaluación ha sido enviada con éxito..
+                                        <p className="mt-1">Muchas gracias por colaborar con la comunidad, su calificación será de ayuda para futuros clientes.</p>
+                                    </span>`,
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'Aceptar'
+                                  }).then((result) => {
+                                    if(result.isConfirmed){
+                                        handleCloseComment()
+                                    }
+                                })
+                                Axios.get("http://54.174.104.208:3001/api/worker/ratings/" + id)
+                                .then((result) => {
+                                    if(result.status === 200){
+                                        setRatingScore(result.data)
+                                    }
+                                }).catch(error => {
+                                    setResponse(error.response.status)
+                                });
+                                Axios.get("http://54.174.104.208:3001/api/worker/evaluations/" + id)
+                                .then((result) => {
+                                    if(result.status === 200){
+                                            setCommentsWorker(result.data)
+                                    }
+                                }).catch(error => {
+                                    setResponse(error.response.status)
+                                });
+                            }
+                        }).catch(error => {
+                            setResponse(error.response.status)
+                            Swal.fire({
+                                icon: 'error',
+                                    html:`<p className="mt-1">Lo sentimos, su solicitud no pudo ser procesada, intente de nuevo o más tarde...</p>`,
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'Aceptar'
+                              }).then((result) => {
+                                if(result.isConfirmed){
+                                    handleCloseComment()
+                                }
+                            })
+                        });
+                    }
+                })
+        }
+    }
+
+    let config = {
+        onUploadProgress: function(progressEvent) {
+          let percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+          setUpdateProgress(percentCompleted)
+        }
+    };
 
     const checkName = (name) =>{
         const regName = new RegExp(/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/g);
@@ -592,21 +784,49 @@ const ViewClientProfile = () => {
     }
 
     const renderTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props} hidden={showModal}>
+        <Tooltip id="button-tooltip" {...props} >
             Enviar solicitud
         </Tooltip>
       );
 
     const renderTooltip2 = (props) => (
-        <Tooltip id="button-tooltip" {...props} hidden={showModal}>
+        <Tooltip id="button-tooltip" {...props}>
           Calificar Trabajador
         </Tooltip>
       );
+
+    const handleRatingResp = (rate) => {
+        setRatingScoreResp(rate)
+    }
+
+    const handleRatingPunt = (rate) => {
+        setRatingScorePunt(rate)
+    }
+
+    const handleRatingHones = (rate) => {
+        setRatingScoreHones(rate)
+    }
+
+    const handleRatingCuidad = (rate) => {
+        setRatingScoreCuidad(rate)
+    }
+
+    const handleRatingPrecio = (rate) => {
+        setRatingScorePrecio(rate)
+    }
     
     useEffect(() =>{
         Axios.get("http://54.174.104.208:3001/api/localidades").then((res)=>{
             setLocalidades(res.data);
         }); 
+        Axios.get("http://54.174.104.208:3001/api/worker/ratings/" + id)
+          .then((result) => {
+              if(result.status === 200){
+                setRatingScore(result.data)
+              }
+          }).catch(error => {
+            setResponse(error.response.status)
+        });
         Axios.get("http://54.174.104.208:3001/api/view/profile/" + id)
           .then((result) => {
               if(result.status === 200){
@@ -614,7 +834,26 @@ const ViewClientProfile = () => {
               }
           }).catch(error => {
                 setResponse(error.response.status)
-          });
+        });
+        Axios.get("http://54.174.104.208:3001/api/worker/evaluations/" + id)
+          .then((result) => {
+              if(result.status === 200){
+                    setCommentsWorker(result.data)
+              }
+          }).catch(error => {
+            setResponse(error.response.status)
+        });
+
+        Axios.get("http://54.174.104.208:3001/api/download/speciality/" + id)
+        .then((result) => {
+            if(result.status === 200){
+                setEspecialitiesWorker(result.data)
+            }
+        }).catch(error => {
+            setEspecialitiesWorker([])
+        });
+        
+
     },[switchCharge])
 
     return(
@@ -636,6 +875,14 @@ const ViewClientProfile = () => {
                         dateFormatted = new Date(element.bornDate)
                     }
                     todayDate.setFullYear( todayDate.getFullYear() - dateFormatted.getFullYear())
+                    let sumaTotal = null;
+                    if(ratingScore.length > 0){
+                        ratingScore.forEach(element => {
+                            let ratingParse = JSON.parse(element.aptitudRating)
+                            let sumaRating = (ratingParse.cuidadoso + ratingParse.honestidad + ratingParse.precio + ratingParse.puntualidad + ratingParse.responsabilidad) / 5;
+                            sumaTotal = (sumaTotal + sumaRating);
+                        });
+                    }
                     return(
                         <>
                             <Container className='profile-container shadow-lg rounded-3 mt-3 mb-5 p-4'>
@@ -650,6 +897,20 @@ const ViewClientProfile = () => {
                                 </Alert></Row> : <></>
                             }
                             <Row>
+                                <div className='rounded-1 p-2 text-center' style={{backgroundColor: '#202A34'}}>
+                                    <h5 style={{color: 'rgb(226 226 226)'}}>Calificación</h5>
+                                    <div className='d-flex align-items-center justify-content-center'>
+                                        <Rating
+                                            initialValue={ratingScore.length > 0 ? (sumaTotal / ratingScore.length).toFixed(1) : 0}
+                                            size={32}
+                                            fillColor='orange'
+                                            emptyColor='gray'
+                                            allowFraction={true}
+                                            readonly={true}
+                                        /><span style={{color: 'rgb(226 226 226)', fontSize: '16px', fontWeight: '600'}}>({ratingScore.length > 0 ? (sumaTotal / ratingScore.length).toFixed(2) : 0})</span>
+                                    </div>
+                                    <span style={{color: 'rgb(226 226 226)', fontSize: '16px', fontWeight: '600'}}>({ratingScore.length} calificaciones)</span>
+                                </div>
                                 <Col lg={12} className='shadow-lg rounded-1 p-2'>
                                     <h5>Información Personal</h5>
                                     <Row md={1} lg={1} className='rounded-4 mt-3 mb-3'>
@@ -675,7 +936,7 @@ const ViewClientProfile = () => {
                                             <Col sm={3}>
                                             <p className="mb-0">Celular</p>
                                             </Col>
-                                            <Col sm={9}><p className="text-muted mb-0"><strong>9 </strong>{element.cellphone}</p>
+                                            <Col sm={9}><p className="text-muted mb-0" style={{ cursor: 'pointer'}} onClick={handleShow} ><strong>9 </strong>{element.cellphone}</p>
                                             </Col>
                                         </Row>
                                         <hr/>
@@ -683,7 +944,7 @@ const ViewClientProfile = () => {
                                             <Col sm={3}>
                                             <p className="mb-0">Email</p>
                                             </Col>
-                                            <Col sm={9}><p className="text-muted mb-0">{element.email}</p>
+                                            <Col sm={9}><p className="text-muted mb-0" style={{ cursor: 'pointer'}} onClick={handleShow} >{element.email}</p>
                                             </Col>
                                         </Row>
                                         <hr/>
@@ -725,46 +986,62 @@ const ViewClientProfile = () => {
                                         <hr/>
                                     </Col>
                                     </Row>
+                                    {
+                                    especialitiesWorker.length > 0 ?
+                                        <div className="mb-5">
+                                            <h5 className="mb-1">Especialidades</h5>
+                                            <Table className="text-left" responsive="md" bordered striped hover >
+                                            <thead>
+                                                <tr>
+                                                    <th style={{fontWeight: '600'}}>Descripción</th>
+                                                    <th style={{fontWeight: '600'}}>Archivo</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {
+                                                
+                                                especialitiesWorker.map(value =>{
+                                                    let descriptSpec = JSON.parse(value.especialityDescript)
+                                                    let specialityToString = Buffer.from(value.especialityDoc)
+                                                    let speciality = JSON.parse(specialityToString)
+                                                    let arrayEspecialities = []
+                                                    let objectEspeciality = {
+                                                        idEspeciality: null,
+                                                        descript: null,
+                                                        image: null,
+                                                        fileType: null
+                                                    }
+
+                                                    objectEspeciality.idEspeciality = value.idworkerEspeciality
+                                                    objectEspeciality.descript = descriptSpec[0]
+                                                    objectEspeciality.image = speciality[0]
+                                                    objectEspeciality.fileType = value.fileType
+                                                    arrayEspecialities.push(objectEspeciality)
+
+                                                        return(
+                                                            <>
+                                                                <tr>
+                                                                <SpecialitiesClient data={arrayEspecialities} />  
+                                                                </tr>                                                          
+                                                            </>
+                                                        )
+                                                })
+                                            }
+                                            </tbody>
+                                            </Table>
+                                        </div>
+                                    : <></>
+                                    }
                                     <h5>Clasificación Laboral</h5>
                                     <Tabs defaultActiveKey="home" id="justify-tab-example">
-                                        <Tab eventKey="home" title="Rating">
-                                            <Card>
-                                                <Card.Body>
-                                                <p className="mb-1" >Responsabilidad</p>
-                                                <div className="progress rounded" style={{height: '5px'}}>
-                                                    <div className="progress-bar" role="progressbar" style={{width:'80%'}} aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <p className="mt-4 mb-1" >Puntualidad</p>
-                                                <div className="progress rounded" style={{height: '5px'}}>
-                                                    <div className="progress-bar" role="progressbar" style={{width:'72%'}} aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <p className="mt-4 mb-1" >Honestidad</p>
-                                                <div className="progress rounded" style={{height: '5px'}}>
-                                                    <div className="progress-bar" role="progressbar" style={{width:'89%'}} aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <p className="mt-4 mb-1" >Cuidadoso</p>
-                                                <div className="progress rounded" style={{height: '5px'}}>
-                                                    <div className="progress-bar" role="progressbar" style={{width:'55%'}} aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <p className="mt-4 mb-1" >Precio justo</p>
-                                                <div className="progress rounded mb-2" style={{height: '5px'}}>
-                                                    <div className="progress-bar" role="progressbar" style={{width:'66%'}} aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                </Card.Body>
-                                                <Card.Footer>
-                                                    Calificación total: 4.5
-                                                </Card.Footer>
-                                            </Card>
+                                        <Tab className='tabprof' eventKey="home" title="Rating">
+                                            <Ratings data={ratingScore} />
                                         </Tab> 
-                                        <Tab eventKey="proyects" title="Proyectos">
-                                        <Col className='projects m-0'>
+                                        <Tab className='tabprof' eventKey="proyects" title="Proyectos">
                                             <ViewClientProjects id={id}/>
-                                        </Col>
                                         </Tab>
-                                        <Tab eventKey="comments" title="Comentarios">
-                                        <Col className='projects m-0'>
-                                            <Comments />
-                                        </Col>
+                                        <Tab className='tabprof' eventKey="comments" title={`Comentarios (${commentsWorker.length})`}>
+                                            <Comments data={commentsWorker} />
                                         </Tab> 
                                     </Tabs>
                                 </Col>
@@ -781,7 +1058,7 @@ const ViewClientProfile = () => {
                             delay={{ show: 250, hide: 400 }}
                             overlay={renderTooltip2}
                             >
-                                <img className='rating' src={rating} alt="rating img" />
+                                <img className='rating' src={rating} alt="rating img" onClick={handleShowComment}/>
                             </OverlayTrigger>
                             <Modal className='modalrequest' show={showModal} onHide={handleClose} size="lg" centered style={{padding: '0px'}}>
                                 <Modal.Header closeButton>
@@ -1013,6 +1290,156 @@ const ViewClientProfile = () => {
                                     Enviar Solicitud
                                 </Button>
                                 <Button variant="danger" onClick={handleClose}>
+                                    Cerrar
+                                </Button>
+                                </Modal.Footer>
+                            </Modal>
+                            <Modal className='modalcomment' show={showModalComment} onHide={handleCloseComment} size="lg" centered style={{padding: '0px'}}>
+                                <Modal.Header closeButton>
+                                <Modal.Title>Evaluación de Trabajo</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                <Form id='commentForm' className='commentForm'>
+                                    <div className='form-floating'>
+                                        <p>Califique al trabajador <strong>{element.nameUser}</strong> según su experiencia.</p>
+                                    </div>
+                                    <Row>
+                                        <div className='form-floating col-md-5 mb-3'>
+                                            <input type='text' className='form-control' id='clientName' name='clientName' placeholder='Nombre' 
+                                            onChange={handleChange} />
+                                            <label htmlFor='clientName'>Nombre<span className='mb-1' style={{color: 'red'}}>*</span></label>
+                                            {
+                                                nombreValid === true ? <Form.Text className='mb-1'>
+                                                    <span className='mb-1' style={{color: 'red'}}>{nombreValidMsge}</span></Form.Text> : nombreValidMsge
+                                            }
+                                        </div>
+                                        <div className='form-floating col-md-7 mb-3'>
+                                            <input type='text' className='form-control' id='clientLastname' name='clientLastname' placeholder='Apellido1 Apellido2'
+                                            onChange={handleChange}/>
+                                            <label htmlFor='clientLastname'>Apellidos<span className='mb-1' style={{color: 'red'}}>*</span></label>
+                                            {
+                                                apellidosValid === true ? <Form.Text className='mb-1'>
+                                                    <span className='mb-1' style={{color: 'red'}}>{apellidosValidMsge}</span></Form.Text> : apellidosValidMsge
+                                            }
+                                        </div>
+                                    </Row>
+                                    <Row>
+                                        <div className='form-floating col-md-5 mb-3'>
+                                            <input type='email' className='form-control' id='clientEmail' name='clientEmail' placeholder='correo@gmail.com'
+                                            onChange={handleChange}/>
+                                            <label htmlFor='clientEmail'>Correo electrónico<span className='mb-1' style={{color: 'red'}}>*</span></label>
+                                            {
+                                                emailValid === true ? <Form.Text className='mb-1'>
+                                                <span className='mb-1' style={{color: 'red'}}>{emailValidMsge}</span></Form.Text> : emailValidMsge
+                                            }
+                                        </div>
+                                        <div className='form-floating mb-3'>
+                                            <textarea className='form-control' id='descriptWork' name='descriptWork' style={{ height: '100px' }}
+                                            placeholder='Comentario sobre el Trabajador' maxLength={250} onChange={handleChange}></textarea>
+                                            <label htmlFor='descriptWork'>Comentario sobre el trabajador<span className='mb-1' style={{color: 'red'}}>*</span></label>
+                                            {
+                                                descriptWorkValid === true ? <Form.Text className='mb-1'>
+                                                <span className='mb-1' style={{color: 'red'}}>{'Por favor, ingrese un comentario sobre este trabajador.'}</span></Form.Text> : descriptWorkValidMsge
+                                            }
+                                        </div>
+                                        <div className="mb-3">
+                                            <label htmlFor="formFileMultiple" className="form-label">Evidencias del trabajo <span style={{color: 'red'}}>(4 fotos máximo)</span></label>
+                                            <input className="form-control" type="file" id="formFileMultiple" onChange={e => onchangeWorkImage(e.target)} multiple />
+                                            <Form.Text style={{color: '#5f738f'}}>Éste campo es opcional</Form.Text>
+                                            <div>
+                                            {
+                                            incorrectTypeImage === true ? <Form.Text style={{color:'red'}}>El archivo debe ser: .JPG .JPEG .PNG</Form.Text> : 
+                                            incorrectLengthImage === true ? <Form.Text style={{color:'red'}}>Sólo se permiten 4 fotos por comentario.</Form.Text> : ''}
+                                            </div>
+                                        </div>
+                                        <div className="mb-3">
+                                        <h5 className="mb-3" style={{color: '#384451'}}>Del 1 al 5, como calificaría usted el trabajo realizado por {element.nameUser}</h5>
+                                        <div id='responsabilidad'>
+                                            <h6 style={{color: '#384451'}}>Responsabilidad: </h6>
+                                            <Rating
+                                                onClick={handleRatingResp}
+                                                ratingValue={ratingScoreResp}
+                                                size={32}
+                                                label
+                                                transition
+                                                fillColor='orange'
+                                                emptyColor='gray'
+                                                className='resp'
+                                            />
+                                            <hr/>
+                                        </div>
+                                        <div id='puntualidad'>
+                                            <h6 style={{color: '#384451'}}>Puntualidad: </h6>
+                                            <Rating
+                                                onClick={handleRatingPunt}
+                                                ratingValue={ratingScorePunt}
+                                                size={32}
+                                                label
+                                                transition
+                                                fillColor='orange'
+                                                emptyColor='gray'
+                                                className='punt'
+                                            />
+                                            <hr/>
+                                        </div>
+                                        <div id='honestidad'>
+                                            <h6 style={{color: '#384451'}}>Honestidad: </h6>
+                                            <Rating
+                                                onClick={handleRatingHones}
+                                                ratingValue={ratingScoreHones}
+                                                size={32}
+                                                label
+                                                transition
+                                                fillColor='orange'
+                                                emptyColor='gray'
+                                                className='hones'
+                                            />
+                                            <hr/>
+                                        </div>
+                                        <div id='cuidadoso'>
+                                            <h6 style={{color: '#384451'}}>Cuidadoso: </h6>
+                                            <Rating
+                                                onClick={handleRatingCuidad}
+                                                ratingValue={ratingScoreCuidad}
+                                                size={32}
+                                                label
+                                                transition
+                                                fillColor='orange'
+                                                emptyColor='gray'
+                                                className='cuidad'
+                                            />
+                                            <hr/>
+                                        </div>
+                                        <div id='preciojusto'>
+                                            <h6 style={{color: '#384451'}}>Precio : </h6>
+                                            <Rating
+                                                onClick={handleRatingPrecio}
+                                                ratingValue={ratingScorePrecio}
+                                                size={32}
+                                                label
+                                                transition
+                                                fillColor='orange'
+                                                emptyColor='gray'
+                                                className='precio'
+                                            />
+                                            <hr/>
+                                        </div>
+                                        </div>
+                                        {
+                                            noRanked === true ? <Form.Text className='mb-1'>
+                                            <span className='mb-1' style={{color: 'red'}}>{`Por favor, califique las aptitudes de ${element.nameUser}`}</span></Form.Text> : ''
+                                        }
+                                    </Row>
+                                    <div className="mb-2" hidden={hiddenProgress}>
+                                        <ProgressBar className='profprogress' now={updateProgress} label={`${updateProgress}%`}/>
+                                    </div>
+                                </Form>
+                                </Modal.Body>
+                                <Modal.Footer>
+                                <Button className='btn-request' onClick={handleSubmitComment}>
+                                    Publicar Evaluación
+                                </Button>
+                                <Button variant="danger" onClick={handleCloseComment}>
                                     Cerrar
                                 </Button>
                                 </Modal.Footer>
