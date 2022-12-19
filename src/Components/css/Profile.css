@@ -79,6 +79,12 @@
     align-items: center;
 }
 
+.noprojects {
+    height:50vh;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
 .projects {
     height:50vh;
     overflow-y: scroll;
@@ -123,8 +129,21 @@
     cursor: pointer;
 }
 
+.tooltip{
+    z-index: 3 !important;
+}
+
 .tooltip-inner {
     background-color: #202A34 !important;
+}
+
+.specButton{
+    background-color: #5F738F !important;
+    border-color: #5F738F !important;
+}
+
+.specButton:hover{
+    background-color: #445266 !important;
 }
 
 .btn-request{
@@ -137,6 +156,11 @@
     background-color: #5f738f !important;
 }
 
+.responsabilidad{
+    display: flex;
+    flex-direction: column;
+}
+
 @media (max-width: 450px) {
     .solicitudbutton{
         right: 10px;
@@ -147,5 +171,8 @@
         right: 10px;
         bottom: 42%;
         width: 44px;
+    }
+    .modal-footer{
+        justify-content: center !important;
     }
   }

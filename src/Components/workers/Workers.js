@@ -3,12 +3,15 @@ import { Button, Col, Container, Form, Nav, Offcanvas, Row } from 'react-bootstr
 import Axios from 'axios'
 import { FaFilter } from "react-icons/fa";
 import '../css/Workers.css';
-import perfil from '../assets/perfil.png'
 import noworkersfounded from '../assets/search-empty.png'
-import { Link } from 'react-router-dom';
+import jobs from '../../Constants/Constants';
+import { useHomeContext } from '../contexts/WorkerContext';
+import Pagination from './Pagination';
 
 const Workers = () => {
 
+  const { worksearcher, setWorksearcher } = useHomeContext()
+  
   const [show, setShow] = useState(false);
   const [filtered, setFiltered] = useState(false);
   const [usuarios, setUsuarios ] = useState([]);
@@ -22,50 +25,53 @@ const Workers = () => {
   const [comunneValue, setComunneValue] = useState([]);
   const [areaValue, setAreaValue] = useState([]);
 
-  const jobs = ["Carpintero/a","Lechero/a","Frutero/a","Cerrajero/a","Cocinero/a","Deshollinador/ora","Lavandero/a","Artesano/a",
-  "Pescador/ra","Escultor/ra","Tornero/a","Albañil","Editor/ra","Barrendero/a","Fontanero/a o plomero/a",
-  "Obrero/a","Panadero/a","Locutor/ra","Barbero/a","Soldador/ra","Escritor/ra","Leñador/ra",
-  "Pintor/ra","Vendedor/ra","Peletero/a","Sastrero/ra","Repartidor/ra","Impresor/ra","Pastor/ra ganadero/ra",
-  "Cajero/a","Agricultor/ra","Vigilante","Exterminador/ra","Carnicero/a","Animador/ra","Peluquero/a",
-  "Mecánico/a","Niñero/a","Conductor/ra","Soldador"].sort();
-
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const  filterWorkers = (e) => {
-    let region = document.getElementById('region').value
-    let city = document.getElementById('city').value
-    let comunne = document.getElementById('comunne').value
-    let area = document.getElementById('area').value
-    let filterer = usuarios.filter(function(params) {
-      if(region === "" && area !== ""){
-        return params.workareaUser === area
-      }else if(region !== "" && city !== "" && comunne !== "" && area === ""){
-        return params.regionUser === region && params.cityUser === city &&  params.communeUser === comunne
-      }else if(region !== "" && city !== "" && area === ""){
-        return params.regionUser === region && params.cityUser === city
-      }else if(region !== "" && area === ""){
-        return params.regionUser === region
-      }else if(region !== "" && city !== "" && comunne !== "" && area !== ""){
-        return params.regionUser === region && params.cityUser === city &&  params.communeUser === comunne && params.workareaUser === area
-      }else if(region !== "" && city !== "" && area !== ""){
-        return params.regionUser === region && params.cityUser === city && params.workareaUser === area
-      }else if(region !== "" && area !== ""){
-        return params.regionUser === region && params.workareaUser === area
-      }
-    })
-    handleClose()
-    setFiltered(true)
-    setUsuariosFiltered(filterer)
+
+  const  filterWorkers = () => {
+      let region = document.getElementById('region').value
+      let city = document.getElementById('city').value
+      let comunne = document.getElementById('comunne').value
+      let area = document.getElementById('area').value
+      let filterer = usuarios.filter(function(params) {
+        if(region === "" && area !== ""){
+          return params.workareaUser === area
+        }else if(region !== "" && city !== "" && comunne !== "" && area === ""){
+          return params.regionUser === region && params.cityUser === city &&  params.communeUser === comunne
+        }else if(region !== "" && city !== "" && area === ""){
+          return params.regionUser === region && params.cityUser === city
+        }else if(region !== "" && area === ""){
+          return params.regionUser === region
+        }else if(region !== "" && city !== "" && comunne !== "" && area !== ""){
+          return params.regionUser === region && params.cityUser === city &&  params.communeUser === comunne && params.workareaUser === area
+        }else if(region !== "" && city !== "" && area !== ""){
+          return params.regionUser === region && params.cityUser === city && params.workareaUser === area
+        }else if(region !== "" && area !== ""){
+          return params.regionUser === region && params.workareaUser === area
+        }
+      })
+      handleClose()
+      setFiltered(true)
+      setUsuariosFiltered(filterer)
   }
 
-  const  clearFilters = (e) => {
-    setRegionValue('')
-    setCityValue('')
-    setComunneValue('')
-    setAreaValue('')
-    handleClose()
-    setFiltered(false)
+  const  clearFilters = () => {
+    if(worksearcher !== ''){
+      Axios.get("http://54.174.104.208:3001/api/usuarios").then((res)=>{
+        setFiltered(false)
+        setUsuarios(res.data)
+        setWorksearcher("")
+        handleClose()
+      });
+    }else{
+      setRegionValue('')
+      setCityValue('')
+      setComunneValue('')
+      setAreaValue('')
+      handleClose()
+      setFiltered(false)
+    }
   };
 
 
@@ -95,12 +101,21 @@ const Workers = () => {
   
   useEffect(() => {
       Axios.get("http://54.174.104.208:3001/api/usuarios").then((res)=>{
-        setUsuarios(res.data);
+        if(worksearcher !== ''){
+          let filtererFromHome = (res.data).filter(function(params) {
+            return params.workareaUser === worksearcher.oficio
+          })
+          setUsuarios(filtererFromHome)
+          setUsuariosFiltered(filtererFromHome)
+          setFiltered(true)
+        }else{
+          setUsuarios(res.data);
+        }
       });
       Axios.get("http://54.174.104.208:3001/api/localidades").then((res)=>{
             setLocalidades(res.data);
-        });        
-  },[])
+      });  
+  },[worksearcher])
 
   return (
     <>
@@ -220,48 +235,7 @@ const Workers = () => {
             </div>
           </div> : ''
         }
-        {
-          (filtered ? usuariosFiltered : usuarios).map((element,key) =>{
-            return(
-              <>
-                <div className="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 mt-2">
-                  <div className="single_advisor_profile wow fadeInUp" data-wow-delay="0.2s" style={{"visibility": "visible", "animationDelay": "0.2s", "animationName": "fadeInUp"}} key={key}>
-                    <div className="advisor_thumb" style={{'backgroundColor': (element.userColor !== undefined && element.userColor !== null && element.userColor !== "") ? element.userColor : '#3f43fd'}}>
-                    <h6>{element.workareaUser}</h6>
-                    <p className="designation"><i className="fa fa-clock-o"></i>{" "+element.experienceYears+" años de experiencia"}</p>
-                      <img src={(element.userPhoto !== undefined && element.userPhoto !== null && element.userPhoto !== "") ? 'http://54.174.104.208:3001/api/images/' + element.userPhoto : perfil} 
-                      style={{height: '15rem'}} alt={'imagen de perfil'} />
-                      <div className="social-info">
-                        {
-                          (element.facebookSite !== "" && element.facebookSite !== null && element.facebookSite !== undefined ) ? <a href={element.facebookSite} target='_blank' rel='noreferrer'><i className="fa fa-facebook"></i></a>
-                          : <></>
-                        }
-                        {
-                          (element.instagramSite !== "" && element.instagramSite !== null && element.instagramSite !== undefined ) ? <a href={element.instagramSite} target='_blank' rel='noreferrer'><i className="fa fa-instagram"></i></a>
-                          : <></>
-                        }
-                        {
-                          (element.webSite !== "" && element.webSite !== null && element.webSite !== undefined ) ? <a href={'http://'+element.webSite} target='_blank' rel='noreferrer'><i className="fas fa-globe-americas"></i></a>
-                          : <></>
-                        }
-                        {
-                          (element.cellphone !== "" && element.cellphone !== null && element.cellphone !== undefined ) ? <a href={`tel:${element.cellphone}`}><i className="fas fa-phone"></i></a>
-                          : <></>
-                        }
-                      </div>
-                    </div>
-                    <div className="single_advisor_details_info">
-                      <h6>{element.nameUser + " " + element.lastnamesUser}</h6>
-                      <p className="designation">{element.chargeUser}</p>
-                      <p className="designation">{element.workResume}</p>
-                      <Link to={`/trabajadores/perfil/vista/${element.id}`} className="btn btn-danger mt-2">Ver Perfil</Link>
-                    </div>
-                  </div>
-                </div>
-              </>
-            )
-          })
-        }
+        <Pagination data={filtered === true ? usuariosFiltered : usuarios} />
         </div>
         </div>
         </Row>
