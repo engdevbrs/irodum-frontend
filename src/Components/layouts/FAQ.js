@@ -78,8 +78,17 @@ const FAQ = () => {
                                         </div>
                                     </div>
                                 </div>
+                                <div className="accordion-item">
+                                    <h3 className="accordion-header" id="headingNine"><button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNine" aria-expanded="false" aria-controls="collapseNine">¿Debo abonar dinero al trabajador antes de comenzar el trabajo?</button></h3>
+                                    <div className="accordion-collapse collapse" id="collapseNine" aria-labelledby="headingNine" data-bs-parent="#accordionExample" >
+                                        <div className="accordion-body">
+                                            <p>Por favor, evite estafas, pague o abone al trabajador una vez comience o termine el trabajo, nunca antes.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <h3 className="fw-bolder mb-3" style={{color: '#5f738f'}}>Pago del servicio</h3>
+                            <h3 className="fw-bolder mb-3" style={{color: '#5f738f'}}>Post servicio</h3>
                             <div className="accordion mb-5" id="accordionExample2">
                                 <div className="accordion-item">
                                     <h3 className="accordion-header" id="headingOne"><button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne2" aria-expanded="false" aria-controls="collapseOne2">¿Cómo se paga al trabajador?</button></h3>
@@ -96,8 +105,8 @@ const FAQ = () => {
                                     <h3 className="accordion-header" id="headingTwo"><button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo2" aria-expanded="false" aria-controls="collapseTwo2">¿Qué hacer después de finalizado el trabajo?</button></h3>
                                     <div className="accordion-collapse collapse" id="collapseTwo2" aria-labelledby="headingTwo" data-bs-parent="#accordionExample2" >
                                         <div className="accordion-body">
-                                            <p>No es necesario hacer nada más, pero lo ideal es que realices una evaluación al trabajo para que
-                                                futuros clientes tengan referencia sobre el trabajador y la calidad de su servicio.
+                                            <p>No es necesario hacer nada más por ambas partes, pero lo ideal es que el cliente realice una evaluación al trabajo para que
+                                                futuros clientes tengan referencia sobre el trabajador y la calidad de sus servicios.
                                             </p>
                                         </div>
                                     </div>
@@ -122,6 +131,7 @@ const FAQ = () => {
                                             <p>Tu cuenta es personal y única. <br/>
                                                 Con tu cuenta podrás.
                                                 <ol classNameName='mt-2'>
+                                                    <li>Controlar y visualizar tus solicitudes de trabajo.</li>
                                                     <li>Subir una foto de perfil tuya.</li>
                                                     <li>Subir algunos proyectos realizados, para que tus clientes vean ejemplos de como trabajas.</li>
                                                     <li>Agregar alguna especialidad y/o certificaciones.</li>

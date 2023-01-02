@@ -81,13 +81,13 @@ const ViewClientProjects = ({id}) => {
       </Row></>
       : 
       <>
-      <div className='shadow d-flex align-items-center justify-content-center text-center' style={{height: '50vh'}}>
+      <Card className='shadow rounded-0 d-flex align-items-center justify-content-center text-center' style={{height: '50vh'}}>
           <h5 className='mt-2'><strong>Éste usuario no tiene trabajos para mostrar</strong></h5>
           <div>
           <img className='mt-4' variant="top" src={emptyprojects} 
               alt={'project'} style={{height: '200px', width: 'auto', padding: '15px'}}/>
           </div> 
-      </div>
+      </Card>
       </>
     }
     </Container>
