@@ -1,4 +1,5 @@
 import React from 'react'
+import { Rating } from 'react-simple-star-rating'
 import { Card, Col, Container, Row } from 'react-bootstrap'
 import '../css/Comments.css'
 import comment from '../assets/comment.png'
@@ -33,8 +34,10 @@ const Comments = ({data}) => {
                 <Card.Body>
                 <Row>
                     <p className='text-start p-2'><strong>Comentario: </strong>{value.workerComment}</p>
-                    <h6 className='text-start p-2'><strong>Evidencias del trabajo</strong></h6>
-                    <hr/>
+                    {
+                      comment.length > 0 ? <><p className='text-start p-2'><strong>Evidencias del trabajo</strong></p><hr/></> : <></>
+                    }
+                    
                 {
                   comment.map(image =>{
                     return(
@@ -49,13 +52,21 @@ const Comments = ({data}) => {
                 }
                 </Row>
                 </Card.Body>
-                <Card.Footer style={{ color: 'rgb(226 226 226)', backgroundColor: '#202A34' }}>
-                  <Row>
-                      <Col className='text-sm-center text-xl-start'>
-                        Puntuación total del trabajo: {sumaRating}
-                      </Col>
-                    </Row>
-                  </Card.Footer>
+                <Card.Footer style={{ color: 'rgb(226 226 226)', backgroundColor: '#202A34',display: 'flex',justifyContent: 'center' }}>
+                      <div className='d-flex align-items-center'>
+                        <span className='me-1'>Evaluó con:</span>
+                        <Rating
+                            initialValue={sumaRating}
+                            size={22}
+                            fillColor='orange'
+                            emptyColor='gray'
+                            allowFraction={true}
+                            readonly={true}
+                            style={{ marginRight: '3px', display: 'flex',justifyItems: 'center' }}
+                        />
+                        <span className='me-1'>({sumaRating})</span>
+                      </div>
+                </Card.Footer>
               </Card>
               </>
             )

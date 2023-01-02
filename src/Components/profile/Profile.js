@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import Axios  from 'axios'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import '../css/Profile.css'
-import { Button, Card, Container, Form, ListGroup, Modal, Nav, OverlayTrigger, ProgressBar, Tab, Table, Tabs, Tooltip } from 'react-bootstrap'
+import { Button, Card, Container, Form, ListGroup, Modal, Nav, ProgressBar, Tab, Table, Tabs } from 'react-bootstrap'
 import { Rating } from 'react-simple-star-rating'
 import web from '../assets/web.png'
 import instagram from '../assets/instagram.png'
 import facebook from '../assets/facebook.png'
 import twitter from '../assets/twitter.png'
-import whatsapp from '../assets/whatsapp.png'
 import accesDenied from '../assets/access-denied.png'
 import loadingprofilegf from '../assets/loading-profile.gif'
 import perfil from '../assets/perfil.png'
@@ -20,13 +19,11 @@ import uploadPhoto from '../assets/upload-photo.png'
 import Projects from './Projects'
 import Comments from './Comments'
 import Ratings from './Ratings'
-import speciality from '../assets/speciality.png';
 import Specialities from './Specialities'
 
 const Profile = () => {
 
     const MySwal = withReactContent(Swal)
-    const navigate = useNavigate()
     const [ dataUser, setDataUser ] = useState([])
     const [ response, setResponse ] = useState([])
     const [ loading, setLoading ] = useState(true)
@@ -49,7 +46,6 @@ const Profile = () => {
     const [ descriptSpecialityMsge, setDescriptSpecialityMsge ] = useState([])
     const [ specialityFormMsge, setSpecialityFormMsge ] = useState([])
     const [showModalSpeciality, setShowModalSpeciality] = useState(false);
-    const [ specialityRows, setSpecialityRows ] = useState(1)
 
     const handleChangePhoto = () =>{
         const token = localStorage.getItem('accessToken');
@@ -211,14 +207,24 @@ const Profile = () => {
                     Axios.put("http://54.174.104.208:3001/api/update-user", {newArrayValues ,'authorization' : `${token}`})
                     .then((result) => {
                         if(result.status === 200){
-                            Swal.fire('Actualización exitosa!', '', 'success')
+                            Swal.fire({
+                                    icon: 'success',
+                                    html:`<p className="mt-1">Su perfil fue actualizado correctamente.</p>`,
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'Aceptar'
+                              })
                             setInputs(false)
                             setCancelButton(false)
                             getAccess(token)
                             
                         }
                     }).catch(error => {
-                        Swal.fire('Los cambios no fueron guardados', '', 'danger')
+                        Swal.fire({
+                            icon: 'error',
+                                html:`<p className="mt-1">Lo sentimos, no pudimos guardar los cambios...</p>`,
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'Aceptar'
+                          })
                         setInputs(false)
                         setCancelButton(false)
                     });
@@ -280,7 +286,6 @@ const Profile = () => {
         setShowModalSpeciality(false)
         setDescriptSpeciality(true)
         setUpdateProgressSpec(0)
-        setSpecialityRows(1)
         showProgressSpec(true)
     }
 
@@ -455,30 +460,24 @@ const Profile = () => {
                                                 <ListGroup.Item>{
                                                 inputs === true ? <><img src={instagram} alt=''/><div className='form-floating col-10'>
                                                     <input type="text" className='form-control' id='floatingInstagram' name='instagram' defaultValue={element.instagramSite !== undefined ? element.instagramSite : '#'} placeholder='floatingInstagram'/>
-                                                    <label htmlFor='floatingInstagram'>Perfil de instagram</label>
+                                                    <label htmlFor='floatingInstagram'>URL perfil de instagram</label>
                                                 </div></> : 
                                                 <><img src={instagram} alt=''/><a href={element.instagramSite !== undefined ? element.instagramSite : '#'} target="_blank" rel="noopener noreferrer">Instagram</a>
                                                 </>}</ListGroup.Item>
                                                 <ListGroup.Item>{
                                                 inputs === true ? <><img src={facebook} alt=''/><div className='form-floating col-10'>
                                                     <input type="text" className='form-control' id='floatingFacebook' defaultValue={element.facebookSite !== undefined ? element.facebookSite : '#'} name='facebook' placeholder='floatingFacebook'/>
-                                                    <label htmlFor='floatingFacebook'>Perfil de facebook</label>
+                                                    <label htmlFor='floatingFacebook'>URL perfil de facebook</label>
                                                 </div></> : 
                                                 <><img src={facebook} alt=''/><a href={element.facebookSite !== undefined ? element.facebookSite : '#'} target="_blank" rel="noopener noreferrer">Facebook</a>
                                                 </>}</ListGroup.Item>
                                                 <ListGroup.Item>{
                                                 inputs === true ? <><img src={twitter} alt=''/><div className='form-floating col-10'>
                                                     <input type="text" className='form-control' id='floatingTwitter' defaultValue={element.twitterSite !== undefined ? element.twitterSite : '#'} name='twitter' placeholder='floatingTwitter'/>
-                                                    <label htmlFor='floatingTwitter'>Perfil de twitter</label>
+                                                    <label htmlFor='floatingTwitter'>URL perfil de twitter</label>
                                                 </div></> : 
                                                 <><img src={twitter} alt=''/><a href={element.twitterSite !== undefined ? element.twitterSite : '#'} target="_blank" rel="noopener noreferrer">Twitter</a>
                                                 </>}</ListGroup.Item>
-                                                <ListGroup.Item>{
-                                                inputs === true ? <><img src={whatsapp} alt=''/><div className='form-floating col-10'>
-                                                    <input type="text" className='form-control' id='floatingWhatsapp' defaultValue={element.whatsappSite !== undefined ? element.whatsappSite : ''} placeholder='floatingWhatsapp'/>
-                                                    <label htmlFor='floatingWhatsapp'>WhatsApp Web</label>
-                                                    </div></> : 
-                                                    <><img src={whatsapp} alt=''/><a href={element.whatsappSite !== undefined ? element.whatsappSite : '#'} target="_blank" rel="noopener noreferrer">WhatsApp Web</a></>}</ListGroup.Item>
                                             </ListGroup>
                                         </Card>
                                     </Col>
