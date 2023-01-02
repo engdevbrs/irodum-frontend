@@ -144,7 +144,7 @@ const ToDoList = () => {
             <Modal.Body>
                 <Alert key='warning' variant='warning'>
                     <p className="mb-0" style={{fontSize: '14px'}}>
-                        <i class='fas fa-exclamation-triangle' style={{fontSize: '18px'}}></i>
+                        <i className='fas fa-exclamation-triangle' style={{fontSize: '18px'}}></i>
                         {' '}Por favor, elija bien su método de contacto. <br/><br/>
                         Al seleccionar el método de Whatsapp, se le preguntará si se contactó con su cliente,
                         ésta confirmación es de suma importancia para que pueda continuar con el proceso de su solicitud de trabajo.
