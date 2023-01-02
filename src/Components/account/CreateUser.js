@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useState } from 'react';
-import { Container, Button } from 'react-bootstrap';
+import { Container, Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { useStepperContext } from '../contexts/StepperContext.js'
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
@@ -110,7 +110,29 @@ const CreateNewUser = () => {
                             <p><i style={{color:value1.match(/[0-9]/) ? "green" : "red",fontSize:"20px"}} className="fa fa-check-circle" aria-hidden="true">
                                 </i><Form.Text> Al menos, un número.</Form.Text></p>
                             <p><i style={{color:value1.match(/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/) ? "green" : "red",fontSize:"20px"}} className="fa fa-check-circle" aria-hidden="true">
-                                </i><Form.Text>  Al menos, un carácter especial.</Form.Text></p>
+                                </i><Form.Text>  Al menos, un carácter especial. <span>{' '}</span> 
+                                            <OverlayTrigger
+                                                key='bottom'
+                                                placement='bottom'
+                                                overlay={
+                                                    <Tooltip >
+                                                    Algunos ejemplos de carácteres especiales son: <br/>
+                                                    <ul style={{ listStyle: 'none', textAlign: 'start' }}>
+                                                        <li>.</li>
+                                                        <li>,</li>
+                                                        <li>#</li>
+                                                        <li>!</li>
+                                                        <li>@</li>
+                                                        <li>$</li>
+                                                        <li>/</li>
+                                                        <li>*</li>
+                                                        <li>&</li>
+                                                        <li>-</li>
+                                                    </ul>
+                                                    </Tooltip>
+                                                }
+                                                ><i className='fas fa-question-circle' style={{fontSize:'18px',cursor:'pointer', color: '#384451'}}></i>
+                                                </OverlayTrigger></Form.Text></p>
                         </Col>
                     </Row>
                     <Row>
