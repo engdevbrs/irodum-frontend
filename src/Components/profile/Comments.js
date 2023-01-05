@@ -76,7 +76,7 @@ const Comments = ({data}) => {
         </> : 
         <>
         <Card className='shadow rounded-0 d-flex align-items-center justify-content-center text-center' style={{height: '50vh'}}>
-            <h5 className='mt-2'><strong>Éste usuario aún no ha recibido comentarios</strong></h5>
+            <h5 className='mt-2'><strong>Ningún comentario recibido</strong></h5>
             <div>
             <img className='mt-4' src={comment} 
                 alt={'project'} style={{height: '200px', width: 'auto', padding: '15px'}}/>

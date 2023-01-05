@@ -373,7 +373,7 @@ const Profile = () => {
         <>
             <div hidden={loading}>
                 <Col>
-                    <Nav aria-label="breadcrumb" className="bg-light rounded-3 p-3 mb-4">
+                    <Nav aria-label="breadcrumb" className="bg-light p-3 mb-4">
                         <ol className="breadcrumb mb-0">
                             <li className="breadcrumb-item"><Link to={'/'} >Inicio</Link></li>
                             <li className="breadcrumb-item active" aria-current="page">Mi Perfil</li>
@@ -414,7 +414,7 @@ const Profile = () => {
                                                 emptyColor='gray'
                                                 allowFraction={true}
                                                 readonly={true}
-                                            /><span style={{fontSize: '16px', fontWeight: '600'}}>({ratingScore.length > 0 ? (sumaTotal / ratingScore.length).toFixed(2) : 0})</span>
+                                            /><span style={{fontSize: '16px', fontWeight: '600'}}>({ratingScore.length > 0 ? (sumaTotal / ratingScore.length).toFixed(1) : 0})</span>
                                             </div>
                                             <span style={{fontSize: '16px', fontWeight: '600'}}>({ratingScore.length} evaluaciones)</span>
                                             <div className="mb-2" hidden={hiddenProgress}>
@@ -510,7 +510,7 @@ const Profile = () => {
                                             <Col sm={9}>
                                             {inputs === true ? <div className='form-floating col-12'>
                                                 <input type='number' className='form-control' onChange={(e) => onchangeCell(e.target)} id='floatingCell' name='cell' 
-                                                defaultValue={element.cellphone !== undefined ? element.cellphone : ''} maxLength={9} placeholder='floatingCell' required/>
+                                                defaultValue={element.cellphone !== undefined ? element.cellphone : ''} max={9} placeholder='floatingCell' required/>
                                                 <label htmlFor='cell'>Nuevo celular</label>
                                                 {
                                                     validationCell !== true ? '' : 

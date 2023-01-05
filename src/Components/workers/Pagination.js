@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Container } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
+import { Rating } from 'react-simple-star-rating'
 import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
 import perfil from '../assets/perfil.png'
@@ -25,7 +26,7 @@ const Pagination = (props) => {
       const newOffset = (event.selected * itemsPerPage) % data.length;
       setItemOffset(newOffset);
     };
-  
+
     return (
       <>
         {
@@ -35,8 +36,23 @@ const Pagination = (props) => {
                     <div className="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 mt-2">
                         <div className="single_advisor_profile wow fadeInUp" data-wow-delay="0.2s" style={{"visibility": "visible", "animationDelay": "0.2s", "animationName": "fadeInUp"}} key={key}>
                         <div className="advisor_thumb" style={{'backgroundColor': (element.userColor !== undefined && element.userColor !== null && element.userColor !== "") ? element.userColor : '#3f43fd'}}>
-                        <h6>{element.workareaUser}</h6>
-                        <p className="designation"><i className="fa fa-clock-o"></i>{" "+element.experienceYears+" años de experiencia"}</p>
+                        <Row className='d-flex align-content-center'>
+                            <Col md={4} sm={4} xs={4} className='d-flex align-content-center'>
+                                <span style={{ color: "rgb(36 36 36)", fontWeight: '500' }}>{element.workareaUser}</span>
+                            </Col>
+                            <Col md={8} sm={8} xs={8} className='d-flex justify-content-end align-items-end'>
+                                <Rating
+                                initialValue={element.ranking !== null ? element.ranking : 0}
+                                size={18}
+                                fillColor='orange'
+                                emptyColor='gray'
+                                allowFraction={true}
+                                readonly={true}
+                                style={{ marginRight: '3px', display: 'flex',justifyItems: 'center' }}
+                                /><span style={{color: 'rgb(245 245 245)', fontSize: '13px', fontWeight: '600'}}>({element.ranking !== null ? element.ranking : 0})</span>
+                            </Col>
+                        </Row>
+                        <p className="designation" style={{fontSize: '14px', fontWeight: '500'}}><i className="fa fa-clock-o"></i>{" "+element.experienceYears+" años de experiencia"}</p>
                             <img src={(element.userPhoto !== undefined && element.userPhoto !== null && element.userPhoto !== "") ? 'http://54.174.104.208:3001/api/images/' + element.userPhoto : perfil} 
                             style={{height: '15rem'}} alt={'imagen de perfil'} />
                             <div className="social-info">

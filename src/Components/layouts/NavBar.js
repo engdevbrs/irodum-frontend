@@ -4,13 +4,17 @@ import { Toast, ToastContainer } from "react-bootstrap";
 import { Link, Outlet } from 'react-router-dom';
 import perfil from '../assets/perfil.png'
 import { useLoginContext } from "../contexts/AuthContext";
+import { useHomeContext } from '../contexts/WorkerContext';
 import '../css/NavBar.css'
 import Footer from "./Footer";
 import { useNavigate } from "react-router-dom";
+import jobs from '../../Constants/Constants';
+
 
 const Menu = () =>{
 
   const navigate = useNavigate()
+  const { worksearcher, setWorksearcher } = useHomeContext();
   const { userData, setUserData } = useLoginContext()
   const [ userPhoto, setUserPhoto] = useState([])
   const [ userName, setUserName] = useState([])
@@ -29,6 +33,14 @@ const Menu = () =>{
     }
   }
 
+  const searchingWorker = (e) =>{
+    e.preventDefault();
+    const oficio = document.getElementById('worksearcher').value
+    setWorksearcher({...worksearcher ,oficio })
+    document.getElementById('worksearcher').value = ""
+    return navigate('/trabajadores');
+  }
+
   const logOut = () =>{
     localStorage.removeItem('accessToken')
     localStorage.removeItem('userPhoto')
@@ -40,6 +52,39 @@ const Menu = () =>{
   }
 
   useEffect(() =>{
+
+    let inputField = document.getElementById('worksearcher');
+    let ulField = document.getElementById('sugerencias');
+    inputField.addEventListener('input', changeAutoComplete);
+    ulField.addEventListener('click', selectItem);
+  
+    function changeAutoComplete({ target }) {
+      let data = target.value;
+      ulField.innerHTML = ``;
+      if (data.length) {
+        let autoCompleteValues = autoComplete(data);
+        autoCompleteValues.forEach(value => { addItem(value); });
+      }
+    }
+  
+    function autoComplete(inputValue) {
+      let destination = jobs;
+      return destination.filter(
+        (value) => value.toLowerCase().includes(inputValue.toLowerCase())
+      );
+    }
+  
+    function addItem(value) {
+      ulField.innerHTML = ulField.innerHTML + `<li>${value}</li>`;
+    }
+  
+    function selectItem({ target }) {
+      if (target.tagName === 'LI') {
+        inputField.value = target.textContent;
+        ulField.innerHTML = ``;
+      }
+    }
+
     if(userData.token !== undefined || localStorage.getItem('accessToken')){
         const token = localStorage.getItem('accessToken');
         Axios.post("http://54.174.104.208:3001/api/user-info", {
@@ -57,8 +102,11 @@ const Menu = () =>{
                 })
                 .then((response) => {
                     if(response.status === 200){
-                      setProjectsData(response.data)
-                      response.data.length > 0 ? setShow(true) : setShow(false)
+                      let notconfirmed = (response.data).filter(function(params) {
+                        return params.estado === 'pendiente' || params.estado === 'acordar';
+                      })
+                      setProjectsData(notconfirmed)
+                      notconfirmed.length > 0 ? setShow(true) : setShow(false)
                     }
                 }).catch(error => {
                       setProjectsData([])
@@ -75,54 +123,64 @@ const Menu = () =>{
             setUserPhoto("")
             setLoggedIn(false)
           });
-
     }
-  },[userData.token, isLoggedIn, userPhoto])
+
+  },[userData.token, isLoggedIn, userPhoto,worksearcher])
 
   return (
       <>
         <div id="menuHolder">
           <div role="navigation" id="mainNavigation">
             <div className="flexMain">
-              <div className="flex2">
+              <div className="col-lg-3 col-md-3 col-sm-3 col-3">
                 <button className="whiteLink siteLink"  onClick={() => menuToggle()}><i className="fas fa-bars me-2"></i> MENÚ</button>
               </div>
-                {
-                  (localStorage.getItem('accessToken') || isLoggedIn) ?  <>
-                  <ul className="navbar-nav d-flex flex-row align-items-center me-3">         
-                    <li className="nav-item me-3 me-md-3 me-lg-4 dropdown" onClick={() => requestNavigate()} style={{cursor: 'pointer'}}>
-                      <i className='fas fa-file-alt mt-1' style={{fontSize:'24px','color': '#5f738f'}}></i>
-                        <span className="position-absolute start-80 translate-middle badge rounded-pill bg-danger mt-1">
+              <div className="col-lg-6 col-md-6 col-sm-6 col-6 d-flex justify-content-center align-items-center">
+                <div className="row height d-flex justify-content-center align-items-center" style={{ width: "100%"}}>
+                  <div className="form worksearcher-form" style={{ width: '100%', padding: '0px' }}>
+                    <input type="text" id='worksearcher' className="worksearcher" placeholder="Ej: Carpintero" />
+                    <span className="left-pan"><i className="fas fa-search" style={{cursor: 'pointer'}} onClick={e => searchingWorker(e)}></i></span>
+                  </div>
+                  <div id='sugerencias' className="sugerencias"></div>
+                </div>
+              </div>
+              <div className="col-lg-3 col-md-3 col-sm-3 col-3 d-flex justify-content-end">
+              {
+                (localStorage.getItem('accessToken') || isLoggedIn) ?  <>
+                <ul className="navbar-nav d-flex flex-row align-items-center me-1">         
+                  <li className="nav-item me-3 me-md-3 me-lg-4 dropdown" onClick={() => requestNavigate()} style={{cursor: 'pointer'}}>
+                    <i className='fas fa-file-alt mt-1' style={{fontSize:'24px','color': '#5f738f'}}></i>
+                      <span className="position-absolute start-80 translate-middle badge rounded-pill bg-danger mt-1">
+                      {projectsData.length}
+                      </span>        
+                  </li>
+                  <li className="nav-item me-0 me-lg-0 dropdown">
+                    <div className="nav-link dropdown-toggle" id="navbarDropdown1" type="button" data-bs-toggle="dropdown"
+                      aria-expanded="false" style={{color: 'grey'}}>
+                      <img id="photoUser" src={(userPhoto !== null && userPhoto !== undefined && userPhoto !== "" && userPhoto.length > 0)  ? 
+                      'http://54.174.104.208:3001/api/images/'+ userPhoto : perfil} className="rounded-circle" height="35" width="35"
+                        alt=""/>
+                    </div>
+                    <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown1">
+                      <li><Link to={'/perfil'} className="dropdown-item" >Mi Perfil</Link></li>
+                      <li><Link to={'/mis-solicitudes'} className="dropdown-item" >{projectsData.length > 0 ? 
+                      <div>Nuevas solicitudes{' '}<span className="badge rounded-pill bg-danger">
                         {projectsData.length}
-                        </span>        
-                    </li>
-                    <li className="nav-item me-0 me-lg-0 dropdown">
-                      <div className="nav-link dropdown-toggle" id="navbarDropdown1" type="button" data-bs-toggle="dropdown"
-                        aria-expanded="false" style={{color: 'grey'}}>
-                        <img id="photoUser" src={(userPhoto !== null && userPhoto !== undefined && userPhoto !== "" && userPhoto.length > 0)  ? 
-                        'http://54.174.104.208:3001/api/images/'+ userPhoto : perfil} className="rounded-circle" height="35" width="35"
-                          alt=""/>
-                      </div>
-                      <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown1">
-                        <li><Link to={'/perfil'} className="dropdown-item" >Mi Perfil</Link></li>
-                        <li><Link to={'/mis-solicitudes'} className="dropdown-item" >{projectsData.length > 0 ? 
-                        <div>Nuevas solicitudes{' '}<span className="badge rounded-pill bg-danger">
-                          {projectsData.length}
-                        </span>
-                        </div> : 'Mis Solicitudes'}</Link></li>
-                        <li><Link to={'/mis-proyectos'} className="dropdown-item" >Mis Proyectos</Link></li>
-                        <li>
-                          <hr className="dropdown-divider"/>
-                        </li>
-                        <li>
-                          <a className="dropdown-item" onClick={() => logOut()} href="/"><i className="fa fa-sign-out me-2"></i>Cerrar Sesión</a>
-                        </li>
-                      </ul>
-                    </li>
-                </ul>
-                </> : <><Link to={'/crear-cuenta'} className="signin-item2 p-2"><i className="fas fa-user-plus me-2" style={{color: 'white'}}></i>Crear Cuenta</Link>
-                      <Link to={'/login'} className="signin-item p-2"><i className="fas fa-sign-in me-2" style={{color: 'white'}}></i>Iniciar Sesión</Link></>
-                }
+                      </span>
+                      </div> : 'Mis Solicitudes'}</Link></li>
+                      <li><Link to={'/mis-proyectos'} className="dropdown-item" >Mis Proyectos</Link></li>
+                      <li>
+                        <hr className="dropdown-divider"/>
+                      </li>
+                      <li>
+                        <a className="dropdown-item" onClick={() => logOut()} href="/"><i className="fa fa-sign-out me-2"></i>Cerrar Sesión</a>
+                      </li>
+                    </ul>
+                  </li>
+              </ul>
+              </> : <><Link to={'/login'} className="signin-item p-2"><i className="fas fa-sign-in me-2" style={{color: 'white'}}></i>Entrar</Link></>
+              }
+              </div>
             </div>
           </div>
           <div id="menuDrawer">
@@ -139,6 +197,7 @@ const Menu = () =>{
               <Link to={'/sobre-nosotros'}  className="nav-menu-item" onClick={() => menuToggle()}><i className="fas fa-exclamation-circle me-3"></i>Sobre Nosotros</Link>
               <Link to={'/preguntas-frecuentes'} className="nav-menu-item" onClick={() => menuToggle()}><i className="fas fa-question-circle me-3"></i>Preguntas Frecuentes</Link>
               <Link to={'/contacto'} className="nav-menu-item" onClick={() => menuToggle()}><i className="fas fa-address-book me-3"></i>Contacto</Link>
+              <Link to={'/crear-cuenta'} className="nav-menu-item" onClick={() => menuToggle()}><i className="fas fa-user-plus me-3"></i>Crear Cuenta</Link>
             </div>
           </div>
         </div>

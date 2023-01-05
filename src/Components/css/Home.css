@@ -21,55 +21,6 @@
     align-items: center;
 }
 
-.worksearcher-form{
-    position: relative;
-}
-
-.worksearcher-form span{
-    position: absolute;
-    right: 17px;
-    padding: 2px;
-    border-left: 1px solid #d1d5db;
-}
-
-.left-pan{
-    padding-left: 7px;
-}
-
-.left-pan i{
-   padding-left: 15px;
-}
-
-.worksearcher{
-    height: 55px;
-    text-indent: 33px;
-    border-radius: 10px;
-}
-
-.worksearcher:focus{
-    box-shadow: none;
-    border:none;
-}
-
-.sugerencias{
-    margin-top: -8px;
-    text-decoration: none;
-    list-style: none;
-    background-color: white;
-    border-radius: 0px 0px 10px 10px;
-    position: relative;
-}
-
-.sugerencias li{
-    text-align: center;
-}
-
-.sugerencias li:hover{
-    cursor: pointer;
-    background-color: rgb(226, 226, 226);
-    border-radius: 0px 0px 10px 10px;
-}
-
 @media (max-width: 450px) {
     .information{
         text-align: center;
