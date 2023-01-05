@@ -8,7 +8,7 @@
 .flex3 { flex:3 }
   
 button.siteLink {
-  margin-left:-5px;
+  margin-left:-12px;
   border:none;
   padding:20px;
   display:inline-block;
@@ -130,6 +130,28 @@ select.noStyle {
   font-weight: 500;
 }
 
+
+.worksearcher-form{
+  position: relative;
+}
+
+.worksearcher-form span{
+  position: absolute;
+  right: 8px;
+  padding: 2px;
+  border-left: 1px solid #d1d5db;
+}
+
+.left-pan{
+  padding-left: 7px;
+}
+
+.left-pan i{
+ padding-left: 15px;
+}
+
+
+
 .searcher{
   display: flex;
   margin: 0px 10px 0px 10px;
@@ -152,10 +174,38 @@ select.noStyle {
   bottom: 0px;
 }
 
+.sugerencias{
+  top: 45px;
+  text-decoration: none;
+  list-style: none;
+  background-color: rgb(32,42,52);
+  border-radius: 0px 0px 10px 10px;
+  position: absolute;
+  padding: 0px !important;
+  width: 50% !important;
+  z-index: 9;
+}
+
+.sugerencias li{
+  color: #fff;
+  padding: 5px;
+  text-align: center;
+}
+
+.sugerencias li:hover{
+  cursor: pointer;
+  background-color: #3c4d5d;
+}
+
 @media (max-width: 560px) {
   
   .signin-item {
-    font-size: 12px;
+    font-size: 14px;
+  }
+
+  .worksearcher{
+    width: 100% !important;
+    height: 37px !important;
   }
 
   .signin-item2 {
@@ -163,13 +213,43 @@ select.noStyle {
   }
 }
 
+@media (max-width: 560px) {
+  
+  .signin-item {
+    font-size: 12px;
+    margin-right: 5px;
+  }
+
+  .worksearcher{
+    width: 100% !important;
+    height: 37px !important;
+  }
+
+}
+
+@media (max-width: 495px) {
+  
+  .signin-item {
+    font-size: 12px;
+    margin-right: 5px;
+  }
+
+  .worksearcher{
+    width: 100% !important;
+    height: 37px !important;
+  }
+
+}
+
 @media (max-width: 450px) {
   
   .signin-item {
-    font-size: 10px;
+    font-size: 12px;
   }
 
-  .signin-item2 {
-    font-size: 10px;
+  .worksearcher{
+    width: 100% !important;
+    height: 37px !important;
   }
+
 }
