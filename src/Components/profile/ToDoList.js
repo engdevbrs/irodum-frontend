@@ -11,22 +11,40 @@ import norequestsconfirmeds from '../assets/no-requests-confirmeds.png'
 import whatsapp from '../assets/whatsapp.png'
 import email from '../assets/email.png'
 
+
 const ToDoList = () => {
 
     const MySwal = withReactContent(Swal)
     const [showModal, setShowModal] = useState(false);
     const [showModalContact, setShowModalContact] = useState(false);
+    const [show, setShow] = useState(false);
+
     const [ response, setResponse ] = useState([])
     const [ userInfo, setUserInfo ] = useState([])
     const [ projectsData, setProjectsData ] = useState([])
+    const [ projectsDataConfirmed, setProjectsDataConfirmed ] = useState([])
+    const [ projectsDataRejected, setProjectsDataRejected ] = useState([])
     const [ tabIndex, setTabIndex ] = useState([])
+    const [ idRequestConfirm, setIdRequestConfirm ] = useState([])
     const [ loading, setLoading ] = useState(true)
     const [ modalData, setModalData ] = useState([])
     const [ showFormEmail, setShowFormEmail ] = useState(false)
     const [ showWspConfirm, setShowWspConfirm ] = useState(false)
+    const [ enableConfirm, setEnableConfirm ] = useState(false)
+    
+    const handleClose = () => {
+        setShow(false)
+        setEnableConfirm(false)
+    };
 
     const confirmUserProject = (e) =>{
+        e.preventDefault();
         const token = localStorage.getItem('accessToken');
+        const requestConfirmObject = {
+            idRequest: idRequestConfirm,
+            estado: 'confirmado',
+            startDate: document.getElementById('dateRequestConfirm').value
+        }
         MySwal.fire({
             title: 'Estás seguro de confirmar ésta solicitud ?',
             showDenyButton: true,
@@ -35,7 +53,7 @@ const ToDoList = () => {
             denyButtonText: `Cancelar`,
             }).then((result) => {
                 if(result.isConfirmed){
-                    Axios.put("http://54.174.104.208:3001/api/user/request-confirm" + parseInt(e[1].value,10), 
+                    Axios.put("http://54.174.104.208:3001/api/user/request-confirm", requestConfirmObject , 
                     {
                         headers: {
                         'authorization': `${token}`
@@ -45,9 +63,45 @@ const ToDoList = () => {
                         if(result.status === 200){
                             getProjects(token)
                             Swal.fire('La solicitud fue confirmada con éxito!', '', 'success')
+                            setShow(false)
+                            setEnableConfirm(false)
                         }
                     }).catch(error => {
+                        setShow(false)
+                        setEnableConfirm(false)
                         Swal.fire('No pudimos confirmar la solicitud.', '', 'warning')
+                    });
+                }
+            })
+    }
+
+    const rejectUserProject = (idRequestReject) =>{
+        const token = localStorage.getItem('accessToken');
+        const requestRejectObject = {
+            idRequest: idRequestReject,
+            estado: 'rechazado',
+        }
+        MySwal.fire({
+            title: 'Estás seguro de rechazar ésta solicitud ?',
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: `Rechazar`,
+            denyButtonText: `Cancelar`,
+            }).then((result) => {
+                if(result.isConfirmed){
+                    Axios.put("http://54.174.104.208:3001/api/user/request-reject", requestRejectObject , 
+                    {
+                        headers: {
+                        'authorization': `${token}`
+                        }
+                    }
+                    ).then((result) => {
+                        if(result.status === 200){
+                            getProjects(token)
+                            Swal.fire('La solicitud fue rechazada', '', 'success')
+                        }
+                    }).catch(error => {
+                        Swal.fire('No pudimos rechazar la solicitud.', '', 'warning')
                     });
                 }
             })
@@ -116,10 +170,21 @@ const ToDoList = () => {
         })
           .then((result) => {
               if(result.status === 200){
-                setProjectsData(result.data)
+                let notconfirmed = (result.data).filter(function(params) {
+                    return params.estado === 'pendiente' || params.estado === 'acordar';
+                })
+                let confirmed = (result.data).filter(function(params) {
+                    return params.estado === 'confirmado';
+                })
+                let rejected = (result.data).filter(function(params) {
+                    return params.estado === 'rechazado';
+                })
+                setProjectsData(notconfirmed)
+                setProjectsDataConfirmed(confirmed)
+                setProjectsDataRejected(rejected)
               }
           }).catch(error => {
-                setProjectsData(error.response.status)
+                setProjectsData([])
           });
     }
 
@@ -274,11 +339,13 @@ const ToDoList = () => {
     }
 
     const allowAccess = () =>{
+        let maxDate = new Date()
+        maxDate.setFullYear(maxDate.getFullYear()+1)
         return(
             <>
                 <div hidden={loading}>
                 <Col>
-                    <Nav aria-label="breadcrumb" className="bg-light rounded-3 p-3 mb-4">
+                    <Nav aria-label="breadcrumb" className="bg-light p-3 mb-4">
                         <ol className="breadcrumb mb-0">
                             <li className="breadcrumb-item"><Link to={'/'} >Inicio</Link></li>
                             <li className="breadcrumb-item"><Link to={'/perfil'} >Mi Perfil</Link></li>
@@ -292,7 +359,7 @@ const ToDoList = () => {
                         <div className="col-12 col-sm-8 col-lg-6">
                             <div className="section_heading text-center wow fadeInUp" data-wow-delay="0.2s" style={{"visibility": "visible", "animationDelay": "0.2s", "animationName": "fadeInUp"}}>
                             <h3><span>Solicitudes</span></h3>
-                            <p>En ésta sección podrás visualizar y/o confirmar solicitudes de trabajo</p>
+                            <p>En ésta sección podrás visualizar y controlar tus solicitudes de trabajo</p>
                             </div>
                         </div>
                     </div>
@@ -304,7 +371,7 @@ const ToDoList = () => {
                             style={{fontSize:'20px',cursor:'pointer', color: '#384451'}}>
                         </i></div>
                     </div>
-                    <Container className='shadow-lg rounded-2 mt-3 mb-5 p-2' style={{'min-height': '60vh'}} fluid>
+                    <Container className='shadow-lg rounded-2 mt-3 mb-5 p-2' style={{minHeight: '60vh'}} fluid>
                         <Modal
                             size="lg"
                             aria-labelledby="contained-modal-title-vcenter"
@@ -371,21 +438,53 @@ const ToDoList = () => {
                                 </ol>
                             </Modal.Body>
                         </Modal>
+                        <Modal show={show} onHide={handleClose} centered>
+                            <Modal.Header closeButton>
+                            <Modal.Title>Confirmación de Trabajo</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>    
+                                <Alert key='secondary' variant='secondary'>
+                                    <p className="mb-0" style={{fontSize: '14px'}}>
+                                        <i className='fas fa-exclamation-triangle' style={{fontSize: '18px'}}></i>
+                                        {' '}Por favor, elija la fecha acordada con su cliente. <br/><br/>
+                                        El plazo máximo para realizar el trabajo es hasta un año a partir de hoy.<br/>
+                                        {/* Luego de seleccionar la fecha de inicio de su trabajo, ésta solicitud
+                                        pasará a solicitudes confirmadas. */}
+                                    </p>
+                                </Alert>
+                                <Form>
+                                <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                                    <Form.Label>Fecha de inicio</Form.Label>
+                                    <Form.Control id='dateRequestConfirm' type="date" placeholder="name@example.com" 
+                                    min={new Date().toISOString().split('T')[0]}
+                                    max={maxDate.toISOString().split('T')[0]} onChange={() =>setEnableConfirm(true)}/>
+                                </Form.Group>
+                                </Form>
+                            </Modal.Body>
+                            <Modal.Footer>
+                            <Button variant="success" disabled={!enableConfirm} onClick={e=> confirmUserProject(e)}>
+                                Confirmar
+                            </Button>
+                            <Button variant="danger" onClick={handleClose}>
+                                Cancelar
+                            </Button>
+                            </Modal.Footer>
+                        </Modal>
                         <Tabs defaultActiveKey="requests" id="justify-tab-example">
-                            <Tab  eventKey="requests" title="Solicitudes">
+                            <Tab  eventKey="requests" title="Pendientes">
                             {
                             projectsData.length > 0 ? 
                             <> 
                             {
-                            <Table striped bordered hover responsive='md'>
+                            <Table striped bordered hover responsive='md' className='mt-3'>
                                 <thead>
                                     <tr>
-                                        <th>Nombre</th>
+                                        <th>Cliente</th>
                                         <th>Rut</th>
                                         <th>Dirección</th>
                                         <th>Celular</th>
                                         <th>Resumen del trabajo</th>
-                                        <th>Acciones</th>
+                                        <th className='text-center'>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -414,11 +513,10 @@ const ToDoList = () => {
                                                             {
                                                                 values.estado === 'acordar' ? 
                                                                 <div className='d-flex justify-content-center align-items-center'>
-                                                                    <Button id={values.idRequest} tabIndex={values.idRequest} variant='primary' className='btn btn-primary me-1' onClick= {(e) => {setShowModalContact(true); setTabIndex(e.currentTarget.tabIndex)}} size='sm'>Acordar Trabajo</Button>
+                                                                    <Button id={values.idRequest} tabIndex={values.idRequest} variant='secondary' className='btn btn-secondary me-1' onClick= {(e) => {setShowModalContact(true); setTabIndex(e.currentTarget.tabIndex)}} size='sm'>Acordar Trabajo</Button>
                                                                 </div>
-                                                                 :
-                                                                <><Button variant='success' className='btn btn-success' size='sm'>Confirmar</Button>
-                                                                <Button variant='danger' className='btn btn-danger' size='sm'>Rechazar</Button></>
+                                                                 : <><Button variant='primary' className='btn btn-primary' size='sm' onClick={() => {setShow(true); setIdRequestConfirm(values.idRequest)}} >Aceptar</Button>
+                                                                 <Button variant='danger' className='btn btn-danger' size='sm' onClick={() => rejectUserProject(values.idRequest)}>Rechazar</Button></>
                                                             }
                                                         </div>
                                                     </td>
@@ -450,23 +548,49 @@ const ToDoList = () => {
                             </>
                             }
                             </Tab>
-                            <Tab eventKey="requests-confirmeds" title="Solicitudes Confirmadas">
+                            <Tab eventKey="requests-confirmeds" title="Confirmadas">
                             {
-                            projectsData.length > 0 ? 
+                            projectsDataConfirmed.length > 0 ? 
                             <>
                             {
-                                <Table striped bordered hover responsive='md'>
+                                <Table striped bordered hover responsive='md' className='mt-3'>
                                 <thead>
                                     <tr>
-                                        <th>Nombre</th>
+                                        <th>Cliente</th>
                                         <th>Rut</th>
                                         <th>Dirección</th>
-                                        <th>Resumen del trabajo</th>
+                                        <th>Teléfono</th>
+                                        <th>Descripción del trabajo</th>
                                         <th>Comienzo del trabajo</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    
+                                {
+                                    projectsDataConfirmed.map((values,key) =>{
+                                        let direccion = null
+                                        if(values.calle !== ''){
+                                            if(values.pasaje !== ''){
+                                                direccion = values.calle+' '+values.NumeroCasa+', Pasaje '+values.pasaje+', '+values.comuna
+                                            }else{
+                                                direccion = values.calle+' '+values.NumeroCasa+','+values.comuna
+                                            }
+                                        }else{
+                                            direccion = values.dptoDirec+', Piso '+values.NumeroPiso+', Departamento '+values.NumeroDepto+', '+values.comuna
+                                        }
+                                        return(
+                                            <>
+                                                <tr key={key}>
+                                                    <td>{values.nombre+' '+values.apellidos}</td>
+                                                    <td>{values.rut}</td>
+                                                    <td>{direccion}</td>
+                                                    <td>{values.celular}</td>
+                                                    <td>{values.descripcionTrabajo}</td>
+                                                    <td>{values.startDate}</td>
+                                                </tr>
+                                            </>
+                                        )
+                                    })
+                                }
                                 </tbody>
                                 </Table>
                             }
@@ -475,6 +599,65 @@ const ToDoList = () => {
                             <>
                             <Card className='d-flex align-items-center justify-content-center text-center' style={{height: '60vh'}}>
                                     <h5><strong>Por el momento no tienes solicitudes confirmadas</strong></h5>
+                                    <div className="mt-4">
+                                    <img variant="top" src={norequestsconfirmeds} 
+                                        alt={'project'} style={{height: '180px', width: 'auto'}}/>
+                                    </div> 
+                                </Card>
+                            </>
+                            }
+                            </Tab>
+                            <Tab eventKey="requests-rejecteds" title="Rechazadas">
+                            {
+                            projectsDataRejected.length > 0 ? 
+                            <>
+                            {
+                                <Table striped bordered hover responsive='md' className='mt-3'>
+                                <thead>
+                                    <tr>
+                                        <th>Cliente</th>
+                                        <th>Rut</th>
+                                        <th>Dirección</th>
+                                        <th>Teléfono</th>
+                                        <th>Descripción del trabajo</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {
+                                    projectsDataRejected.map((values,key) =>{
+                                        let direccion = null
+                                        if(values.calle !== ''){
+                                            if(values.pasaje !== ''){
+                                                direccion = values.calle+' '+values.NumeroCasa+', Pasaje '+values.pasaje+', '+values.comuna
+                                            }else{
+                                                direccion = values.calle+' '+values.NumeroCasa+','+values.comuna
+                                            }
+                                        }else{
+                                            direccion = values.dptoDirec+', Piso '+values.NumeroPiso+', Departamento '+values.NumeroDepto+', '+values.comuna
+                                        }
+                                        return(
+                                            <>
+                                                <tr key={key}>
+                                                    <td>{values.nombre+' '+values.apellidos}</td>
+                                                    <td>{values.rut}</td>
+                                                    <td>{direccion}</td>
+                                                    <td>{values.celular}</td>
+                                                    <td>{values.descripcionTrabajo}</td>
+                                                    <td>Rechazada</td>
+                                                </tr>
+                                            </>
+                                        )
+                                    })
+                                }
+                                </tbody>
+                                </Table>
+                            }
+                            </>
+                            : 
+                            <>
+                                <Card className='d-flex align-items-center justify-content-center text-center rounded-0' style={{height: '60vh'}}>
+                                    <h5><strong>Por el momento no haz rechazado ningúna solicitud</strong></h5>
                                     <div className="mt-4">
                                     <img variant="top" src={norequestsconfirmeds} 
                                         alt={'project'} style={{height: '180px', width: 'auto'}}/>

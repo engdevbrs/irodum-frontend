@@ -281,7 +281,7 @@ const UserProjects = () => {
             <>
                 <div hidden={loading}>
                 <Col>
-                    <Nav aria-label="breadcrumb" className="bg-light rounded-3 p-3 mb-4">
+                    <Nav aria-label="breadcrumb" className="bg-light p-3 mb-4">
                         <ol className="breadcrumb mb-0">
                             <li className="breadcrumb-item"><Link to={'/'} >Inicio</Link></li>
                             <li className="breadcrumb-item"><Link to={'/perfil'} >Mi Perfil</Link></li>

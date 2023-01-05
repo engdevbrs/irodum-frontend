@@ -22,10 +22,10 @@ const App = () => {
         <div className='app'>
         <BrowserRouter>
             <Routes>
-                <Route path='' element= { <LoginContextProvider><Menu/></LoginContextProvider>}>
-                    <Route index element= { <HomeContextProvider><Home /></HomeContextProvider>} />
+                <Route path='' element= {<LoginContextProvider><HomeContextProvider><Menu/></HomeContextProvider></LoginContextProvider>}>
+                    <Route index element= { <Home />} />
                     <Route path='crear-cuenta' element= { <CreateAccount />  } />
-                    <Route path='trabajadores' element= { <HomeContextProvider><Workers /></HomeContextProvider> } />
+                    <Route path='trabajadores' element= { <Workers /> } />
                     <Route path='perfil' element= { <Profile /> } />
                     <Route path='/trabajadores/perfil/vista/:id' element= { <ViewClientProfile /> } />
                     <Route path='login' element= { <Login /> } />

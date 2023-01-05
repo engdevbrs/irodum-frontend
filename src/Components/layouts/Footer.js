@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import '../css/footer.css';
-import Logo from '../assets/logo.png';
 import { Link } from 'react-router-dom';
 import instagram from '../assets/instagram.png'
 import facebook from '../assets/facebook.png'
@@ -35,17 +34,7 @@ const Footer = () => {
                         </ul>
                     </div>
                     <div className="col-lg-4 col-md-4">
-                        <h5 className="text-white mb-3">Boletín</h5>
-                        <p className="small text-muted">Si no te quieres perder novedades o noticias, no dudes en suscribirte a nuestro boletín informativo.</p>
-                        <form action="#">
-                            <div className="input-group mb-3">
-                                <input className="form-control" type="text" placeholder="Correo electrónico" aria-label="Correo electrónico" aria-describedby="button-addon2"/>
-                                <button className="btn btn-primary" id="button-addon2" type="button">Enviar</button>
-                            </div>
-                        </form>
-                    </div>
-                    <div>
-                        <div className="col-12 text-center">
+                    <div className="col-12 text-center">
                             <a className="fs-5 px-2 link-dark" href="#!"><img src={twitter} alt='twitter' style={{'width': '24px'}}/></a>
                             <a className="fs-5 px-2 link-dark" href="#!"><img src={facebook} alt='facebook' style={{'width': '24px'}}/></a>
                             <a className="fs-5 px-2 link-dark" href="#!"><img src={instagram} alt='instagram' style={{'width': '24px'}}/></a>                    

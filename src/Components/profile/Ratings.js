@@ -70,7 +70,7 @@ const Ratings = ({data}) => {
           </Card>
          : <>
         <Card className='shadow d-flex align-items-center justify-content-center text-center' style={{height: '50vh'}}>
-                <h5 className='mt-2'><strong>Éste trabajador aún no ha sido evaluado</strong></h5>
+                <h5 className='mt-2'><strong>Ningúna evaluación recibida</strong></h5>
                 <div>
                 <img className='mt-4' src={rate} 
                     alt={'project'} style={{height: '200px', width: 'auto'}}/>
