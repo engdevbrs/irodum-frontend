@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import '../css/Home.css';
 import slide1 from '../assets/slide1.jpg';
 import slide2 from '../assets/slide2.jpeg';
@@ -17,80 +17,14 @@ import Col from 'react-bootstrap/Col';
 import { Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Categories from './Categories';
-import jobs from '../../Constants/Constants';
-import { useNavigate } from 'react-router-dom';
-import { useHomeContext } from '../contexts/WorkerContext';
-
 
 const Home = () => {
-
-  const [index, setIndex] = useState(0);
-
-  const { worksearcher, setWorksearcher } = useHomeContext();
-  const navigate = useNavigate();
-
-  const handleSelect = (selectedIndex, e) => {
-    setIndex(selectedIndex);
-  };
-
-  const searchingWorker = (e) =>{
-    e.preventDefault();
-    const oficio = document.getElementById('worksearcher').value
-    setWorksearcher({...worksearcher ,oficio })
-    console.log("buscando: " + oficio);
-    return navigate('/trabajadores');
-  }
-
-  useEffect(() => {
-    let inputField = document.getElementById('worksearcher');
-    let ulField = document.getElementById('sugerencias');
-    inputField.addEventListener('input', changeAutoComplete);
-    ulField.addEventListener('click', selectItem);
-  
-    function changeAutoComplete({ target }) {
-      let data = target.value;
-      ulField.innerHTML = ``;
-      if (data.length) {
-        let autoCompleteValues = autoComplete(data);
-        autoCompleteValues.forEach(value => { addItem(value); });
-      }
-    }
-  
-    function autoComplete(inputValue) {
-      let destination = jobs;
-      return destination.filter(
-        (value) => value.toLowerCase().includes(inputValue.toLowerCase())
-      );
-    }
-  
-    function addItem(value) {
-      ulField.innerHTML = ulField.innerHTML + `<li>${value}</li>`;
-    }
-  
-    function selectItem({ target }) {
-      if (target.tagName === 'LI') {
-        inputField.value = target.textContent;
-        ulField.innerHTML = ``;
-      }
-    }
-  }, []);
 
   return (
     <>
       <header className="bg-dark py-5">
           <Container className="px-5">
               <Row className="gx-5 align-items-center justify-content-center">
-                <Container>
-                  <div className="row height d-flex justify-content-center align-items-center">
-                    <div className="col-lg-8 col-xl-7 col-xxl-6">
-                      <div className="form worksearcher-form">
-                        <input type="text" id='worksearcher' className="worksearcher" placeholder="Ej: Carpintero" />
-                        <span className="left-pan"><i className="fas fa-search" style={{cursor: 'pointer'}} onClick={e => searchingWorker(e)}></i></span>
-                      </div>
-                      <div id='sugerencias' className="sugerencias"></div>
-                    </div>
-                  </div>
-                </Container>
                 <Col className="col-lg-8 col-xl-7 col-xxl-6">
                     <div className="my-5 text-center text-xl-start">
                         <h1 className="display-5 fw-bolder text-white mb-2">Una nueva forma de encontar oportunidades</h1>

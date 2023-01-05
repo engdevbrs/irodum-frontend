@@ -442,10 +442,29 @@ const ViewClientProfile = () => {
                                 Axios.get("http://54.174.104.208:3001/api/worker/ratings/" + id)
                                 .then((result) => {
                                     if(result.status === 200){
+                                        let sumaTotal = null
+                                        if((result.data).length > 0){
+                                            (result.data).forEach(element => {
+                                                let ratingParse = JSON.parse(element.aptitudRating)
+                                                let sumaRating = (ratingParse.cuidadoso + ratingParse.honestidad + ratingParse.precio + ratingParse.puntualidad + ratingParse.responsabilidad) / 5;
+                                                sumaTotal = (sumaTotal + sumaRating);
+                                            });
+                                        }
+                                        sumaTotal = (sumaTotal / (result.data).length).toFixed(1)
+                                        console.log(sumaTotal);
                                         setRatingScore(result.data)
+
+                                        Axios.put("http://54.174.104.208:3001/api/worker/update-rating/" +id, {rankingTotal: sumaTotal})
+                                        .then((result) => {
+                                            if(result.status === 200){
+                                                console.log("resultado: ",result.data);
+                                            }
+                                        }).catch(error => {
+                                            
+                                        });
                                     }
                                 }).catch(error => {
-                                    setResponse(error.response.status)
+                                    setResponse([])
                                 });
                                 Axios.get("http://54.174.104.208:3001/api/worker/evaluations/" + id)
                                 .then((result) => {
@@ -453,11 +472,11 @@ const ViewClientProfile = () => {
                                             setCommentsWorker(result.data)
                                     }
                                 }).catch(error => {
-                                    setResponse(error.response.status)
+                                    setResponse([])
                                 });
                             }
                         }).catch(error => {
-                            setResponse(error.response.status)
+                            setResponse([])
                             Swal.fire({
                                 icon: 'error',
                                     html:`<p className="mt-1">Lo sentimos, su solicitud no pudo ser procesada, intente de nuevo o más tarde...</p>`,
@@ -520,16 +539,12 @@ const ViewClientProfile = () => {
     }
 
     const checkRut = (rut) => {
-        // Despejar Puntos
         var valor = rut.value.replace('.','');
-        // Despejar Guión
         valor = valor.replace('-','');
         
-        // Aislar Cuerpo y Dígito Verificador
         let cuerpo = valor.slice(0,-1);
         let dv = valor.slice(-1).toUpperCase();
         
-        // Si no cumple con el mínimo ej. (n.nnn.nnn)
         if(cuerpo.length < 7 && valor.length !== 0){ 
             setRutValid(true)
             setCustomValidity("RUT Incompleto"); 
@@ -540,20 +555,15 @@ const ViewClientProfile = () => {
             return true
         }
         
-        // Calcular Dígito Verificador
         let suma = 0;
         let multiplo = 2;
         
-        // Para cada dígito del Cuerpo
         for(let i=1;i<=cuerpo.length;i++){
         
-            // Obtener su Producto con el Múltiplo Correspondiente
             let index = multiplo * valor.charAt(cuerpo.length - i);
             
-            // Sumar al Contador General
             suma = suma + index;
             
-            // Consolidar Múltiplo dentro del rango [2,7]
             if(multiplo < 7){ 
                 multiplo = multiplo + 1; 
             }else{ 
@@ -561,21 +571,17 @@ const ViewClientProfile = () => {
             }
         }
         
-        // Calcular Dígito Verificador en base al Módulo 11
         let dvEsperado = 11 - (suma % 11);
         
-        // Casos Especiales (0 y K)
         dv = (dv === 'K') ? 10 : dv;
         dv = (parseInt(dv,10) === 0) ? 11 : dv;
         
-        // Validar que el Cuerpo coincide con su Dígito Verificador
         if(dvEsperado !== parseInt(dv,10)){ 
             setRutValid(true)
             setCustomValidity("RUT Inválido"); 
             return true; 
         }
         
-        // Si todo sale bien, eliminar errores (decretar que es válido)
         setRutValid(false)
         setCustomValidity("RUT válido");
         return false
@@ -825,7 +831,7 @@ const ViewClientProfile = () => {
                 setRatingScore(result.data)
               }
           }).catch(error => {
-            setResponse(error.response.status)
+            setResponse([])
         });
         Axios.get("http://54.174.104.208:3001/api/view/profile/" + id)
           .then((result) => {
@@ -833,7 +839,7 @@ const ViewClientProfile = () => {
                     setDataUser(result.data)
               }
           }).catch(error => {
-                setResponse(error.response.status)
+                setResponse([])
         });
         Axios.get("http://54.174.104.208:3001/api/worker/evaluations/" + id)
           .then((result) => {
@@ -841,7 +847,7 @@ const ViewClientProfile = () => {
                     setCommentsWorker(result.data)
               }
           }).catch(error => {
-            setResponse(error.response.status)
+            setResponse([])
         });
 
         Axios.get("http://54.174.104.208:3001/api/download/speciality/" + id)
@@ -859,7 +865,7 @@ const ViewClientProfile = () => {
     return(
         <>
             <Col>
-                <Nav aria-label="breadcrumb" className="bg-light rounded-3 p-3 mb-4">
+                <Nav aria-label="breadcrumb" className="bg-light p-3 mb-4">
                     <ol className="breadcrumb mb-0">
                         <li className="breadcrumb-item"><Link to={'/'} >Inicio</Link></li>
                         <li className="breadcrumb-item"><Link to={'/trabajadores'} >Trabajadores</Link></li>
@@ -907,7 +913,7 @@ const ViewClientProfile = () => {
                                             emptyColor='gray'
                                             allowFraction={true}
                                             readonly={true}
-                                        /><span style={{color: 'rgb(226 226 226)', fontSize: '16px', fontWeight: '600'}}>({ratingScore.length > 0 ? (sumaTotal / ratingScore.length).toFixed(2) : 0})</span>
+                                        /><span style={{color: 'rgb(226 226 226)', fontSize: '16px', fontWeight: '600'}}>({ratingScore.length > 0 ? (sumaTotal / ratingScore.length).toFixed(1) : 0})</span>
                                     </div>
                                     <span style={{color: 'rgb(226 226 226)', fontSize: '16px', fontWeight: '600'}}>({ratingScore.length} calificaciones)</span>
                                 </div>
@@ -969,7 +975,7 @@ const ViewClientProfile = () => {
                                         <hr/>
                                         <Row >
                                             <Col sm={3}>
-                                            <p className="mb-0">Lugar de residencia</p>
+                                            <p className="mb-0">Residencia</p>
                                             </Col>
                                             <Col sm={9}>
                                             <p className="text-muted mb-0">{element.regionUser + ", " + element.cityUser + ", " + element.communeUser}</p>
@@ -984,54 +990,46 @@ const ViewClientProfile = () => {
                                             </Col>
                                         </Row>
                                         <hr/>
+                                            {
+                                            especialitiesWorker.length > 0 ?
+                                            <>
+                                            <Row className='mt-3'>
+                                                <Col sm={12} className="mb-2">
+                                                <p className="mb-0">Especialidades</p>
+                                                </Col>
+                                                <Col sm={12}>
+                                                    {
+                                                        especialitiesWorker.map(value =>{
+                                                            let descriptSpec = JSON.parse(value.especialityDescript)
+                                                            let specialityToString = Buffer.from(value.especialityDoc)
+                                                            let speciality = JSON.parse(specialityToString)
+                                                            let arrayEspecialities = []
+                                                            let objectEspeciality = {
+                                                                idEspeciality: null,
+                                                                descript: null,
+                                                                image: null,
+                                                                fileType: null
+                                                            }
+                                                            objectEspeciality.idEspeciality = value.idworkerEspeciality
+                                                            objectEspeciality.descript = descriptSpec[0]
+                                                            objectEspeciality.image = speciality[0]
+                                                            objectEspeciality.fileType = value.fileType
+                                                            arrayEspecialities.push(objectEspeciality)
+                                                                return(
+                                                                    <>
+                                                                        <SpecialitiesClient data={arrayEspecialities} />  
+                                                                    </>
+                                                                )
+                                                        })
+                                                    }
+                                                </Col>
+                                            </Row>
+                                            <hr/>
+                                            </>
+                                        : <></>
+                                        }
                                     </Col>
                                     </Row>
-                                    {
-                                    especialitiesWorker.length > 0 ?
-                                        <div className="mb-5">
-                                            <h5 className="mb-1">Especialidades</h5>
-                                            <Table className="text-left" responsive="md" bordered striped hover >
-                                            <thead>
-                                                <tr>
-                                                    <th style={{fontWeight: '600'}}>Descripción</th>
-                                                    <th style={{fontWeight: '600'}}>Archivo</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            {
-                                                
-                                                especialitiesWorker.map(value =>{
-                                                    let descriptSpec = JSON.parse(value.especialityDescript)
-                                                    let specialityToString = Buffer.from(value.especialityDoc)
-                                                    let speciality = JSON.parse(specialityToString)
-                                                    let arrayEspecialities = []
-                                                    let objectEspeciality = {
-                                                        idEspeciality: null,
-                                                        descript: null,
-                                                        image: null,
-                                                        fileType: null
-                                                    }
-
-                                                    objectEspeciality.idEspeciality = value.idworkerEspeciality
-                                                    objectEspeciality.descript = descriptSpec[0]
-                                                    objectEspeciality.image = speciality[0]
-                                                    objectEspeciality.fileType = value.fileType
-                                                    arrayEspecialities.push(objectEspeciality)
-
-                                                        return(
-                                                            <>
-                                                                <tr>
-                                                                <SpecialitiesClient data={arrayEspecialities} />  
-                                                                </tr>                                                          
-                                                            </>
-                                                        )
-                                                })
-                                            }
-                                            </tbody>
-                                            </Table>
-                                        </div>
-                                    : <></>
-                                    }
                                     <h5>Clasificación Laboral</h5>
                                     <Tabs defaultActiveKey="home" id="justify-tab-example">
                                         <Tab className='tabprof' eventKey="home" title="Rating">

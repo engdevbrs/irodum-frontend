@@ -7,6 +7,7 @@ import noworkersfounded from '../assets/search-empty.png'
 import jobs from '../../Constants/Constants';
 import { useHomeContext } from '../contexts/WorkerContext';
 import Pagination from './Pagination';
+import { Link } from 'react-router-dom';
 
 const Workers = () => {
 
@@ -24,6 +25,7 @@ const Workers = () => {
   const [cityValue, setCityValue] = useState([]);
   const [comunneValue, setComunneValue] = useState([]);
   const [areaValue, setAreaValue] = useState([]);
+  const [valueFromSearcher, setValueFromSearcher ] = useState([]);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -105,9 +107,11 @@ const Workers = () => {
           let filtererFromHome = (res.data).filter(function(params) {
             return params.workareaUser === worksearcher.oficio
           })
-          setUsuarios(filtererFromHome)
+          setUsuarios(res.data)
           setUsuariosFiltered(filtererFromHome)
           setFiltered(true)
+          setValueFromSearcher(worksearcher.oficio)
+          setWorksearcher("")
         }else{
           setUsuarios(res.data);
         }
@@ -122,9 +126,9 @@ const Workers = () => {
       <section className='section-workers'>
       <div>
           <Col>
-              <Nav aria-label="breadcrumb" className="bg-light rounded-3 p-3">
+              <Nav aria-label="breadcrumb" className="bg-light p-3">
                   <ol className="breadcrumb mb-0">
-                      <li className="breadcrumb-item"><a href="/">Inicio</a></li>
+                      <li className="breadcrumb-item"><Link to={'/'} >Inicio</Link></li>
                       <li className="breadcrumb-item active" aria-current="page">Trabajadores</li>
                   </ol>
               </Nav>
@@ -132,7 +136,7 @@ const Workers = () => {
       </div>
       <Container className='mt-4 mb-4'>
         <Row lg={1} md={1} sm={1} xs={1} className='worker-view'>                
-        <div className="container">
+        <div className="container p-3">
           <div className="row justify-content-center">
             <div className="col-12 col-sm-8 col-lg-6">
               <div className="section_heading text-center wow fadeInUp" data-wow-delay="0.2s" style={{"visibility": "visible", "animationDelay": "0.2s", "animationName": "fadeInUp"}}>
@@ -204,7 +208,7 @@ const Workers = () => {
               </div>
               <h6 className='mb-2'>Especialidad del trabajador</h6>
               <div>
-              <Form.Select id='area' name='area' defaultValue={'' || areaValue} onChange={(e) => setAreaValue(e.target.value)}>
+              <Form.Select id='area' name='area' defaultValue={filtered ? valueFromSearcher : '' || areaValue } onChange={(e) => setAreaValue(e.target.value)}>
                   <option disabled selected value="">Seleccionar especialidad</option>
                   {
                       jobs.map((jobs,key) =>{
@@ -223,15 +227,18 @@ const Workers = () => {
               </div>
         </Offcanvas.Body>
       </Offcanvas>
-        <div className="row shadow-lg rounded-3">
+        <div className="row shadow-lg rounded-3 p-2">
         {
           filtered === true && usuariosFiltered.length === 0 ? 
           <div id='denied' className="container mt-5 mb-5 text-center" hidden={usuariosFiltered.length > 1 ? true : false}>
             <div className="denied" style={{height: '60vh'}}>
-            <h6>Lo sentimos, No encontramos ningún trabajador con sus requerimientos.</h6>
-                <div className="wrapper text-center">
-                    <img src={noworkersfounded} alt="imagen de confirmación" style={{width: '15rem'}}/>
+            <h6>Lo sentimos, no encontramos ningún trabajador con sus requerimientos.</h6>
+                <div className="wrapper text-center mt-3">
+                    <img src={noworkersfounded} alt="imagen de confirmación" style={{width: '12rem'}}/>
                 </div>
+                <div className="d-grid gap-2 mt-5">
+                  <Button className="btn btn-danger px-4" onClick={e => clearFilters()} >Ver a todos los trabajadores</Button>
+              </div>
             </div>
           </div> : ''
         }
