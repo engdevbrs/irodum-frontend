@@ -1,5 +1,6 @@
 .projects-user{
     border-color: rgba(0, 0, 0, 0) !important;
+    height: 100% !important;
 }
 
 .cardproject{
@@ -30,7 +31,7 @@
 
 .noprojectsphoto {
     border-color: rgba(0, 0, 0, 0) !important;
-    height: 63vh;
+    height: 100% !important;
     overflow-y: hidden;
     overflow-x: hidden;
 }

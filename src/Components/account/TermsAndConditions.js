@@ -1,24 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import Axios from 'axios'
-import { Container } from 'react-bootstrap';
 import Alert from 'react-bootstrap/Alert';
+import { Container } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import '../css/TermsAndConditions.css';
 import { useStepperContext } from '../contexts/StepperContext';
+import { useStepperContextPyme } from '../contexts/StepperContextPyme.js'
 
 const TermsConditions = () => {
 
     const [show, setShow] = useState(true);
     const { userData, setUserData } = useStepperContext();
+    const { userDataPyme , setUserDataPyme } = useStepperContextPyme();
     const [disabledButton, setDisabledButton] = useState(true);
     const TermsConditions = document.getElementById('nextButton');
     TermsConditions.disabled = disabledButton;
 
     const handleChange = (e) => {
-        setUserData({ ...userData, ['agreeconditions']: e.target.checked });
+        if(userData === "" || userData === undefined){
+            setUserDataPyme({ ...userDataPyme, ['agreeconditions']: e.target.checked });
+        }else if(userDataPyme === "" || userDataPyme === undefined){
+            setUserData({ ...userData, ['agreeconditions']: e.target.checked });
+        }
         setDisabledButton(!disabledButton)
         TermsConditions.disabled = disabledButton;
     };
@@ -31,11 +36,11 @@ const TermsConditions = () => {
     }
 
     useEffect(() => {      
-        document.addEventListener('handleEvent', handleSubmit);
+        document.addEventListener('handleEventPyme', handleSubmit);
         return () => {
-            document.removeEventListener('handleEvent', handleSubmit);
+            document.removeEventListener('handleEventPyme', handleSubmit);
         }
-    },[userData]);
+    },[userData,userDataPyme]);
 
     return (
         <>

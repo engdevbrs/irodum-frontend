@@ -53,7 +53,7 @@ const Pagination = (props) => {
                             </Col>
                         </Row>
                         <p className="designation" style={{fontSize: '14px', fontWeight: '500'}}><i className="fa fa-clock-o"></i>{" "+element.experienceYears+" años de experiencia"}</p>
-                            <img src={(element.userPhoto !== undefined && element.userPhoto !== null && element.userPhoto !== "") ? 'http://54.174.104.208:3001/api/images/' + element.userPhoto : perfil} 
+                            <img src={(element.userPhoto !== undefined && element.userPhoto !== null && element.userPhoto !== "") ? 'http://localhost:3001/api/images/' + element.userPhoto : perfil} 
                             style={{height: '15rem'}} alt={'imagen de perfil'} />
                             <div className="social-info">
                             {

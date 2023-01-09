@@ -4,7 +4,7 @@ import Axios from 'axios'
 import { FaFilter } from "react-icons/fa";
 import '../css/Workers.css';
 import noworkersfounded from '../assets/search-empty.png'
-import jobs from '../../Constants/Constants';
+import Constants from '../../Constants/Constants';
 import { useHomeContext } from '../contexts/WorkerContext';
 import Pagination from './Pagination';
 import { Link } from 'react-router-dom';
@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom';
 const Workers = () => {
 
   const { worksearcher, setWorksearcher } = useHomeContext()
-  
+  const { jobs } = Constants;
   const [show, setShow] = useState(false);
   const [filtered, setFiltered] = useState(false);
   const [usuarios, setUsuarios ] = useState([]);
@@ -60,7 +60,7 @@ const Workers = () => {
 
   const  clearFilters = () => {
     if(worksearcher !== ''){
-      Axios.get("http://54.174.104.208:3001/api/usuarios").then((res)=>{
+      Axios.get("http://localhost:3001/api/usuarios").then((res)=>{
         setFiltered(false)
         setUsuarios(res.data)
         setWorksearcher("")
@@ -102,7 +102,7 @@ const Workers = () => {
   }
   
   useEffect(() => {
-      Axios.get("http://54.174.104.208:3001/api/usuarios").then((res)=>{
+      Axios.get("http://localhost:3001/api/usuarios").then((res)=>{
         if(worksearcher !== ''){
           let filtererFromHome = (res.data).filter(function(params) {
             return params.workareaUser === worksearcher.oficio
@@ -116,7 +116,7 @@ const Workers = () => {
           setUsuarios(res.data);
         }
       });
-      Axios.get("http://54.174.104.208:3001/api/localidades").then((res)=>{
+      Axios.get("http://localhost:3001/api/localidades").then((res)=>{
             setLocalidades(res.data);
       });  
   },[worksearcher])

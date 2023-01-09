@@ -43,7 +43,7 @@ const UserProjects = () => {
             denyButtonText: `Cancelar`,
             }).then((result) => {
                 if(result.isConfirmed){
-                    Axios.delete("http://54.174.104.208:3001/api/image/delete-project" + parseInt(e[1].value,10), 
+                    Axios.delete("http://localhost:3001/api/image/delete-project" + parseInt(e[1].value,10), 
                     {
                         headers: {
                         'authorization': `${token}`
@@ -91,8 +91,7 @@ const UserProjects = () => {
             }).then((result) => {
                 if(result.isConfirmed){
                     showProgress(false)
-                    clearFormUpload()
-                    Axios.post("http://54.174.104.208:3001/api/image/upload-project",formFile,config)
+                    Axios.post("http://localhost:3001/api/image/upload-project",formFile,config)
                     .then((result) => {
                         if(result.status === 200){
                             setResponse(result.status)
@@ -100,9 +99,11 @@ const UserProjects = () => {
                             Swal.fire('Su foto ha sido actualizada con éxito!', '', 'success')
                             showProgress(true)
                             setUpdateProgress(0)
+                            clearFormUpload()
                         }
                     }).catch(error => {
                         Swal.fire('No pudimos subir éste proyecto', '', 'warning')
+                        clearFormUpload()
                     });
                 }
             })
@@ -165,13 +166,19 @@ const UserProjects = () => {
         document.getElementById('photofile').value = ""
         document.getElementById('clientPhone').value = ""
         document.getElementById('clientEmail').value = ""
+        setEmptyName(true)
+        setEmptyDate(true)
+        setEmptyImage(true)
+        setEmptyWorkResume(true)
+        setEmptyCellClient(true)
+        setShortResume(true)
         showProgress(true)
         setUpdateProgress(0)
     }
     
     const getProjects = () => {
         const token = localStorage.getItem('accessToken');
-        Axios.get("http://54.174.104.208:3001/api/image/user-projects",{
+        Axios.get("http://localhost:3001/api/image/user-projects",{
             headers: {
                 'authorization': `${token}`
                 }
@@ -186,7 +193,7 @@ const UserProjects = () => {
     }
 
     const getAccess = async (token) =>{
-        await Axios.post("http://54.174.104.208:3001/api/user-info", {
+        await Axios.post("http://localhost:3001/api/user-info", {
             'authorization' : `${token}`
         })
           .then((result) => {
@@ -378,60 +385,57 @@ const UserProjects = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <Card className='projects-user shadow rounded-3 p-2'>
                                     {
-                                    projectsData.length > 0 ? <><h5 className='mx-1'><strong>Trabajos subidos</strong></h5> 
-                                    <Row xs={1} md={1} lg={2} xl={3} className='projectsphoto mx-1'>
-                                    {
-                                     projectsData.length > 0 ? projectsData.map(value =>{
-                                            let dateFormatted = null
-                                            if(value.workDate){
-                                                dateFormatted = new Date(value.workDate)
-                                            }
-                                            return(
-                                                <>
-                                                <Col className='mb-2'>
-                                                    <Card className='cardproject rounded-3'>
-                                                        <Card.Header style={{ color: 'rgb(226 226 226)', backgroundColor: '#202A34' , fontSize: '14px'}}>
+                                    projectsData.length > 0 ? 
+                                    <Card className='projects-user shadow rounded-3 p-2'>
+                                        <h5 className='mx-1'><strong>Trabajos subidos</strong></h5> 
+                                        <Row className='projectsphoto mx-1'>
+                                        {
+                                        projectsData.length > 0 ? projectsData.map(value =>{
+                                                let dateFormatted = null
+                                                if(value.workDate){
+                                                    dateFormatted = new Date(value.workDate)
+                                                }
+                                                return(
+                                                    <>
+                                                    <Col className='mb-2 col-xxl-4 col-xl-6 col-lg-6 col-md-12 col-sm-6 col-12'>
+                                                        <Card className='cardproject rounded-3'>
+                                                            <Card.Header style={{ color: 'rgb(226 226 226)', backgroundColor: '#202A34' , fontSize: '14px'}}>
+                                                                <Row>
+                                                                    <Col className='col-12 text-start'>Realizado a {value.clientName}</Col>
+                                                                    <Col className='col-12 text-start'>{"El dia " + dateFormatted.toLocaleDateString()}</Col>
+                                                                </Row> 
+                                                            </Card.Header>
+                                                                <img src={'http://localhost:3001/' + value.imageName} 
+                                                                alt={'project'} style={{height: '200px'}}/>
+                                                            <i className='deletephoto fas fa-trash' value={value.id_img} key={value.id_img} onClick={e => deleteUserProject(e.target.attributes)}></i>
+                                                            <Card.Body>
+                                                                <Card.Title>Descripción del trabajo</Card.Title>
+                                                                <Card.Text>{value.workResume}</Card.Text>
+                                                            </Card.Body>
+                                                            <Card.Footer style={{ color: 'rgb(226 226 226)', backgroundColor: '#202A34' , fontSize: '14px'}}>
                                                             <Row>
-                                                                <Col className='col-12 text-start'>Realizado a {value.clientName}</Col>
-                                                                <Col className='col-12 text-start'>{"El dia " + dateFormatted.toLocaleDateString()}</Col>
-                                                            </Row> 
-                                                        </Card.Header>
-                                                            <img src={'http://54.174.104.208:3001/' + value.imageName} 
-                                                            alt={'project'} style={{height: '200px'}}/>
-                                                        <i className='deletephoto fas fa-trash' value={value.id_img} key={value.id_img} onClick={e => deleteUserProject(e.target.attributes)}></i>
-                                                        <Card.Body>
-                                                            <Card.Title>Descripción del trabajo</Card.Title>
-                                                            <Card.Text>{value.workResume}</Card.Text>
-                                                        </Card.Body>
-                                                        <Card.Footer style={{ color: 'rgb(226 226 226)', backgroundColor: '#202A34' , fontSize: '14px'}}>
-                                                        <Row>
-                                                            <Col className='col-6 text-start'>Celular: {value.clientCell}</Col>
-                                                            <Col className='col-6 text-end'>{value.clientEmail !== "" ? "Email: " + value.clientEmail : ""}</Col>
-                                                        </Row>
-                                                        </Card.Footer>
-                                                    </Card>
-                                                </Col>
-                                                </>
-                                            )
-                                        }) : <></>
-                                    }
-                                    </Row>
-                                    </>
+                                                                <Col className='col-6 text-start'>Celular: {value.clientCell}</Col>
+                                                                <Col className='col-6 text-end'>{value.clientEmail !== "" ? "Email: " + value.clientEmail : ""}</Col>
+                                                            </Row>
+                                                            </Card.Footer>
+                                                        </Card>
+                                                    </Col>
+                                                    </>
+                                                )
+                                            }) : <></>
+                                        }
+                                        </Row>
+                                    </Card>
                                     : 
-                                    <>
-                                    <h5><strong>No haz subido ningún proyecto</strong></h5>
-                                    <Card className='noprojectsphoto d-flex align-items-center justify-content-center'>
+                                    <Card className='noprojectsphoto shadow rounded-3 d-flex align-items-center justify-content-center'>
+                                        <h5><strong>No haz subido ningún proyecto</strong></h5>
                                             <div className="mt-2">
                                             <img variant="top" src={emptywork} 
                                                 alt={'project'} style={{height: '250px', width: 'auto'}}/>
                                             </div> 
                                         </Card>
-                                    </>
                                     }
-                                    
-                                </Card>
                             </Col>
                         </Row>
                     </Container>

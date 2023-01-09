@@ -1,45 +1,42 @@
-import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'react'
+import React, { useEffect, useState} from 'react'
 import { Container, Form, Row } from 'react-bootstrap'
 import Axios from 'axios'
 import '../css/Personalnformation.css'
-import { useStepperContext } from '../contexts/StepperContext.js'
+import { useStepperContextPyme } from '../contexts/StepperContextPyme.js'
+import Constants from '../../Constants/Constants';
 
-const PersonalInformation = () => {
+const PersonalInformationPyme = () => {
 
-    const { userData, setUserData } = useStepperContext();
+    const { userDataPyme, setUserDataPyme } = useStepperContextPyme();
+    const { economicActivities } = Constants;
     const [localidades, setLocalidades] = useState([]);
     const [ciudades, setCiudades] = useState([]);
     const [comunas, setComunas] = useState([]);
+    
 
     const [nombreValid, setNombreValid] = useState(false);
-    const [apellidosValid, setApellidosValid] = useState(false);
     const [rutValid, setRutValid] = useState(false);
     const [cellphoneValid, setCellphoneValid] = useState(false);
     const [emailValid, setEmailValid] = useState(false);
-    const [borndateValid, setBornDateValid] = useState(false);
+    const [economicActivityValid, setEconomicActivityValid] = useState(false);
     const [regionValid, setRegionValid] = useState(false);
     const [cityValid, setCityValid] = useState(false);
     const [comunneValid, setComunneValid] = useState(false);
 
     const [nombreValidMsge, setNombreValidMsge] = useState([]);
-    const [apellidosValidMsge, setApellidosValidMsge] = useState([]);
     const [cellphoneValidMsge, setCellphoneValidMsge] = useState([]);
     const [emailValidMsge, setEmailValidMsge] = useState([]);
-    const [borndateValidMsge, setBornDateValidMsge] = useState([]);
-
     const [customValidity, setCustomValidity] = useState([]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setUserData({ ...userData, [name]: value });
+        setUserDataPyme({ ...userDataPyme, [name]: value });
         if(e.target.name === 'name'){
             checkName(e.target.value)
-        }else if(e.target.name === 'lastname'){
-            checkLastName(e.target.value)
         }else if(e.target.name === 'rut'){
             checkRut(e.target)
-        }else if(e.target.name === 'bornDate'){
-            checkBornDate(e.target.value)
+        }else if(e.target.name === 'economicActivity'){
+            checkEconomicActivity(e.target.value)
         }else if(e.target.name === 'phone'){
             checkCellphone(e.target.value)
         }else if(e.target.name === 'email'){
@@ -57,7 +54,7 @@ const PersonalInformation = () => {
         const ciudadIndex = document.getElementById('region').value;
         ciudadIndex !== '' ? setRegionValid(false) : setRegionValid(true)
         const { name, value } = e.target;
-        setUserData({ ...userData, [name]: value });
+        setUserDataPyme({ ...userDataPyme, [name]: value });
         const ciudadesIndex = localidades.find(element => {
             return element.region === ciudadIndex;
         });
@@ -69,7 +66,7 @@ const PersonalInformation = () => {
         const cityName = document.getElementById('city').value;
         cityName !== '' ? setCityValid(false) : setCityValid(true)
         const { name, value } = e.target;
-        setUserData({ ...userData, [name]: value });
+        setUserDataPyme({ ...userDataPyme, [name]: value });
         const comunasData = ciudades.find(element => {
             return element[0] === cityName;
         });
@@ -82,9 +79,8 @@ const PersonalInformation = () => {
         const formValues = document.getElementsByClassName('personalForm')[0].elements;
 
         let checkNameValue = checkName(document.getElementById('name').value);
-        let checkLastNameValue = checkLastName(document.getElementById('lastname').value);
         let checkRutValue = checkRut(document.getElementById('rut'));
-        let checkBornDateValue =  checkBornDate(document.getElementById('bornDate').value);
+        let checkEconomicActivityValue = checkEconomicActivity(document.getElementById('economicActivity').value);
         let checkCellphoneValue = checkCellphone(document.getElementById('phone').value);
         let checkEmailValue = checkEmail(document.getElementById('email').value);
 
@@ -92,7 +88,7 @@ const PersonalInformation = () => {
         let checkCityValue = checkCity(document.getElementById('city').value);
         let checkComunneValue = checkComunne(document.getElementById('comunne').value);
 
-        const validation = (checkNameValue === false && checkLastNameValue === false && checkRutValue === false && checkBornDateValue === false 
+        const validation = (checkNameValue === false && checkRutValue === false && checkEconomicActivityValue === false 
             && checkCellphoneValue === false && checkEmailValue === false && checkRegionValue === false && checkCityValue === false 
             && checkComunneValue === false);
 
@@ -131,24 +127,6 @@ const PersonalInformation = () => {
         }
     }
 
-    const checkLastName = (lastname) =>{
-        const regLastname = new RegExp(/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/g);
-        if(lastname.length > 0){
-            if(!regLastname.test(lastname)){
-                setApellidosValidMsge('Por favor, sólo ingrese letras.')
-                setApellidosValid(true)
-                return true
-            }else{
-                setApellidosValidMsge('')
-                setApellidosValid(false)
-                return false
-            }
-        }else{
-            setApellidosValidMsge('Por favor, ingrese sus apellidos.')
-            setApellidosValid(true)
-            return true
-        }
-    }
 
     const checkRut = (rut) => {
         // Despejar Puntos
@@ -212,24 +190,6 @@ const PersonalInformation = () => {
         return false
     }
 
-    const checkBornDate = (borndate) =>{
-        let bornDate = new Date(borndate)
-        let dateNow = new Date()
-        let edad = dateNow.getFullYear() - bornDate.getFullYear()
-        if(borndate.length !== '' && edad > 17){
-            setBornDateValidMsge('')
-            setBornDateValid(false)
-            return false
-        }else if(borndate.length === 0){
-            setBornDateValidMsge('Por favor, ingrese su fecha de nacimiento.')
-            setBornDateValid(true)
-            return true
-        }else if(borndate.length !== '' && edad < 17){
-            setBornDateValidMsge('Debes ser mayor de edad.')
-            setBornDateValid(true)
-            return true
-        }
-    }
 
     const checkCellphone = (cell) =>{
         const regCell = new RegExp('^[0-9]+$');
@@ -263,6 +223,16 @@ const PersonalInformation = () => {
         }else{
             setEmailValidMsge('Por favor, ingrese su correo electrónico.')
             setEmailValid(true)
+            return true
+        }
+    }
+
+    const checkEconomicActivity = (region) =>{
+        if(region !== ''){
+            setEconomicActivityValid(false)
+            return false
+        }else{
+            setEconomicActivityValid(true)
             return true
         }
     }
@@ -301,10 +271,10 @@ const PersonalInformation = () => {
         Axios.get("http://localhost:3001/api/localidades").then((res)=>{
             setLocalidades(res.data);
         });        
-        document.addEventListener('handleEvent', handleSubmit);
+        document.addEventListener('handleEventPyme', handleSubmit);
 
         return () => {
-            document.removeEventListener('handleEvent', handleSubmit);
+            document.removeEventListener('handleEventPyme', handleSubmit);
         }
     },[]);
 
@@ -312,32 +282,12 @@ const PersonalInformation = () => {
         <Container className='form mt-5 mb-5'>
             <div className='col-lg-8 col-md-10 col-sm-12'>
                 <Form className='personalForm shadow p-3 rounded'>
-                    <h3 className='mb-4 mt-1'>Información personal</h3>
+                    <h3 className='mb-4 mt-1'>Información PYME</h3>
                     <Row>
                         <Form.Text className='mb-2'><span className='mb-1' style={{color: 'red', fontWeight: '600'}}>Todos los campos son obligatorios</span></Form.Text>
                         <div className='form-floating col-md-4 mb-3'>
-                            <input type='text' className='form-control' id='name' name='name' placeholder='Nombre' 
-                            value={userData['name'] || ''} onChange={handleChange}/>
-                            <label htmlFor='name'>Nombre</label>
-                            {
-                                nombreValid === true ? <Form.Text className='mb-1'>
-                                    <span className='mb-1' style={{color: 'red'}}>{nombreValidMsge}</span></Form.Text> : nombreValidMsge
-                            }
-                        </div>
-                        <div className='form-floating col-md-8 mb-3'>
-                            <input type='text' className='form-control' id='lastname' name='lastname' placeholder='Apellido'
-                            value={userData['lastname'] || ''} onChange={handleChange}/>
-                            <label htmlFor='lastname'>Apellidos</label>
-                            {
-                                apellidosValid === true ? <Form.Text className='mb-1'>
-                                    <span className='mb-1' style={{color: 'red'}}>{apellidosValidMsge}</span></Form.Text> : apellidosValidMsge
-                            }
-                        </div>
-                    </Row>
-                    <Row>
-                        <div className='form-floating col-md-4 mb-3'>
                             <input type='text' className='form-control' id='rut' name='rut' placeholder='Ej: 123456789'
-                            value={userData['rut'] || ''} onChange={handleChange} maxLength='9'/>
+                            value={userDataPyme['rut'] || ''} onChange={handleChange} maxLength='9'/>
                             <label htmlFor='rut'>Rut</label>
                             {
                                 rutValid === false ? <Form.Text className='mb-1'><span className='mb-1' style={{color: '#5f738f'}}>
@@ -347,19 +297,41 @@ const PersonalInformation = () => {
                             }
                         </div>
                         <div className='form-floating col-md-8 mb-3'>
-                            <input type='date' className='form-control' id='bornDate' name='bornDate' placeholder='correo@gmail.com'
-                            value={userData['bornDate'] || ''} onChange={handleChange}/>
-                            <label htmlFor='bornDate'>Fecha de Nacimiento</label>
+                            <input type='text' className='form-control' id='name' name='name' placeholder='Nombre' 
+                            value={userDataPyme['name'] || ''} onChange={handleChange}/>
+                            <label htmlFor='name'>Razón Social</label>
                             {
-                                borndateValid === true ? <Form.Text className='mb-1'>
-                                <span className='mb-1' style={{color: 'red'}}>{borndateValidMsge}</span></Form.Text> : borndateValidMsge
+                                nombreValid === true ? <Form.Text className='mb-1'>
+                                    <span className='mb-1' style={{color: 'red'}}>{nombreValidMsge}</span></Form.Text> : nombreValidMsge
+                            }
+                        </div>
+                    </Row>
+                    <Row>
+                        <div className='form-floating mb-3'>
+                        <select id='economicActivity' className='form-select' name='economicActivity' 
+                            value={userDataPyme['economicActivity'] || ''} onChange={handleChange}>
+                            <option disabled selected="" value="">Seleccionar actividad económica</option>
+                            {
+                                economicActivities.map((activities,key) => {
+                                    return(
+                                        <>
+                                        <option key={key} value={activities.name}>{activities.name}</option>
+                                        </>
+                                    )
+                                })
+                            }
+                            </select>
+                            <label >Actividad económica</label>
+                            {
+                                economicActivityValid === true ? <Form.Text className='mb-1'>
+                                <span className='mb-1' style={{color: 'red'}}>Por favor, seleccione una actividad económica.</span></Form.Text> : ''
                             }
                         </div>
                     </Row>
                     <Row>
                         <div className='form-floating col-lg-4 col-md-4 col-md-4 mb-3'>
                             <input type='text' className='form-control' id='phone' name='phone' placeholder='+569 12345678'
-                            value={userData['phone'] || ''} onChange={handleChange} maxLength='8'/>
+                            value={userDataPyme['phone'] || ''} onChange={handleChange} maxLength='8'/>
                             <label htmlFor='phone'>Celular</label>
                             {
                                 cellphoneValid === true ? <Form.Text className='mb-1'>
@@ -368,7 +340,7 @@ const PersonalInformation = () => {
                         </div>
                         <div className='form-floating col-md-8 mb-3'>
                             <input type='email' className='form-control' id='email' name='email' placeholder='correo@gmail.com'
-                            value={userData['email'] || ''} onChange={handleChange}/>
+                            value={userDataPyme['email'] || ''} onChange={handleChange}/>
                             <label htmlFor='email'>Correo electrónico</label>
                             {
                                 emailValid === true ? <Form.Text className='mb-1'>
@@ -377,10 +349,10 @@ const PersonalInformation = () => {
                         </div>
                     </Row>
                     <Row>
-                        <h3 className='mb-4 mt-1'>Lugar de residencia</h3>
+                        <h3 className='mb-4 mt-1'>Localidad de la PYME</h3>
                         <div className='form-floating col-md-4 mb-3'>
                             <select id='region' className='form-select' name='region' 
-                            value={userData['region'] || ''} onChange={handleRegionChange}>
+                            value={userDataPyme['region'] || ''} onChange={handleRegionChange}>
                             <option disabled selected="" value="">Seleccionar región</option>
                             {
                                 localidades.map((locations,key) => {
@@ -400,7 +372,7 @@ const PersonalInformation = () => {
                         </div>
                         <div className='form-floating col-md-4 mb-3'>
                             <select id='city' className='form-select' name='city' 
-                            value={userData['city'] || ''} onChange={handleCityChange}>
+                            value={userDataPyme['city'] || ''} onChange={handleCityChange}>
                             <option disabled selected="" value="">Seleccionar provincia</option>
                             {
                                 ciudades.map((cities,key) => {
@@ -420,7 +392,7 @@ const PersonalInformation = () => {
                         </div>
                         <div className='form-floating col-md-4 mb-3'>
                             <select id='comunne' className='form-select' name='comunne' 
-                            value={userData['comunne'] || ''} onChange={handleChange}>
+                            value={userDataPyme['comunne'] || ''} onChange={handleChange}>
                             <option selected="" value="">Seleccionar comuna</option>
                             {
                                 comunas.map((comunnes,key) => {
@@ -445,4 +417,4 @@ const PersonalInformation = () => {
     )
 }
 
-export default PersonalInformation
+export default PersonalInformationPyme

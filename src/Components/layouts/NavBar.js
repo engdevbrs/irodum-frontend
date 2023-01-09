@@ -8,16 +8,18 @@ import { useHomeContext } from '../contexts/WorkerContext';
 import '../css/NavBar.css'
 import Footer from "./Footer";
 import { useNavigate } from "react-router-dom";
-import jobs from '../../Constants/Constants';
+import Constants from '../../Constants/Constants';
 
 
 const Menu = () =>{
 
   const navigate = useNavigate()
+  const { jobs } = Constants;
   const { worksearcher, setWorksearcher } = useHomeContext();
-  const { userData, setUserData } = useLoginContext()
+  const { userData } = useLoginContext()
   const [ userPhoto, setUserPhoto] = useState([])
   const [ userName, setUserName] = useState([])
+  const [ ispyme, setIsPyme] = useState([])
   const [ projectsData, setProjectsData ] = useState([])
   const [ isLoggedIn, setLoggedIn] = useState(false)
   const [show, setShow] = useState(false);
@@ -87,15 +89,16 @@ const Menu = () =>{
 
     if(userData.token !== undefined || localStorage.getItem('accessToken')){
         const token = localStorage.getItem('accessToken');
-        Axios.post("http://54.174.104.208:3001/api/user-info", {
+        const ispyme = JSON.parse(localStorage.getItem('ispyme'));
+        Axios.post(ispyme ? "http://localhost:3001/api/user-info-pyme" : "http://localhost:3001/api/user-info", {
             'authorization' : `${userData.token || token}`
         })
           .then((result) => {
               if(result.status === 200){
                 setLoggedIn(true)
                 setUserPhoto(result.data[0].userPhoto)
-                setUserName(result.data[0].nameUser)
-                Axios.get("http://54.174.104.208:3001/api/user/user-requests",{
+                setUserName(ispyme ? result.data[0].razonSocial: result.data[0].nameUser)
+                Axios.get("http://localhost:3001/api/user/user-requests",{
                   headers: {
                       'authorization': `${token}`
                       }
@@ -158,11 +161,11 @@ const Menu = () =>{
                     <div className="nav-link dropdown-toggle" id="navbarDropdown1" type="button" data-bs-toggle="dropdown"
                       aria-expanded="false" style={{color: 'grey'}}>
                       <img id="photoUser" src={(userPhoto !== null && userPhoto !== undefined && userPhoto !== "" && userPhoto.length > 0)  ? 
-                      'http://54.174.104.208:3001/api/images/'+ userPhoto : perfil} className="rounded-circle" height="35" width="35"
+                      'http://localhost:3001/api/images/'+ userPhoto : perfil} className="rounded-circle" height="35" width="35"
                         alt=""/>
                     </div>
                     <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown1">
-                      <li><Link to={'/perfil'} className="dropdown-item" >Mi Perfil</Link></li>
+                      <li><Link to={ispyme ? '/perfil-pyme' : '/perfil'} className="dropdown-item" >Mi Perfil</Link></li>
                       <li><Link to={'/mis-solicitudes'} className="dropdown-item" >{projectsData.length > 0 ? 
                       <div>Nuevas solicitudes{' '}<span className="badge rounded-pill bg-danger">
                         {projectsData.length}
@@ -173,7 +176,7 @@ const Menu = () =>{
                         <hr className="dropdown-divider"/>
                       </li>
                       <li>
-                        <a className="dropdown-item" onClick={() => logOut()} href="/"><i className="fa fa-sign-out me-2"></i>Cerrar Sesión</a>
+                        <a className="dropdown-item" onClick={() => logOut()} href="/login"><i className="fa fa-sign-out me-2"></i>Cerrar Sesión</a>
                       </li>
                     </ul>
                   </li>
@@ -194,6 +197,7 @@ const Menu = () =>{
             <div className="menu-pages">
               <Link to={'/'} className="nav-menu-item" onClick={() => menuToggle()}><i className="fas fa-home me-3"></i>Inicio</Link>
               <Link to={'/trabajadores'}  className="nav-menu-item" onClick={() => menuToggle()}><i className="fas fa-hard-hat me-3"></i>Trabajadores</Link>
+              <Link to={'/pymes'}  className="nav-menu-item" onClick={() => menuToggle()}><i className="fas fa-briefcase me-3"></i>Pymes</Link>
               <Link to={'/sobre-nosotros'}  className="nav-menu-item" onClick={() => menuToggle()}><i className="fas fa-exclamation-circle me-3"></i>Sobre Nosotros</Link>
               <Link to={'/preguntas-frecuentes'} className="nav-menu-item" onClick={() => menuToggle()}><i className="fas fa-question-circle me-3"></i>Preguntas Frecuentes</Link>
               <Link to={'/contacto'} className="nav-menu-item" onClick={() => menuToggle()}><i className="fas fa-address-book me-3"></i>Contacto</Link>

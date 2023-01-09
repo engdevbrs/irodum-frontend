@@ -1,6 +1,8 @@
 import React from 'react';
 import { BrowserRouter, BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import AccountType from './Components/account/AccountType';
 import CreateAccount from './Components/account/CreateAccount';
+import CreateAccountPyme from './Components/account/CreateAccountPyme';
 import { LoginContextProvider } from './Components/contexts/AuthContext';
 import Home from './Components/home/Home';
 import About from './Components/layouts/About';
@@ -8,6 +10,7 @@ import FAQ from './Components/layouts/FAQ';
 import Menu from './Components/layouts/NavBar';
 import Login from './Components/login/Login';
 import Profile from './Components/profile/Profile';
+import ProfilePyme from './Components/profile/ProfilePyme';
 import ToDoList from './Components/profile/ToDoList';
 import UserProjects from './Components/profile/UserProjects';
 import ViewClientProfile from './Components/profile/ViewClientProfile';
@@ -16,6 +19,7 @@ import Contact from './Components/layouts/Contact';
 import { HomeContextProvider } from './Components/contexts/WorkerContext';
 import RequestRecoverPassword from './Components/account/RequestRecoverPassword';
 import RecoverPassword from './Components/login/RequestPassword';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
     return (
@@ -24,9 +28,13 @@ const App = () => {
             <Routes>
                 <Route path='' element= {<LoginContextProvider><HomeContextProvider><Menu/></HomeContextProvider></LoginContextProvider>}>
                     <Route index element= { <Home />} />
-                    <Route path='crear-cuenta' element= { <CreateAccount />  } />
+                    <Route path='crear-cuenta' element= { <AccountType />  } />
+                    <Route path='crear-cuenta-independiente' element= { <CreateAccount />  } />
+                    <Route path='crear-cuenta-pyme' element= { <CreateAccountPyme />  } />
                     <Route path='trabajadores' element= { <Workers /> } />
+                    <Route path='pymes' element= { <Workers /> } />
                     <Route path='perfil' element= { <Profile /> } />
+                    <Route path='perfil-pyme' element= { <ProfilePyme /> } />
                     <Route path='/trabajadores/perfil/vista/:id' element= { <ViewClientProfile /> } />
                     <Route path='login' element= { <Login /> } />
                     <Route path='/solicitud-recuperar-clave' element= { <RequestRecoverPassword /> } />
