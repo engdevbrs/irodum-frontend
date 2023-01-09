@@ -336,13 +336,13 @@ const ViewClientProfile = () => {
 
             arrayValues.push(dataUser[0].email,dataUser[0].rutUser,dataUser[0].nameUser)
 
-            Axios.post('http://54.174.104.208:3001/api/request-work',arrayValues)
+            Axios.post('http://localhost:3001/api/request-work',arrayValues)
             .then((result) => {
                 if(result.status === 200){
                     setResponseRequest(result.status)
                     setShowAlert(true)
                     clearForm()
-                    Axios.post('http://54.174.104.208:3001/api/requestEmail',arrayValues)
+                    Axios.post('http://localhost:3001/api/requestEmail',arrayValues)
                     .then((result) => {
                         if(result.status === 200){
                             console.log(result);
@@ -423,7 +423,7 @@ const ViewClientProfile = () => {
                 }).then((result) => {
                     if(result.isConfirmed){
                         showProgress(false)
-                        Axios.post('http://54.174.104.208:3001/api/rating-worker',formFileMultiple, config)
+                        Axios.post('http://localhost:3001/api/rating-worker',formFileMultiple, config)
                         .then((result) => {
                             if(result.status === 200){
                                 Swal.fire({
@@ -439,7 +439,7 @@ const ViewClientProfile = () => {
                                         handleCloseComment()
                                     }
                                 })
-                                Axios.get("http://54.174.104.208:3001/api/worker/ratings/" + id)
+                                Axios.get("http://localhost:3001/api/worker/ratings/" + id)
                                 .then((result) => {
                                     if(result.status === 200){
                                         let sumaTotal = null
@@ -454,7 +454,7 @@ const ViewClientProfile = () => {
                                         console.log(sumaTotal);
                                         setRatingScore(result.data)
 
-                                        Axios.put("http://54.174.104.208:3001/api/worker/update-rating/" +id, {rankingTotal: sumaTotal})
+                                        Axios.put("http://localhost:3001/api/worker/update-rating/" +id, {rankingTotal: sumaTotal})
                                         .then((result) => {
                                             if(result.status === 200){
                                                 console.log("resultado: ",result.data);
@@ -466,7 +466,7 @@ const ViewClientProfile = () => {
                                 }).catch(error => {
                                     setResponse([])
                                 });
-                                Axios.get("http://54.174.104.208:3001/api/worker/evaluations/" + id)
+                                Axios.get("http://localhost:3001/api/worker/evaluations/" + id)
                                 .then((result) => {
                                     if(result.status === 200){
                                             setCommentsWorker(result.data)
@@ -822,10 +822,10 @@ const ViewClientProfile = () => {
     }
     
     useEffect(() =>{
-        Axios.get("http://54.174.104.208:3001/api/localidades").then((res)=>{
+        Axios.get("http://localhost:3001/api/localidades").then((res)=>{
             setLocalidades(res.data);
         }); 
-        Axios.get("http://54.174.104.208:3001/api/worker/ratings/" + id)
+        Axios.get("http://localhost:3001/api/worker/ratings/" + id)
           .then((result) => {
               if(result.status === 200){
                 setRatingScore(result.data)
@@ -833,7 +833,7 @@ const ViewClientProfile = () => {
           }).catch(error => {
             setResponse([])
         });
-        Axios.get("http://54.174.104.208:3001/api/view/profile/" + id)
+        Axios.get("http://localhost:3001/api/view/profile/" + id)
           .then((result) => {
               if(result.status === 200){
                     setDataUser(result.data)
@@ -841,7 +841,7 @@ const ViewClientProfile = () => {
           }).catch(error => {
                 setResponse([])
         });
-        Axios.get("http://54.174.104.208:3001/api/worker/evaluations/" + id)
+        Axios.get("http://localhost:3001/api/worker/evaluations/" + id)
           .then((result) => {
               if(result.status === 200){
                     setCommentsWorker(result.data)
@@ -850,7 +850,7 @@ const ViewClientProfile = () => {
             setResponse([])
         });
 
-        Axios.get("http://54.174.104.208:3001/api/download/speciality/" + id)
+        Axios.get("http://localhost:3001/api/download/speciality/" + id)
         .then((result) => {
             if(result.status === 200){
                 setEspecialitiesWorker(result.data)
