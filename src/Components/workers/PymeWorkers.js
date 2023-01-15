@@ -9,7 +9,7 @@ import { useHomeContext } from '../contexts/WorkerContext';
 import Pagination from './Pagination';
 import { Link } from 'react-router-dom';
 
-const Workers = () => {
+const PymeWorkers = () => {
 
   const { worksearcher, setWorksearcher } = useHomeContext()
   const { jobs } = Constants;
@@ -102,7 +102,7 @@ const Workers = () => {
   }
   
   useEffect(() => {
-      Axios.get("54.174.104.208:3001/api/usuarios").then((res)=>{
+      Axios.get("54.174.104.208:3001/api/pymes").then((res)=>{
         if(worksearcher !== ''){
           let filtererFromHome = (res.data).filter(function(params) {
             return params.workareaUser === worksearcher.oficio
@@ -129,7 +129,7 @@ const Workers = () => {
               <Nav aria-label="breadcrumb" className="bg-light p-3">
                   <ol className="breadcrumb mb-0">
                       <li className="breadcrumb-item"><Link to={'/'} >Inicio</Link></li>
-                      <li className="breadcrumb-item active" aria-current="page">Trabajadores</li>
+                      <li className="breadcrumb-item active" aria-current="page">Empresas</li>
                   </ol>
               </Nav>
           </Col>
@@ -141,7 +141,7 @@ const Workers = () => {
             <div className="col-12 col-sm-8 col-lg-6">
               <div className="section_heading text-center wow fadeInUp" data-wow-delay="0.2s" style={{"visibility": "visible", "animationDelay": "0.2s", "animationName": "fadeInUp"}}>
                 <h3>Nuestra gran <span> Comunidad</span></h3>
-                <p>A continuación le mostraremos a nuestros trabajadores y sus servicios laborales.</p>
+                <p>A continuación le mostraremos a nuestras PYMES y sus servicios.</p>
               <div className="line"></div>
             </div>
           </div>
@@ -166,7 +166,7 @@ const Workers = () => {
                       localidades.map((locations,key) => {
                           return(
                               <>
-                              <option key={key} value={locations.region}>{locations.region}</option>
+                              <option key={locations.region} value={locations.region}>{locations.region}</option>
                               </>
                           )
                       })
@@ -179,10 +179,10 @@ const Workers = () => {
                    defaultValue={'' || cityValue} onChange={(e) => {handleCityChange(e); setCityValue(e.target.value)}}>
                   <option disabled selected="" value="">Seleccionar provincia</option>
                   {
-                      ciudades.map((cities,key) => {
+                      ciudades.map((cities,index) => {
                           return(
                               <>
-                              <option key={key} value={cities[0]}>{cities[0]}</option>
+                              <option key={index} value={cities[0]}>{cities[0]}</option>
                               </>
                           )
                       })
@@ -193,12 +193,12 @@ const Workers = () => {
               <div>
                   <Form.Select id='comunne' name='comunne'
                   defaultValue={'' || comunneValue} onChange={(e) => setComunneValue(e.target.value)}>
-                  <option selected="" value="">Seleccionar comuna</option>
+                  <option disabled selected="" value="">Seleccionar comuna</option>
                   {
-                      comunas.map((comunnes,key) => {
+                      comunas.map((comunnes,index) => {
                           return(
                               <>
-                              <option key={key} value={comunnes}>{comunnes}</option>
+                              <option key={index} value={comunnes}>{comunnes}</option>
                               </>
                           )
                       })
@@ -252,4 +252,4 @@ const Workers = () => {
   );
 }
 
-export default Workers;
+export default PymeWorkers;

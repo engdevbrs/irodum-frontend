@@ -12,7 +12,7 @@ const ViewClientProjects = ({id}) => {
 
   useEffect(() =>{
     setTimeout(() => {
-        Axios.get("http://localhost:3001/api/image/view-projects/" + id)
+        Axios.get("54.174.104.208:3001/api/image/view-projects/" + id)
           .then((result) => {
               if(result.status === 200){
                 setResponse(result.status)
@@ -60,7 +60,7 @@ const ViewClientProjects = ({id}) => {
                         <Col className='col-4 text-end'>{"El dia " + dateFormatted.toLocaleDateString()}</Col>
                     </Row> 
                     </Card.Header>
-                    <img src={'http://localhost:3001/' + value.imageName} 
+                    <img src={'54.174.104.208:3001/' + value.imageName} 
                         alt={'project'} style={{height: '200px'}}/>
                     <Card.Body>
                         <Card.Title>Descripción del trabajo</Card.Title>

@@ -15,12 +15,12 @@ const Confirm = () => {
 
   const handleCreate =  async () => {
     if(userData === "" || userData === undefined){
-      Axios.post("http://localhost:3001/api/create-user-pyme", userDataPyme)
+      Axios.post("54.174.104.208:3001/api/create-user-pyme", userDataPyme)
       .then((result) => {
           if(result.status === 200){
               setResult(result.status);
               setLoadingRequest(false);
-              Axios.post("http://localhost:3001/api/welcomeMail", userDataPyme)
+              Axios.post("54.174.104.208:3001/api/welcomeMail", userDataPyme)
               .then((response) => {
                 if(response.status === 200){
                   console.log(response);
@@ -36,12 +36,12 @@ const Confirm = () => {
           clearTimeout();
       });
     }else if(userDataPyme === "" || userDataPyme === undefined){
-      Axios.post("http://localhost:3001/api/create-user", userData)
+      Axios.post("54.174.104.208:3001/api/create-user", userData)
       .then((result) => {
           if(result.status === 200){
               setResult(result.status);
               setLoadingRequest(false);
-              Axios.post("http://localhost:3001/api/welcomeMail", userData)
+              Axios.post("54.174.104.208:3001/api/welcomeMail", userData)
               .then((response) => {
                 if(response.status === 200){
                   console.log(response);

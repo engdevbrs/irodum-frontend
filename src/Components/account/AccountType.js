@@ -24,7 +24,7 @@ const AccountType = () => {
                     <div className="col-lg-6 col-xxl-4 mb-5">
                         <div className="card bg-light border-0 h-100">
                             <div className="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                <div className="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-4"><i className="fas fa-restroom"></i></div>
+                                <div className="feature bg-gradient text-white rounded-3 mb-4 mt-4" style={{backgroundColor: "#2b3d64"}}><i className="fas fa-restroom"></i></div>
                                 <h5 className="fw-bold">Trabajador independiente</h5>
                                 <p className="mb-3">Si deseas registrarte como trabajador independiente haz click en el botón que está a continuación.</p>
                                 <Link className="btn btn-primary" to={"/crear-cuenta-independiente"} >Registrarme</Link>
@@ -34,7 +34,7 @@ const AccountType = () => {
                     <div className="col-lg-6 col-xxl-4 mb-5">
                         <div className="card bg-light border-0 h-100">
                             <div className="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                                <div className="feature bg-primary bg-gradient text-white rounded-3 mb-4 mt-4"><i className="fas fa-building"></i></div>
+                                <div className="feature bg-gradient text-white rounded-3 mb-4 mt-4" style={{backgroundColor: "#2b3d64"}}><i className="fas fa-building"></i></div>
                                 <h5 className="fw-bold">Pequeña y Mediana Empresa</h5>
                                 <p className="mb-3">Si deseas registrarte como PYME y ofrecer tus servicios haz click en el botón que está a continuación.</p>
                                 <Link className="btn btn-primary" to={"/crear-cuenta-pyme"} >Registrarme</Link>
