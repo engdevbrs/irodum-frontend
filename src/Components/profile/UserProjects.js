@@ -43,7 +43,7 @@ const UserProjects = () => {
             denyButtonText: `Cancelar`,
             }).then((result) => {
                 if(result.isConfirmed){
-                    Axios.delete("http://localhost:3001/api/image/delete-project" + parseInt(e[1].value,10), 
+                    Axios.delete("54.174.104.208:3001/api/image/delete-project" + parseInt(e[1].value,10), 
                     {
                         headers: {
                         'authorization': `${token}`
@@ -91,12 +91,12 @@ const UserProjects = () => {
             }).then((result) => {
                 if(result.isConfirmed){
                     showProgress(false)
-                    Axios.post("http://localhost:3001/api/image/upload-project",formFile,config)
+                    Axios.post("54.174.104.208:3001/api/image/upload-project",formFile,config)
                     .then((result) => {
                         if(result.status === 200){
                             setResponse(result.status)
                             getProjects(token)
-                            Swal.fire('Su foto ha sido actualizada con éxito!', '', 'success')
+                            Swal.fire('Su proyecto se guardó existosamente!', '', 'success')
                             showProgress(true)
                             setUpdateProgress(0)
                             clearFormUpload()
@@ -178,7 +178,7 @@ const UserProjects = () => {
     
     const getProjects = () => {
         const token = localStorage.getItem('accessToken');
-        Axios.get("http://localhost:3001/api/image/user-projects",{
+        Axios.get("54.174.104.208:3001/api/image/user-projects",{
             headers: {
                 'authorization': `${token}`
                 }
@@ -193,7 +193,7 @@ const UserProjects = () => {
     }
 
     const getAccess = async (token) =>{
-        await Axios.post("http://localhost:3001/api/user-info", {
+        await Axios.post("54.174.104.208:3001/api/user-info", {
             'authorization' : `${token}`
         })
           .then((result) => {
@@ -310,7 +310,7 @@ const UserProjects = () => {
                 <section className='p-3'>
                     <Container className='shadow-lg rounded-3 mt-3 mb-5 p-2' fluid>
                         <Row xs={1} md={1}>
-                            <Col md={5} lg={4} className='mb-2' >
+                            <Col md={5} lg={4} className='mb-2' style={{ maxHeight: '140vh'}}>
                                 <Card className='projects-user shadow rounded-3 p-2'>
                                 <h5><strong>Subir trabajos realizados</strong></h5>
                                 <Form.Group className="mb-3">
@@ -406,7 +406,7 @@ const UserProjects = () => {
                                                                     <Col className='col-12 text-start'>{"El dia " + dateFormatted.toLocaleDateString()}</Col>
                                                                 </Row> 
                                                             </Card.Header>
-                                                                <img src={'http://localhost:3001/' + value.imageName} 
+                                                                <img src={'54.174.104.208:3001/' + value.imageName} 
                                                                 alt={'project'} style={{height: '200px'}}/>
                                                             <i className='deletephoto fas fa-trash' value={value.id_img} key={value.id_img} onClick={e => deleteUserProject(e.target.attributes)}></i>
                                                             <Card.Body>

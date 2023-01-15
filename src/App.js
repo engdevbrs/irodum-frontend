@@ -20,6 +20,8 @@ import { HomeContextProvider } from './Components/contexts/WorkerContext';
 import RequestRecoverPassword from './Components/account/RequestRecoverPassword';
 import RecoverPassword from './Components/login/RequestPassword';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import PymeWorkers from './Components/workers/PymeWorkers';
+import ViewPymeProfile from './Components/profile/ViewPymeProfile';
 
 const App = () => {
     return (
@@ -32,10 +34,11 @@ const App = () => {
                     <Route path='crear-cuenta-independiente' element= { <CreateAccount />  } />
                     <Route path='crear-cuenta-pyme' element= { <CreateAccountPyme />  } />
                     <Route path='trabajadores' element= { <Workers /> } />
-                    <Route path='pymes' element= { <Workers /> } />
+                    <Route path='pymes' element= { <PymeWorkers /> } />
                     <Route path='perfil' element= { <Profile /> } />
                     <Route path='perfil-pyme' element= { <ProfilePyme /> } />
                     <Route path='/trabajadores/perfil/vista/:id' element= { <ViewClientProfile /> } />
+                    <Route path='/trabajadores/perfil-pyme/vista/:id' element= { <ViewPymeProfile /> } />
                     <Route path='login' element= { <Login /> } />
                     <Route path='/solicitud-recuperar-clave' element= { <RequestRecoverPassword /> } />
                     <Route path='/resetear-password/:id/:token' element= { <RecoverPassword /> } />

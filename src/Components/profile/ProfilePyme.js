@@ -61,7 +61,7 @@ const ProfilePyme = () => {
             }).then((result) => {
                 if(result.isConfirmed){
                     showProgress(false)
-                    Axios.put("http://localhost:3001/api/images-pyme",
+                    Axios.put("54.174.104.208:3001/api/images-pyme",
                     formData,
                     {
                         headers: {
@@ -81,7 +81,7 @@ const ProfilePyme = () => {
                             Swal.fire('Su foto ha sido actualizada con éxito!', '', 'success')
                             showProgress(true)
                             getAccess(token)
-                            document.getElementById('photoUser').src = "http://localhost:3001" + result.data.imagePath
+                            document.getElementById('photoUser').src = "54.174.104.208:3001" + result.data.imagePath
                         }
                     }).catch(error => {
                         Swal.fire('No pudimos cambiar tu foto de perfil', '', 'warning')
@@ -120,7 +120,7 @@ const ProfilePyme = () => {
             }).then((result) => {
                 if(result.isConfirmed){
                     showProgressSpec(false)
-                    Axios.post('http://localhost:3001/api/upload/speciality',specialityFormFile, config)
+                    Axios.post('54.174.104.208:3001/api/upload/speciality',specialityFormFile, config)
                     .then((result) => {
                         if(result.status === 200){
                             Swal.fire({
@@ -137,7 +137,7 @@ const ProfilePyme = () => {
                                     handleCloseSpeciality()
                                 }
                             })
-                            Axios.get("http://localhost:3001/api/download/speciality/" + dataUser[0].id)
+                            Axios.get("54.174.104.208:3001/api/download/speciality/" + dataUser[0].id)
                                 .then((result) => {
                                     if(result.status === 200){
                                         setEspecialitiesWorker(result.data)
@@ -172,7 +172,7 @@ const ProfilePyme = () => {
     };
 
     const deletePrevUserPhoto = () =>{
-        Axios.delete('http://localhost:3001/api/images/delete/' + getPhoto)
+        Axios.delete('54.174.104.208:3001/api/images/delete/' + getPhoto)
           .then((result) => {
               if(result.status === 200){
                 console.log(result);
@@ -204,7 +204,7 @@ const ProfilePyme = () => {
                 denyButtonText: `Cancelar`,
               }).then((result) => {
                 if (result.isConfirmed) {
-                    Axios.put("http://localhost:3001/api/update-pyme", {newArrayValues ,'authorization' : `${token}`})
+                    Axios.put("54.174.104.208:3001/api/update-pyme", {newArrayValues ,'authorization' : `${token}`})
                     .then((result) => {
                         if(result.status === 200){
                             Swal.fire({
@@ -238,16 +238,16 @@ const ProfilePyme = () => {
     }
 
     const getAccess = (token) =>{
-        Axios.post("http://localhost:3001/api/user-info-pyme", {
+        Axios.post("54.174.104.208:3001/api/user-info-pyme", {
             'authorization' : `${token}`
         }).then((result) => {
               if(result.status === 200){
                     setResponse(result.status)
                     setLoading(false)
                     setDataUser(result.data)
-                    localStorage.setItem('userPhoto', "http://localhost:3001/api/images/" + result.data[0].userPhoto)
+                    localStorage.setItem('userPhoto', "54.174.104.208:3001/api/images/" + result.data[0].userPhoto)
                     setGetPhoto(result.data[0].userPhoto)
-                    Axios.get("http://localhost:3001/api/worker/ratings/" + result.data[0].iduser_pyme)
+                    Axios.get("54.174.104.208:3001/api/worker/ratings/" + result.data[0].iduser_pyme)
                         .then((result) => {
                             if(result.status === 200){
                                 setRatingScore(result.data)
@@ -255,7 +255,7 @@ const ProfilePyme = () => {
                         }).catch(error => {
                             setRatingScore([])
                         });
-                    Axios.get("http://localhost:3001/api/worker/evaluations/" + result.data[0].iduser_pyme)
+                    Axios.get("54.174.104.208:3001/api/worker/evaluations/" + result.data[0].iduser_pyme)
                         .then((result) => {
                             if(result.status === 200){
                                     setCommentsWorker(result.data)
@@ -263,7 +263,7 @@ const ProfilePyme = () => {
                         }).catch(error => {
                             setCommentsWorker([])
                         });
-                    Axios.get("http://localhost:3001/api/download/speciality-pyme/" + result.data[0].iduser_pyme)
+                    Axios.get("54.174.104.208:3001/api/download/speciality-pyme/" + result.data[0].iduser_pyme)
                         .then((result) => {
                             if(result.status === 200){
                                 setEspecialitiesWorker(result.data)
@@ -452,7 +452,7 @@ const ProfilePyme = () => {
                                                     <input type="text" className='form-control' id='floatingWebsite' defaultValue={element.webSite !== undefined ? element.webSite : ''} name='website' placeholder='floatingWebsite' />
                                                     <label htmlFor='floatingWebsite'>Ingrese su sitio web</label>
                                                 </div></> : 
-                                                <><img src={web} alt=''/><a href={element.webSite !== undefined ? 'http://'+element.webSite : '#'} target="_blank" rel="noopener noreferrer">{element.webSite !== undefined ? element.webSite : 'Sitio Web'}</a>
+                                                <><img src={web} alt=''/><a href={element.webSite !== undefined ? ''+element.webSite : '#'} target="_blank" rel="noopener noreferrer">{element.webSite !== undefined ? element.webSite : 'Sitio Web'}</a>
                                                 </>
                                                 }</ListGroup.Item>
                                                 <ListGroup.Item>{
@@ -524,6 +524,19 @@ const ProfilePyme = () => {
                                             </Col>
                                             <Col sm={9}>
                                             <p className="text-muted mb-0">{element.regionUser + ", " + element.cityUser + ", " + element.communeUser}</p>
+                                            </Col>
+                                        </Row>
+                                        <hr/>
+                                        <Row >
+                                            <Col sm={3}>
+                                            <p className="mb-0">Años de servicio</p>
+                                            </Col>
+                                            <Col sm={9}>
+                                            {inputs === true ? <div className='form-floating col-12'>
+                                                <input type='number' className='form-control' id='floatingExp' name='exp' 
+                                                defaultValue={element.experienceYears !== undefined ? element.experienceYears : ''} max={2} placeholder='floatingExp' required/>
+                                                <label htmlFor='exp'>Años de servicio</label>
+                                            </div> : <p className="text-muted mb-0">{element.experienceYears}</p>}
                                             </Col>
                                         </Row>
                                         {

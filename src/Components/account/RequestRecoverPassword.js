@@ -32,7 +32,7 @@ const RequestRecoverPassword = () => {
     }
 
     const recoverPass = (mailValue) =>{
-        Axios.post("http://localhost:3001/api/recover-password", {mailValue})
+        Axios.post("54.174.104.208:3001/api/recover-password", {mailValue})
           .then((result) => {
               if(result.status === 200){
                 setUserValid(true)

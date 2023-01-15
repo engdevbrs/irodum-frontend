@@ -6,6 +6,7 @@
 .cardproject{
     border-color: rgba(121, 121, 121, 0.208) !important;
 }
+
 .info-client{
     display: flex;
     flex-direction: column;
@@ -24,7 +25,7 @@
 }
 
 .projectsphoto {
-    height:63vh;
+    height:120vh;
     overflow-x: hidden;
     overflow-y: visible;
 }

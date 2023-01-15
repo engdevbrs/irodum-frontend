@@ -19,7 +19,6 @@ const Menu = () =>{
   const { userData } = useLoginContext()
   const [ userPhoto, setUserPhoto] = useState([])
   const [ userName, setUserName] = useState([])
-  const [ ispyme, setIsPyme] = useState([])
   const [ projectsData, setProjectsData ] = useState([])
   const [ isLoggedIn, setLoggedIn] = useState(false)
   const [show, setShow] = useState(false);
@@ -90,7 +89,7 @@ const Menu = () =>{
     if(userData.token !== undefined || localStorage.getItem('accessToken')){
         const token = localStorage.getItem('accessToken');
         const ispyme = JSON.parse(localStorage.getItem('ispyme'));
-        Axios.post(ispyme ? "http://localhost:3001/api/user-info-pyme" : "http://localhost:3001/api/user-info", {
+        Axios.post(ispyme ? "54.174.104.208:3001/api/user-info-pyme" : "54.174.104.208:3001/api/user-info", {
             'authorization' : `${userData.token || token}`
         })
           .then((result) => {
@@ -98,7 +97,7 @@ const Menu = () =>{
                 setLoggedIn(true)
                 setUserPhoto(result.data[0].userPhoto)
                 setUserName(ispyme ? result.data[0].razonSocial: result.data[0].nameUser)
-                Axios.get("http://localhost:3001/api/user/user-requests",{
+                Axios.get("54.174.104.208:3001/api/user/user-requests",{
                   headers: {
                       'authorization': `${token}`
                       }
@@ -117,12 +116,14 @@ const Menu = () =>{
               }else{
                 localStorage.removeItem('accessToken')
                 localStorage.removeItem('userPhoto')
+                localStorage.removeItem('ispyme')
                 setLoggedIn(false)
                 setUserPhoto("")
               }
           }).catch(error => {
             localStorage.removeItem('accessToken')
             localStorage.removeItem('userPhoto')
+            localStorage.removeItem('ispyme')
             setUserPhoto("")
             setLoggedIn(false)
           });
@@ -161,11 +162,11 @@ const Menu = () =>{
                     <div className="nav-link dropdown-toggle" id="navbarDropdown1" type="button" data-bs-toggle="dropdown"
                       aria-expanded="false" style={{color: 'grey'}}>
                       <img id="photoUser" src={(userPhoto !== null && userPhoto !== undefined && userPhoto !== "" && userPhoto.length > 0)  ? 
-                      'http://localhost:3001/api/images/'+ userPhoto : perfil} className="rounded-circle" height="35" width="35"
+                      '54.174.104.208:3001/api/images/'+ userPhoto : perfil} className="rounded-circle" height="35" width="35"
                         alt=""/>
                     </div>
                     <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown1">
-                      <li><Link to={ispyme ? '/perfil-pyme' : '/perfil'} className="dropdown-item" >Mi Perfil</Link></li>
+                      <li><Link to={JSON.parse(localStorage.getItem('ispyme')) ? '/perfil-pyme' : '/perfil'} className="dropdown-item" >Mi Perfil</Link></li>
                       <li><Link to={'/mis-solicitudes'} className="dropdown-item" >{projectsData.length > 0 ? 
                       <div>Nuevas solicitudes{' '}<span className="badge rounded-pill bg-danger">
                         {projectsData.length}
