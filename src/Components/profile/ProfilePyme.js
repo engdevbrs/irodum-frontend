@@ -21,7 +21,7 @@ import Comments from './Comments'
 import Ratings from './Ratings'
 import Specialities from './Specialities'
 
-const Profile = () => {
+const ProfilePyme = () => {
 
     const MySwal = withReactContent(Swal)
     const [ dataUser, setDataUser ] = useState([])
@@ -61,7 +61,7 @@ const Profile = () => {
             }).then((result) => {
                 if(result.isConfirmed){
                     showProgress(false)
-                    Axios.put("54.174.104.208:3001/api/images",
+                    Axios.put("54.174.104.208:3001/api/images-pyme",
                     formData,
                     {
                         headers: {
@@ -112,7 +112,7 @@ const Profile = () => {
         specialityFormFile.append('params', JSON.stringify(arrayValues))
 
         MySwal.fire({
-            title: '¿Estás seguro de agregar ésta especialidad?',
+            title: '¿Estás seguro de agregar ésta certificación?',
             showDenyButton: true,
             showCancelButton: false,
             confirmButtonText: `Agregar`,
@@ -124,9 +124,9 @@ const Profile = () => {
                     .then((result) => {
                         if(result.status === 200){
                             Swal.fire({
-                                title: '<strong>Especialidad Guardada</strong>',
+                                title: '<strong>Certificación Guardada</strong>',
                                 icon: 'success',
-                                html:`<span>Su especialidad fue almacenada con éxito..
+                                html:`<span>Su certificación fue almacenada con éxito..
                                     <p className="mt-1">Ésta será visible para todas las personas que visiten su perfil.</p>
                                 </span>`,
                                 confirmButtonColor: '#3085d6',
@@ -151,7 +151,7 @@ const Profile = () => {
                         setResponse(error.response.status)
                         Swal.fire({
                             icon: 'error',
-                                html:`<p className="mt-1">Lo sentimos, su especialidad no pudo ser guardada, intente de nuevo o más tarde...</p>`,
+                                html:`<p className="mt-1">Lo sentimos, su certificación no pudo ser guardada, intente de nuevo o más tarde...</p>`,
                                 confirmButtonColor: '#3085d6',
                                 confirmButtonText: 'Aceptar'
                           }).then((result) => {
@@ -204,7 +204,7 @@ const Profile = () => {
                 denyButtonText: `Cancelar`,
               }).then((result) => {
                 if (result.isConfirmed) {
-                    Axios.put("54.174.104.208:3001/api/update-user", {newArrayValues ,'authorization' : `${token}`})
+                    Axios.put("54.174.104.208:3001/api/update-pyme", {newArrayValues ,'authorization' : `${token}`})
                     .then((result) => {
                         if(result.status === 200){
                             Swal.fire({
@@ -238,33 +238,32 @@ const Profile = () => {
     }
 
     const getAccess = (token) =>{
-        Axios.post("54.174.104.208:3001/api/user-info", {
+        Axios.post("54.174.104.208:3001/api/user-info-pyme", {
             'authorization' : `${token}`
-        })
-          .then((result) => {
+        }).then((result) => {
               if(result.status === 200){
                     setResponse(result.status)
                     setLoading(false)
                     setDataUser(result.data)
                     localStorage.setItem('userPhoto', "54.174.104.208:3001/api/images/" + result.data[0].userPhoto)
                     setGetPhoto(result.data[0].userPhoto)
-                    Axios.get("54.174.104.208:3001/api/worker/ratings/" + result.data[0].id)
+                    Axios.get("54.174.104.208:3001/api/worker/ratings/" + result.data[0].iduser_pyme)
                         .then((result) => {
                             if(result.status === 200){
                                 setRatingScore(result.data)
                             }
                         }).catch(error => {
-                            setResponse(error.response.status)
+                            setRatingScore([])
                         });
-                    Axios.get("54.174.104.208:3001/api/worker/evaluations/" + result.data[0].id)
+                    Axios.get("54.174.104.208:3001/api/worker/evaluations/" + result.data[0].iduser_pyme)
                         .then((result) => {
                             if(result.status === 200){
                                     setCommentsWorker(result.data)
                             }
                         }).catch(error => {
-                            setResponse(error.response.status)
+                            setCommentsWorker([])
                         });
-                    Axios.get("54.174.104.208:3001/api/download/speciality/" + result.data[0].id)
+                    Axios.get("54.174.104.208:3001/api/download/speciality-pyme/" + result.data[0].iduser_pyme)
                         .then((result) => {
                             if(result.status === 200){
                                 setEspecialitiesWorker(result.data)
@@ -273,7 +272,6 @@ const Profile = () => {
                             setEspecialitiesWorker([])
                         });
               }
-              
           }).catch(error => {
                 setResponse(error.response.status)
                 setLoading(false)
@@ -314,7 +312,7 @@ const Profile = () => {
         if(descriptWork !== '' && descriptWork !== null && descriptWork !== undefined){
             if(!regdescriptWork.test(descriptWork)){
                 if(descriptWork.length < 20){
-                    setDescriptSpecialityMsge('Por favor, ingrese al menos 20 letras para describir su especialidad.')
+                    setDescriptSpecialityMsge('Por favor, ingrese al menos 20 letras para describir su certificación.')
                     setDescriptSpeciality(true)
                     return true
                 }else{
@@ -328,7 +326,7 @@ const Profile = () => {
                 return true
             }
         }else{
-            setDescriptSpecialityMsge('Por favor, ingrese una breve descripción de su especialidad.')
+            setDescriptSpecialityMsge('Por favor, ingrese una breve descripción de su certificación.')
             setDescriptSpeciality(true)
             return true
         }
@@ -402,7 +400,7 @@ const Profile = () => {
                                         <img id='upload' className='upload mt-2' src={uploadPhoto} style={{ width: '5rem' }} alt="" hidden={inputs} onClick={open_file} />
                                         <img id='userPhoto' className='userphoto mt-2' variant="top" src={(element.userPhoto !== undefined && element.userPhoto !== null && element.userPhoto !== "") ? localStorage.getItem('userPhoto') : perfil} alt={'foto perfil'} style={{ width: '12rem'}} />
                                         <Card.Body>
-                                            <Card.Title><strong>{element.nameUser + " " + element.lastnamesUser}</strong></Card.Title>
+                                            <Card.Title><strong>{element.razonSocial}</strong></Card.Title>
                                             <h6 style={{color: 'grey'}}>
                                             {element.workareaUser}
                                             </h6>
@@ -430,7 +428,7 @@ const Profile = () => {
                                                         cancelButton === true ? <Button variant="danger" onClick={(e) => {handleButton(e.target); setInputs(false)}} >Cancelar</Button> : <></>
                                                     }</> : <><Button variant={inputs === true ? 'success' : 'primary'} onClick={() => {handleChangePhoto()}} 
                                                     disabled={enableSave}>
-                                                        { savePhoto === true ? 'Guardar Foto' : 'Editar Perfil' }
+                                                        { savePhoto === true ? 'Subir Logo' : 'Editar Perfil' }
                                                     </Button>
                                                     {
                                                         cancelButton === true ? <Button variant="danger" onClick={(e) => {handleButton(e.target); setInputs(false); setEnableSave(false)}} >Cancelar</Button> : <></>
@@ -439,10 +437,10 @@ const Profile = () => {
                                                 }
                                             </div>
                                             {
-                                                enableSave === true ? <Form.Text><span style={{color: 'red',fontWeight:'bold' }}>Debes seleccionar una imagen para tu perfil</span></Form.Text> : <></>
+                                                enableSave === true ? <Form.Text><span style={{color: 'red',fontWeight:'bold' }}>Debes seleccionar tu logo empresarial</span></Form.Text> : <></>
                                             }
                                             <div className="d-grid gap-2 d-sm-flex justify-content-sm-center mt-2">
-                                                <Button className='specButton' onClick={handleShowSpeciality}>Agregar Especialidad
+                                                <Button className='specButton' onClick={handleShowSpeciality}>Agregar Certificación
                                                 </Button>
                                             </div>
                                         </Card.Body>
@@ -484,13 +482,13 @@ const Profile = () => {
                                     <Col lg={8} className=''>
                                     <Card className='info mb-4 shadow'>
                                         <Card.Body>
-                                        <h5 className="mb-4">Información personal</h5>
+                                        <h5 className="mb-4">Información empresarial</h5>
                                         <Row>
                                             <Col sm={3}>
-                                            <p className="mb-0">Nombre completo</p>
+                                            <p className="mb-0">Actividad económica o Giro</p>
                                             </Col>
                                             <Col sm={9}>
-                                            <p className="text-muted mb-0">{element.nameUser + " " + element.lastnamesUser}</p>
+                                            <p className="text-muted mb-0">{element.economicActivity}</p>
                                             </Col>
                                         </Row>
                                         <hr/>
@@ -531,13 +529,13 @@ const Profile = () => {
                                         <hr/>
                                         <Row >
                                             <Col sm={3}>
-                                            <p className="mb-0">Años de experiencia</p>
+                                            <p className="mb-0">Años de servicio</p>
                                             </Col>
                                             <Col sm={9}>
                                             {inputs === true ? <div className='form-floating col-12'>
                                                 <input type='number' className='form-control' id='floatingExp' name='exp' 
                                                 defaultValue={element.experienceYears !== undefined ? element.experienceYears : ''} max={2} placeholder='floatingExp' required/>
-                                                <label htmlFor='exp'>Años de experiencia</label>
+                                                <label htmlFor='exp'>Años de servicio</label>
                                             </div> : <p className="text-muted mb-0">{element.experienceYears}</p>}
                                             </Col>
                                         </Row>
@@ -559,9 +557,9 @@ const Profile = () => {
                                     especialitiesWorker.length > 0 ?
                                     <Card className='info mb-4 shadow'>
                                         <Card.Body>
-                                            <h5 className="mb-2">Especialidades</h5>
+                                            <h5 className="mb-2">Certificaciones</h5>
                                             <hr/>
-                                            <Table className="text-left" responsive="md">
+                                            <Table className="text-left" responsive>
                                             <thead>
                                                 <tr>
                                                     <th style={{fontWeight: '600'}}>Descripción</th>
@@ -621,7 +619,7 @@ const Profile = () => {
                                 </Row>
                                 <Modal className='modalSpeciality' show={showModalSpeciality} onHide={handleCloseSpeciality} size="lg" centered style={{padding: '0px'}}>
                                 <Modal.Header closeButton>
-                                <Modal.Title>Agregue especialidades a su perfil laboral</Modal.Title>
+                                <Modal.Title>Agregue certificaciones a su perfil empresarial</Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
                                 <Form id='SpecialityForm' className='SpecialityForm'>
@@ -629,7 +627,7 @@ const Profile = () => {
                                         <div className='container'>
                                             <div className="card p-4 mb-3">
                                                 <div className="mb-3">
-                                                    <label htmlFor="specialityFormFile" className="form-label">¿Tienes algún certificado?</label>
+                                                    <label htmlFor="specialityFormFile" className="form-label">¿Tienes algún comprobante del certificado?</label>
                                                     <input id={'specialityFormFile'} className="form-control specialityFormFile" type="file" onChange={e => checkSpecialityFormFile(e.target)} />
                                                     {
                                                         specialityForm === true ? 
@@ -637,7 +635,7 @@ const Profile = () => {
                                                     }
                                                 </div>
                                                 <div className='mb-3'>
-                                                    <label >Describa su especialidad<span className='mb-2' style={{color: 'red'}}> *</span></label>
+                                                    <label >Describa su certificación<span className='mb-2' style={{color: 'red'}}> *</span></label>
                                                     <textarea id={'descriptSpeciality'} className='descriptSpeciality form-control' name='descriptSpeciality' style={{ height: '100px' }}
                                                     placeholder='Comentario sobre el Trabajador' maxLength={250} onChange={e => checkDescriptSpeciality(e.target)}></textarea>
                                                     {
@@ -655,7 +653,7 @@ const Profile = () => {
                                 </Modal.Body>
                                 <Modal.Footer className='d-flex justify-content-end align-items-center'>
                                 <Button className='btn-request' disabled={descriptSpeciality === false && specialityForm === false ? false : true} onClick={uploadSpeciality}>
-                                    Agregar especialidad
+                                    Agregar certificación
                                 </Button>
                                 <Button variant="danger" onClick={handleCloseSpeciality}>
                                     Cerrar
@@ -704,4 +702,4 @@ const Profile = () => {
     )
 }
 
-export default Profile
+export default ProfilePyme

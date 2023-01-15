@@ -43,7 +43,7 @@ const Comments = ({data}) => {
                     return(
                       <>
                         <div className="col-lg-4 col-md-6 col-sm-12 mb-4 mb-lg-2">
-                        <img className='img-comment shadow rounded' src={'http://54.174.104.208:3001/' + image.originalname} 
+                        <img className='img-comment shadow rounded' src={'54.174.104.208:3001/' + image.originalname} 
                               alt={'project'}/>
                         </div>
                       </>

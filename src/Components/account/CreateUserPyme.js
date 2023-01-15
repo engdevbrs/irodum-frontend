@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Container, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { useStepperContext } from '../contexts/StepperContext.js'
+import { useStepperContextPyme } from '../contexts/StepperContextPyme.js'
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-const CreateNewUser = () => {
+const CreateNewUserPyme = () => {
 
-    const { userData, setUserData } = useStepperContext();
+    const { userDataPyme, setUserDataPyme } = useStepperContextPyme();
     const [disabledButton, setDisabledButton] = useState(true);
-
 
     const TermsConditions = document.getElementById('nextButton');
     TermsConditions.disabled = disabledButton;
@@ -19,8 +18,10 @@ const CreateNewUser = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setUserData({ ...userData, [name]: value });
+        setUserDataPyme({ ...userDataPyme, [name]: value });
+
     };
+
 
     const handleChange1=(event)=>{
         setValue1(event.target.value);
@@ -48,9 +49,9 @@ const CreateNewUser = () => {
         }else{
             setDisabledButton(true);
         }
-        document.addEventListener('handleEvent', handleSubmit);
+        document.addEventListener('handleEventPyme', handleSubmit);
         return () => {
-            document.removeEventListener('handleEvent', handleSubmit);
+            document.removeEventListener('handleEventPyme', handleSubmit);
         }
     },[value1,value2,disabledButton]);
 
@@ -63,7 +64,7 @@ const CreateNewUser = () => {
                     <Row>
                         <Col className='form-floating mb-3'>
                             <input type='email' className='form-control' id='email' name='email' placeholder='correo@gmail.com'
-                            value={userData['email'] || ''} disabled readOnly/>
+                            value={userDataPyme['email'] || ''} disabled readOnly/>
                             <label htmlFor='email'>Correo electrónico</label>
                         </Col>
                     </Row>
@@ -71,7 +72,7 @@ const CreateNewUser = () => {
                     <Row>
                         <Col className="form-floating mb-3">
                             <input type="password" className="form-control" id='pass' name='pass' placeholder="Especialidad"
-                            value={userData["pass"] || ""} onChange={(e) => {handleChange(e); handleChange1(e)}}/>
+                            value={userDataPyme["pass"] || ""} onChange={(e) => {handleChange(e); handleChange1(e)}}/>
                             <label htmlFor="pass">Contraseña</label>
                             <p className='mt-1' style={{fontWeight:"bold"}}>Todas las marcas de verificación deben volverse verdes, la contraseña debe tener:</p>
                             <p><i style={{color: value1.length >= "8" ? "green" : "red",fontSize:"20px"}} className="fa fa-check-circle" aria-hidden="true">
@@ -122,4 +123,4 @@ const CreateNewUser = () => {
     )
 }
 
-export default CreateNewUser
+export default CreateNewUserPyme

@@ -1,11 +1,12 @@
 import React, { Component, useEffect, useState } from 'react'
 import { Col, Container, Form, Row } from 'react-bootstrap'
-import jobs from '../../Constants/Constants.js'
+import Constants from '../../Constants/Constants.js'
 import { useStepperContext } from '../contexts/StepperContext.js'
 
 const WorkProfile = () => {
 
     const { userData, setUserData } = useStepperContext();
+    const { jobs } = Constants;
     const [switchCharge, setSwitchCharge] = useState((userData.role !== '' && userData.role !== undefined) === true ? true : false);
     const [disabledButton, setDisabledButton] = useState(false);
     const nextButton = document.getElementById('nextButton');

@@ -15,7 +15,7 @@ import rating from '../assets/rating.png';
 import Ratings from './Ratings'
 import SpecialitiesClient from './ClientSpecialitiesView'
 
-const ViewClientProfile = () => {
+const ViewPymeProfile = () => {
 
     const { id } = useParams();
     const MySwal = withReactContent(Swal)
@@ -833,7 +833,7 @@ const ViewClientProfile = () => {
           }).catch(error => {
             setResponse([])
         });
-        Axios.get("54.174.104.208:3001/api/view/profile/" + id)
+        Axios.get("54.174.104.208:3001/api/view/profile-pyme/" + id)
           .then((result) => {
               if(result.status === 200){
                     setDataUser(result.data)
@@ -850,7 +850,7 @@ const ViewClientProfile = () => {
             setResponse([])
         });
 
-        Axios.get("54.174.104.208:3001/api/download/speciality/" + id)
+        Axios.get("54.174.104.208:3001/api/download/speciality-pyme/" + id)
         .then((result) => {
             if(result.status === 200){
                 setEspecialitiesWorker(result.data)
@@ -868,19 +868,13 @@ const ViewClientProfile = () => {
                 <Nav aria-label="breadcrumb" className="bg-light p-3 mb-4">
                     <ol className="breadcrumb mb-0">
                         <li className="breadcrumb-item"><Link to={'/'} >Inicio</Link></li>
-                        <li className="breadcrumb-item"><Link to={'/trabajadores'} >Trabajadores</Link></li>
-                        <li className="breadcrumb-item active" aria-current="page">Perfil de usuario</li>
+                        <li className="breadcrumb-item"><Link to={'/pymes'} >Empresas</Link></li>
+                        <li className="breadcrumb-item active" aria-current="page">Perfil de pyme</li>
                     </ol>
                 </Nav>
             </Col>
             {
                 dataUser.map((element,key) =>{
-                    let dateFormatted = null
-                    const todayDate = new Date()
-                    if(element.bornDate){
-                        dateFormatted = new Date(element.bornDate)
-                    }
-                    todayDate.setFullYear( todayDate.getFullYear() - dateFormatted.getFullYear())
                     let sumaTotal = null;
                     if(ratingScore.length > 0){
                         ratingScore.forEach(element => {
@@ -918,21 +912,21 @@ const ViewClientProfile = () => {
                                     <span style={{color: 'rgb(226 226 226)', fontSize: '16px', fontWeight: '600'}}>({ratingScore.length} calificaciones)</span>
                                 </div>
                                 <Col lg={12} className='shadow-lg rounded-1 p-2'>
-                                    <h5>Información Personal</h5>
+                                    <h5>Información PYME</h5>
                                     <Row md={1} lg={1} className='rounded-4 mt-3 mb-3'>
                                     <Col lg={6}>
                                         <Row>
                                         <Col sm={3}>
-                                        <p className="mb-0">Nombre completo</p>
+                                        <p className="mb-0">Razón social</p>
                                         </Col>
                                         <Col sm={9}>
-                                        <p className="text-muted mb-0">{element.nameUser + " " + element.lastnamesUser}</p>
+                                        <p className="text-muted mb-0">{element.razonSocial}</p>
                                         </Col>
                                         </Row>
                                         <hr/>
                                         <Row >
                                             <Col sm={3}>
-                                            <p className="mb-0">Rut</p>
+                                            <p className="mb-0">Rut empresa</p>
                                             </Col>
                                             <Col sm={9}><p className="text-muted mb-0">{element.rutUser}</p>
                                             </Col>
@@ -956,26 +950,9 @@ const ViewClientProfile = () => {
                                         <hr/>
                                     </Col>
                                     <Col lg={6}>
-                                    <Row>
-                                        <Col sm={3}>
-                                        <p className="mb-0">Día de Nacimiento</p>
-                                        </Col>
-                                        <Col sm={9}>
-                                        <p className="text-muted mb-0">{dateFormatted.toLocaleDateString()}</p>
-                                        </Col>
-                                        </Row>
-                                        <hr/>
                                         <Row >
                                             <Col sm={3}>
-                                            <p className="mb-0">Años</p>
-                                            </Col>
-                                            <Col sm={9}><p className="text-muted mb-0">{todayDate.getFullYear()}</p>
-                                            </Col>
-                                        </Row>
-                                        <hr/>
-                                        <Row >
-                                            <Col sm={3}>
-                                            <p className="mb-0">Residencia</p>
+                                            <p className="mb-0">Ubicación</p>
                                             </Col>
                                             <Col sm={9}>
                                             <p className="text-muted mb-0">{element.regionUser + ", " + element.cityUser + ", " + element.communeUser}</p>
@@ -984,9 +961,18 @@ const ViewClientProfile = () => {
                                         <hr/>
                                         <Row >
                                             <Col sm={3}>
-                                            <p className="mb-0">Oficio</p>
+                                            <p className="mb-0">Años de servicio</p>
                                             </Col>
-                                            <Col sm={9}><p className="text-muted mb-0">{element.workareaUser}</p>
+                                            <Col sm={9}>
+                                            <p className="text-muted mb-0">{element.experienceYears}</p>
+                                            </Col>
+                                        </Row>
+                                        <hr/>
+                                        <Row >
+                                            <Col sm={3}>
+                                            <p className="mb-0">Actividad económica o Giro</p>
+                                            </Col>
+                                            <Col sm={9}><p className="text-muted mb-0">{element.economicActivity}</p>
                                             </Col>
                                         </Row>
                                         <hr/>
@@ -1065,7 +1051,7 @@ const ViewClientProfile = () => {
                                 <Modal.Body>
                                 <Form id='requestForm' className='requestForm'>
                                     <div className='form-floating'>
-                                        <p>Ingrese sus datos personales para que <strong>{element.nameUser}</strong> pueda tomar contacto con usted.</p>
+                                        <p>Ingrese sus datos personales para que <strong>{element.razonSocial}</strong> pueda tomar contacto con usted.</p>
                                     </div>
                                     <Row>
                                         <div className='form-floating col-md-4 mb-3'>
@@ -1451,4 +1437,4 @@ const ViewClientProfile = () => {
         )
 }
 
-export default ViewClientProfile
+export default ViewPymeProfile
