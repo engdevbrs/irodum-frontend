@@ -9,7 +9,7 @@ const Projects = () => {
 
   const getProjects = () => {
     const token = localStorage.getItem('accessToken');
-    Axios.get("http://54.174.104.208:3001/api/image/user-projects",{
+    Axios.get("54.174.104.208:3001/api/image/user-projects",{
         headers: {
             'authorization': `${token}`
             }
@@ -49,7 +49,7 @@ const Projects = () => {
                       <Col className='col-6 text-end'>{"El dia " + dateFormatted.toLocaleDateString()}</Col>
                   </Row> 
                 </Card.Header>
-                <img  src={'http://54.174.104.208:3001/' + value.imageName} 
+                <img  src={'54.174.104.208:3001/' + value.imageName} 
                     alt={'project'} style={{height: '200px'}}/>
                 <Card.Body>
                     <Card.Title>Descripción del trabajo</Card.Title>

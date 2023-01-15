@@ -97,7 +97,7 @@ const Home = () => {
                       <div className="col mb-4 h-100">
                           <div className="feature bg-gradient text-white rounded-3 mb-3"><img src={benefits} alt="" width={64}/></div>
                           <h2 className="h5" style={{color: '#202A34'}}>Beneficios</h2>
-                          <ul className='fw-normal text-muted'>
+                          <ul className='fw-normal text-muted' style={{ listStyle: "none", padding: '0px' }}>
                             <li>Visibilidad a nivel nacional.</li>
                             <li>Aumento de tus ingresos.</li>
                             <li>Ayudar a las personas con tus trabajos.</li>

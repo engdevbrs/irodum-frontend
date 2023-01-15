@@ -5,19 +5,22 @@ import finalcheck from '../assets/final-check.png'
 import finalerror from '../assets/final-error.png'
 import loadingrequestgf from '../assets/loading-request.gif'
 import { useStepperContext } from '../contexts/StepperContext';
+import { useStepperContextPyme } from '../contexts/StepperContextPyme.js'
 
 const Confirm = () => {
-  const { userData, setUserData } = useStepperContext();
+  const { userData } = useStepperContext();
+  const { userDataPyme  } = useStepperContextPyme();
   const [ result, setResult] = useState([]);
   const [ loadingrequest, setLoadingRequest] = useState(true); 
 
   const handleCreate =  async () => {
-    Axios.post("http://54.174.104.208:3001/api/create-user", userData)
+    if(userData === "" || userData === undefined){
+      Axios.post("54.174.104.208:3001/api/create-user-pyme", userDataPyme)
       .then((result) => {
           if(result.status === 200){
               setResult(result.status);
               setLoadingRequest(false);
-              Axios.post("http://54.174.104.208:3001/api/welcomeMail", userData)
+              Axios.post("54.174.104.208:3001/api/welcomeMail", userDataPyme)
               .then((response) => {
                 if(response.status === 200){
                   console.log(response);
@@ -32,6 +35,28 @@ const Confirm = () => {
           setLoadingRequest(false);
           clearTimeout();
       });
+    }else if(userDataPyme === "" || userDataPyme === undefined){
+      Axios.post("54.174.104.208:3001/api/create-user", userData)
+      .then((result) => {
+          if(result.status === 200){
+              setResult(result.status);
+              setLoadingRequest(false);
+              Axios.post("54.174.104.208:3001/api/welcomeMail", userData)
+              .then((response) => {
+                if(response.status === 200){
+                  console.log(response);
+                }
+              }).catch(error => {
+                  console.log(error);
+              });
+              clearTimeout();
+          }
+      }).catch(error => {
+          setResult(error.response);
+          setLoadingRequest(false);
+          clearTimeout();
+      });
+    }
   }
 
   useEffect(() =>{
@@ -46,7 +71,7 @@ const Confirm = () => {
     <div className="container mt-5 mb-5" hidden={!loadingrequest}>
         <div className="final">
             <div className="wrapper text-center">
-              <img src={loadingrequestgf} alt="imagen de confirmación" style={{width: '15rem'}}/>
+              <img src={loadingrequestgf} alt="imagen de confirmación" style={{width: '10rem'}}/>
             </div>
             <div className="success-account mb-3">
               Estamos verificando sus datos...
@@ -57,7 +82,7 @@ const Confirm = () => {
       result !== 200 ? <div className="container mt-5 mb-5" hidden={loadingrequest}>
                           <div className="final d-flex justify-content-center" style={{height: '50vh'}}>
                             <div className="wrapper mb-4">
-                              <img src={finalerror} alt="imagen de confirmación" style={{width: '10rem'}}/>
+                              <img src={finalerror} alt="imagen de confirmación" style={{width: '8rem'}}/>
                             </div>
                             <div className="mt-3 congrats">
                               UPS! Lo sentimos, su cuenta no pudo ser creada
@@ -70,7 +95,7 @@ const Confirm = () => {
                         <div className="container mt-5 mb-5" hidden={loadingrequest}>
                           <div className="final">
                             <div className="wrapper mb-4">
-                              <img src={finalcheck} alt="imagen de confirmación" style={{width: '10rem'}}/>
+                              <img src={finalcheck} alt="imagen de confirmación" style={{width: '8rem'}}/>
                             </div>
                             <div className="mt-3 congrats">
                               Felicidades!

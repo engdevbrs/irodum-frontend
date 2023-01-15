@@ -53,7 +53,7 @@ const ToDoList = () => {
             denyButtonText: `Cancelar`,
             }).then((result) => {
                 if(result.isConfirmed){
-                    Axios.put("http://54.174.104.208:3001/api/user/request-confirm", requestConfirmObject , 
+                    Axios.put("54.174.104.208:3001/api/user/request-confirm", requestConfirmObject , 
                     {
                         headers: {
                         'authorization': `${token}`
@@ -89,7 +89,7 @@ const ToDoList = () => {
             denyButtonText: `Cancelar`,
             }).then((result) => {
                 if(result.isConfirmed){
-                    Axios.put("http://54.174.104.208:3001/api/user/request-reject", requestRejectObject , 
+                    Axios.put("54.174.104.208:3001/api/user/request-reject", requestRejectObject , 
                     {
                         headers: {
                         'authorization': `${token}`
@@ -115,7 +115,7 @@ const ToDoList = () => {
                 estado: 'pendiente',
                 actionbutton: 'wspbutton'
             }
-            Axios.put("http://54.174.104.208:3001/api/update/agreement", wspContactObject, 
+            Axios.put("54.174.104.208:3001/api/update/agreement", wspContactObject, 
             {
                 headers: {
                 'authorization': `${token}`
@@ -143,7 +143,7 @@ const ToDoList = () => {
                 emailClient: modalData.email,
                 requestInfo: modalData.descripcionTrabajo
             }
-            Axios.put("http://54.174.104.208:3001/api/update/agreement",emailContactObject, 
+            Axios.put("54.174.104.208:3001/api/update/agreement",emailContactObject, 
             {
                 headers: {
                 'authorization': `${token}`
@@ -163,7 +163,7 @@ const ToDoList = () => {
 
     const getProjects = () => {
         const token = localStorage.getItem('accessToken');
-        Axios.get("http://54.174.104.208:3001/api/user/user-requests",{
+        Axios.get("54.174.104.208:3001/api/user/user-requests",{
             headers: {
                 'authorization': `${token}`
                 }
@@ -297,7 +297,7 @@ const ToDoList = () => {
     }
 
     const getAccess = async (token) =>{
-        await Axios.post("http://54.174.104.208:3001/api/user-info", {
+        await Axios.post("54.174.104.208:3001/api/user-info", {
             'authorization' : `${token}`
         })
           .then((result) => {
@@ -538,7 +538,7 @@ const ToDoList = () => {
                             </>
                             : 
                             <>
-                                <Card className='d-flex align-items-center justify-content-center text-center' style={{height: '60vh'}}>
+                                <Card className='d-flex align-items-center rounded-0 justify-content-center text-center' style={{height: '60vh'}}>
                                     <h5><strong>Por el momento no tienes solicitudes</strong></h5>
                                     <div className="mt-4">
                                     <img variant="top" src={norequests} 
@@ -597,7 +597,7 @@ const ToDoList = () => {
                             </>
                             : 
                             <>
-                            <Card className='d-flex align-items-center justify-content-center text-center' style={{height: '60vh'}}>
+                            <Card className='d-flex align-items-center rounded-0 justify-content-center text-center' style={{height: '60vh'}}>
                                     <h5><strong>Por el momento no tienes solicitudes confirmadas</strong></h5>
                                     <div className="mt-4">
                                     <img variant="top" src={norequestsconfirmeds} 

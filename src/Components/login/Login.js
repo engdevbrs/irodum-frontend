@@ -20,14 +20,20 @@ const Login = () =>  {
 
     const submitForm = (e) =>{
         e.preventDefault();
-        Axios.post("http://54.174.104.208:3001/api/login", {userName,userPass})
+        Axios.post("54.174.104.208:3001/api/login", {userName,userPass})
           .then((result) => {
               if(result.status === 200){
                   localStorage.setItem("accessToken", result.data.accessToken);
                   setwarnCredentials(false)
                   setUserData({...userData, ['token']: result.data.accessToken });
+                  if(result.data.userType === "independiente"){
+                        localStorage.setItem("ispyme", false);
+                    return navigate('/perfil');
+                  }else{
+                        localStorage.setItem("ispyme", true);
+                    return navigate('/perfil-pyme');
+                  }
               }
-              return navigate('/perfil');
           }).catch(error => {
                 setwarnCredentials(true)
           });

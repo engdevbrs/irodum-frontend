@@ -150,7 +150,12 @@ select.noStyle {
  padding-left: 15px;
 }
 
-
+.formcell span{
+  position: absolute;
+  right: 8px;
+  padding: 2px;
+  border-left: 1px solid #d1d5db;
+}
 
 .searcher{
   display: flex;
@@ -183,7 +188,7 @@ select.noStyle {
   position: absolute;
   padding: 0px !important;
   width: 50% !important;
-  z-index: 9;
+  z-index: 9999;
 }
 
 .sugerencias li{

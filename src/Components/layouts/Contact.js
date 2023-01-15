@@ -28,7 +28,7 @@ const Contact = () => {
                 cell: document.getElementById('phone').value,
                 message: document.getElementById('message').value
             }
-            Axios.post('http://54.174.104.208:3001/api/contact-email',emailContactObject)
+            Axios.post('54.174.104.208:3001/api/contact-email',emailContactObject)
             .then((result) => {
                 if(result.status === 200){
                     setEmailNotSent(false)
@@ -129,7 +129,7 @@ const Contact = () => {
                 <div className="container px-3">
                     <div className="bg-light rounded-3 py-5 px-4 px-md-5 mb-5">
                         <div className="text-center mb-5">
-                            <div className="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i className="bi bi-envelope"></i></div>
+                            <div className="feature bg-gradient text-white rounded-3 mb-3" style={{ backgroundColor: "#2b3d64"}}><i className="fas fa-envelope"></i></div>
                             <h1 className="fw-bolder">¿Tienes alguna duda?</h1>
                             <p className="lead fw-normal text-muted mb-0">Estaremos encantados de ayudarte.</p>
                         </div>
