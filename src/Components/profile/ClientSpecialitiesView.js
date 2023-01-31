@@ -10,12 +10,12 @@ const SpecialitiesClient = ({data}) => {
                     return(
                         <>
                         <Row>
-                            <Col sm={6}>
+                            <Col sm={6} xs={6}>
                                 <span className='text-muted'>{values.descript}</span>
                             </Col>
-                            <Col sm={6}>
-                                <p className="text-muted mb-2"><a href={"54.174.104.208:3001/" + values.image.originalname} 
-                                target="_blank" rel="noreferrer" style={{ color: 'blue' }} >{values.image.originalname}</a></p>
+                            <Col sm={6} xs={6}>
+                                <p className="text-muted text-center mb-2"><a href={"http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/" + values.image.originalname} 
+                                target="_blank" rel="noreferrer" style={{ color: 'blue' }} >Ver certificación</a></p>
                             </Col>
                             </Row>
                         </>

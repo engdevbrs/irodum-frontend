@@ -15,6 +15,7 @@ import emptywork from '../assets/emptywork.png'
 const UserProjects = () => {
 
     const MySwal = withReactContent(Swal)
+    const [ userData, setUserData ] = useState([])
     const [ response, setResponse ] = useState([])
     const [ projectsData, setProjectsData ] = useState([])
     const [ loading, setLoading ] = useState(true)
@@ -43,7 +44,7 @@ const UserProjects = () => {
             denyButtonText: `Cancelar`,
             }).then((result) => {
                 if(result.isConfirmed){
-                    Axios.delete("54.174.104.208:3001/api/image/delete-project" + parseInt(e[1].value,10), 
+                    Axios.delete("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/image/delete-project" + parseInt(e[1].value,10), 
                     {
                         headers: {
                         'authorization': `${token}`
@@ -91,7 +92,7 @@ const UserProjects = () => {
             }).then((result) => {
                 if(result.isConfirmed){
                     showProgress(false)
-                    Axios.post("54.174.104.208:3001/api/image/upload-project",formFile,config)
+                    Axios.post("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/image/upload-project/"+userData.idEmployed,formFile,config)
                     .then((result) => {
                         if(result.status === 200){
                             setResponse(result.status)
@@ -178,7 +179,7 @@ const UserProjects = () => {
     
     const getProjects = () => {
         const token = localStorage.getItem('accessToken');
-        Axios.get("54.174.104.208:3001/api/image/user-projects",{
+        Axios.get("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/image/user-projects",{
             headers: {
                 'authorization': `${token}`
                 }
@@ -188,22 +189,23 @@ const UserProjects = () => {
                 setProjectsData(result.data)
               }
           }).catch(error => {
-                setProjectsData(error.response.status)
+                setProjectsData([])
           });
     }
 
     const getAccess = async (token) =>{
-        await Axios.post("54.174.104.208:3001/api/user-info", {
+        const ispyme = JSON.parse(localStorage.getItem('ispyme'));
+        await Axios.post(ispyme ? "http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user-info-pyme" : "http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user-info", {
             'authorization' : `${token}`
         })
           .then((result) => {
               if(result.status === 200){
+                    setUserData(result.data[0])
                     setResponse(result.status)
-                    setLoading(false)
+                    getProjects()
               }
           }).catch(error => {
                 setResponse(error.response.status)
-                setLoading(false)
                 clearTimeout()
           });
     }
@@ -284,14 +286,17 @@ const UserProjects = () => {
     }
 
     const allowAccess = () =>{
+
+        const ispyme = JSON.parse(localStorage.getItem('ispyme'));
+        
         return(
-            <>
-                <div hidden={loading}>
+            <div hidden={loading}>
+                <div>
                 <Col>
                     <Nav aria-label="breadcrumb" className="bg-light p-3 mb-4">
                         <ol className="breadcrumb mb-0">
                             <li className="breadcrumb-item"><Link to={'/'} >Inicio</Link></li>
-                            <li className="breadcrumb-item"><Link to={'/perfil'} >Mi Perfil</Link></li>
+                            <li className="breadcrumb-item"><Link to={ispyme ? '/perfil-pyme' : '/perfil'} >Mi Perfil</Link></li>
                             <li className="breadcrumb-item active" aria-current="page">Mis Proyectos</li>
                         </ol>
                     </Nav>
@@ -369,8 +374,6 @@ const UserProjects = () => {
                                         disabled={(emptyName || emptyDate || emptyImage || emptyCellClient || emptyWorkResume || shortResume || incorrectTypeImage || incorrectSizeImage || emailValid || cellphoneValid || projectsData.length >= 8) === true ? true : false}
                                         onClick={e => uploadProject(e)}
                                         >Subir Trabajo</Button>
-                                    <Button variant="danger">Cancelar
-                                    </Button>
                                 </div>
                                 </Card>
                             </Col>
@@ -406,7 +409,7 @@ const UserProjects = () => {
                                                                     <Col className='col-12 text-start'>{"El dia " + dateFormatted.toLocaleDateString()}</Col>
                                                                 </Row> 
                                                             </Card.Header>
-                                                                <img src={'54.174.104.208:3001/' + value.imageName} 
+                                                                <img src={'http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/' + value.imageName} 
                                                                 alt={'project'} style={{height: '200px'}}/>
                                                             <i className='deletephoto fas fa-trash' value={value.id_img} key={value.id_img} onClick={e => deleteUserProject(e.target.attributes)}></i>
                                                             <Card.Body>
@@ -440,22 +443,24 @@ const UserProjects = () => {
                         </Row>
                     </Container>
                 </section>
-            </>
+            </div>
         )
     }
 
     useEffect(() =>{
         document.getElementById('menuHolder').scrollIntoView();
         setTimeout(() =>{
-            const getToken = localStorage.getItem('accessToken');
-            if(getToken === null){
-                setLoading(false);
-                setResponse(500);
-            }else{
-                getAccess(getToken)
-            }
+            setLoading(false);
         },1720)
-        getProjects()
+
+        const getToken = localStorage.getItem('accessToken');
+        if(getToken === null){
+            setLoading(false);
+            setResponse(500);
+        }else{
+            getAccess(getToken)
+        }
+
     },[])
 
   return (

@@ -14,13 +14,12 @@ const Confirm = () => {
   const [ loadingrequest, setLoadingRequest] = useState(true); 
 
   const handleCreate =  async () => {
-    if(userData === "" || userData === undefined){
-      Axios.post("54.174.104.208:3001/api/create-user-pyme", userDataPyme)
+      Axios.post("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/create-user", userData === "" || userData === undefined ? userDataPyme : userData)
       .then((result) => {
           if(result.status === 200){
               setResult(result.status);
               setLoadingRequest(false);
-              Axios.post("54.174.104.208:3001/api/welcomeMail", userDataPyme)
+              Axios.post("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/welcomeMail", userData === "" || userData === undefined ? userDataPyme : userData)
               .then((response) => {
                 if(response.status === 200){
                   console.log(response);
@@ -35,28 +34,6 @@ const Confirm = () => {
           setLoadingRequest(false);
           clearTimeout();
       });
-    }else if(userDataPyme === "" || userDataPyme === undefined){
-      Axios.post("54.174.104.208:3001/api/create-user", userData)
-      .then((result) => {
-          if(result.status === 200){
-              setResult(result.status);
-              setLoadingRequest(false);
-              Axios.post("54.174.104.208:3001/api/welcomeMail", userData)
-              .then((response) => {
-                if(response.status === 200){
-                  console.log(response);
-                }
-              }).catch(error => {
-                  console.log(error);
-              });
-              clearTimeout();
-          }
-      }).catch(error => {
-          setResult(error.response);
-          setLoadingRequest(false);
-          clearTimeout();
-      });
-    }
   }
 
   useEffect(() =>{
@@ -69,7 +46,7 @@ const Confirm = () => {
   return (
     <>
     <div className="container mt-5 mb-5" hidden={!loadingrequest}>
-        <div className="final">
+        <div className="final d-flex justify-content-center" style={{height: '50vh'}}>
             <div className="wrapper text-center">
               <img src={loadingrequestgf} alt="imagen de confirmación" style={{width: '10rem'}}/>
             </div>
@@ -82,26 +59,26 @@ const Confirm = () => {
       result !== 200 ? <div className="container mt-5 mb-5" hidden={loadingrequest}>
                           <div className="final d-flex justify-content-center" style={{height: '50vh'}}>
                             <div className="wrapper mb-4">
-                              <img src={finalerror} alt="imagen de confirmación" style={{width: '8rem'}}/>
+                              <img src={finalerror} alt="imagen de confirmación" style={{width: '6rem'}}/>
                             </div>
                             <div className="mt-3 congrats">
                               UPS! Lo sentimos, su cuenta no pudo ser creada
                             </div>
                             <div className="success-account mb-3">
-                              Verifique sus datos y vuelva a intentar.
+                              Verifique sus datos y vuelva a intentar de nuevo o más tarde.
                             </div>
                           </div>
                         </div> : 
                         <div className="container mt-5 mb-5" hidden={loadingrequest}>
-                          <div className="final">
+                          <div className="final d-flex justify-content-center" style={{height: '50vh'}}>
                             <div className="wrapper mb-4">
-                              <img src={finalcheck} alt="imagen de confirmación" style={{width: '8rem'}}/>
+                              <img src={finalcheck} alt="imagen de confirmación" style={{width: '6rem'}}/>
                             </div>
                             <div className="mt-3 congrats">
                               Felicidades!
                             </div>
                             <div className="success-account mb-3">
-                              Tu cuenta ha sido creada con éxito.
+                              Su cuenta ha sido creada con éxito.
                             </div>
                           </div>
                         </div>

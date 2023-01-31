@@ -39,24 +39,12 @@ const Home = () => {
                       <Carousel controls={false} indicators={false}>
                       <Carousel.Item>
                       <img className="img-fluid rounded-3 my-5" src={slide1} alt="..."/>
-                      <Carousel.Caption>
-                        <h3>Visibilidad a nivel nacional</h3>
-                        <p>Tu perfil podrá ser visitado desde cualquier parte de Chile.</p>
-                      </Carousel.Caption>
                       </Carousel.Item>
                       <Carousel.Item>
                       <img className="img-fluid rounded-3 my-5" src={slide2} alt="..."/>
-                      <Carousel.Caption>
-                        <h3>Oportunidades laborales</h3>
-                        <p>Aumentarán tus probabilidades de adquirir nuevos trabajos.</p>
-                      </Carousel.Caption>
                       </Carousel.Item>
                       <Carousel.Item>
                       <img className="img-fluid rounded-3 my-5" src={slide3} alt="..."/>
-                      <Carousel.Caption>
-                        <h3>Fácil comunicación</h3>
-                        <p>Tus clientes podrán tomar contacto contigo fácilmente.</p>
-                      </Carousel.Caption>
                       </Carousel.Item>
                       </Carousel>
                 </Col>

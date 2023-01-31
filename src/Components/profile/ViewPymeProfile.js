@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { Rating } from 'react-simple-star-rating'
@@ -334,15 +334,15 @@ const ViewPymeProfile = () => {
                 
             })
 
-            arrayValues.push(dataUser[0].email,dataUser[0].rutUser,dataUser[0].nameUser)
+            arrayValues.push(dataUser[0].email,dataUser[0].rutUser,dataUser[0].razonSocial,id)
 
-            Axios.post('54.174.104.208:3001/api/request-work',arrayValues)
+            Axios.post('http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/request-work',arrayValues)
             .then((result) => {
                 if(result.status === 200){
                     setResponseRequest(result.status)
                     setShowAlert(true)
                     clearForm()
-                    Axios.post('54.174.104.208:3001/api/requestEmail',arrayValues)
+                    Axios.post('http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/requestEmail',arrayValues)
                     .then((result) => {
                         if(result.status === 200){
                             console.log(result);
@@ -391,7 +391,9 @@ const ViewPymeProfile = () => {
         
 
         if(validation){
-
+            let idWorker = {
+                employed: id
+            };
             [...formValues].forEach((elements) =>{
                 if(elements.type !== "file"){
                     arrayValues.push(elements.value)
@@ -408,6 +410,7 @@ const ViewPymeProfile = () => {
 
             arrayValues.push(dataUser[0].email)
             arrayValues.push(scoreObject)
+            arrayValues.push(idWorker)
 
             for(let i = 0; i < (formFiles.files).length; i++){
                 formFileMultiple.append('formFileMultiple',formFiles.files[i])
@@ -423,7 +426,7 @@ const ViewPymeProfile = () => {
                 }).then((result) => {
                     if(result.isConfirmed){
                         showProgress(false)
-                        Axios.post('54.174.104.208:3001/api/rating-worker',formFileMultiple, config)
+                        Axios.post('http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/rating-worker',formFileMultiple, config)
                         .then((result) => {
                             if(result.status === 200){
                                 Swal.fire({
@@ -439,7 +442,7 @@ const ViewPymeProfile = () => {
                                         handleCloseComment()
                                     }
                                 })
-                                Axios.get("54.174.104.208:3001/api/worker/ratings/" + id)
+                                Axios.get("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/worker/ratings/" + id)
                                 .then((result) => {
                                     if(result.status === 200){
                                         let sumaTotal = null
@@ -453,8 +456,8 @@ const ViewPymeProfile = () => {
                                         sumaTotal = (sumaTotal / (result.data).length).toFixed(1)
                                         console.log(sumaTotal);
                                         setRatingScore(result.data)
-
-                                        Axios.put("54.174.104.208:3001/api/worker/update-rating/" +id, {rankingTotal: sumaTotal})
+                                        setCommentsWorker(result.data)
+                                        Axios.put("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/worker/update-rating/" +id, {rankingTotal: sumaTotal})
                                         .then((result) => {
                                             if(result.status === 200){
                                                 console.log("resultado: ",result.data);
@@ -462,14 +465,6 @@ const ViewPymeProfile = () => {
                                         }).catch(error => {
                                             
                                         });
-                                    }
-                                }).catch(error => {
-                                    setResponse([])
-                                });
-                                Axios.get("54.174.104.208:3001/api/worker/evaluations/" + id)
-                                .then((result) => {
-                                    if(result.status === 200){
-                                            setCommentsWorker(result.data)
                                     }
                                 }).catch(error => {
                                     setResponse([])
@@ -822,35 +817,28 @@ const ViewPymeProfile = () => {
     }
     
     useEffect(() =>{
-        Axios.get("54.174.104.208:3001/api/localidades").then((res)=>{
+        Axios.get("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/view/profile-pyme/" + id)
+        .then((result) => {
+            if(result.status === 200){
+                  setDataUser(result.data)
+            }
+        }).catch(error => {
+              setResponse([])
+      });
+        Axios.get("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/localidades").then((res)=>{
             setLocalidades(res.data);
         }); 
-        Axios.get("54.174.104.208:3001/api/worker/ratings/" + id)
+        Axios.get("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/worker/ratings/" + id)
           .then((result) => {
               if(result.status === 200){
                 setRatingScore(result.data)
-              }
-          }).catch(error => {
-            setResponse([])
-        });
-        Axios.get("54.174.104.208:3001/api/view/profile-pyme/" + id)
-          .then((result) => {
-              if(result.status === 200){
-                    setDataUser(result.data)
-              }
-          }).catch(error => {
-                setResponse([])
-        });
-        Axios.get("54.174.104.208:3001/api/worker/evaluations/" + id)
-          .then((result) => {
-              if(result.status === 200){
-                    setCommentsWorker(result.data)
+                setCommentsWorker(result.data)
               }
           }).catch(error => {
             setResponse([])
         });
 
-        Axios.get("54.174.104.208:3001/api/download/speciality-pyme/" + id)
+        Axios.get("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/download/speciality/" + id)
         .then((result) => {
             if(result.status === 200){
                 setEspecialitiesWorker(result.data)
@@ -868,7 +856,7 @@ const ViewPymeProfile = () => {
                 <Nav aria-label="breadcrumb" className="bg-light p-3 mb-4">
                     <ol className="breadcrumb mb-0">
                         <li className="breadcrumb-item"><Link to={'/'} >Inicio</Link></li>
-                        <li className="breadcrumb-item"><Link to={'/pymes'} >Empresas</Link></li>
+                        <li className="breadcrumb-item"><Link to={'/trabajadores'} >Trabajadores</Link></li>
                         <li className="breadcrumb-item active" aria-current="page">Perfil de pyme</li>
                     </ol>
                 </Nav>
@@ -928,7 +916,7 @@ const ViewPymeProfile = () => {
                                             <Col sm={3}>
                                             <p className="mb-0">Rut empresa</p>
                                             </Col>
-                                            <Col sm={9}><p className="text-muted mb-0">{element.rutUser}</p>
+                                            <Col sm={9}><p className="text-muted mb-0">{element.rutEmployed}</p>
                                             </Col>
                                         </Row>
                                         <hr/>
@@ -944,7 +932,7 @@ const ViewPymeProfile = () => {
                                             <Col sm={3}>
                                             <p className="mb-0">Email</p>
                                             </Col>
-                                            <Col sm={9}><p className="text-muted mb-0" style={{ cursor: 'pointer'}} onClick={handleShow} >{element.email}</p>
+                                            <Col sm={9}><p className="text-muted mb-0" style={{ cursor: 'pointer'}} onClick={handleShow} >{element.emailEmployed}</p>
                                             </Col>
                                         </Row>
                                         <hr/>
@@ -955,7 +943,7 @@ const ViewPymeProfile = () => {
                                             <p className="mb-0">Ubicación</p>
                                             </Col>
                                             <Col sm={9}>
-                                            <p className="text-muted mb-0">{element.regionUser + ", " + element.cityUser + ", " + element.communeUser}</p>
+                                            <p className="text-muted mb-0">{element.regionEmployed + ", " + element.cityEmployed + ", " + element.communeEmployed}</p>
                                             </Col>
                                         </Row>
                                         <hr/>
@@ -980,10 +968,10 @@ const ViewPymeProfile = () => {
                                             especialitiesWorker.length > 0 ?
                                             <>
                                             <Row className='mt-3'>
-                                                <Col sm={12} className="mb-2">
+                                                <Col sm={12} lg={3} className="mb-2">
                                                 <p className="mb-0">Especialidades</p>
                                                 </Col>
-                                                <Col sm={12}>
+                                                <Col sm={12} lg={9}>
                                                     {
                                                         especialitiesWorker.map(value =>{
                                                             let descriptSpec = JSON.parse(value.especialityDescript)
@@ -1285,7 +1273,7 @@ const ViewPymeProfile = () => {
                                 <Modal.Body>
                                 <Form id='commentForm' className='commentForm'>
                                     <div className='form-floating'>
-                                        <p>Califique al trabajador <strong>{element.nameUser}</strong> según su experiencia.</p>
+                                        <p>Califique al trabajador <strong>{element.razonSocial}</strong> según su experiencia.</p>
                                     </div>
                                     <Row>
                                         <div className='form-floating col-md-5 mb-3'>
@@ -1337,7 +1325,7 @@ const ViewPymeProfile = () => {
                                             </div>
                                         </div>
                                         <div className="mb-3">
-                                        <h5 className="mb-3" style={{color: '#384451'}}>Del 1 al 5, como calificaría usted el trabajo realizado por {element.nameUser}</h5>
+                                        <h5 className="mb-3" style={{color: '#384451'}}>Del 1 al 5, como calificaría usted el trabajo realizado por {element.razonSocial}</h5>
                                         <div id='responsabilidad'>
                                             <h6 style={{color: '#384451'}}>Responsabilidad: </h6>
                                             <Rating
@@ -1411,7 +1399,7 @@ const ViewPymeProfile = () => {
                                         </div>
                                         {
                                             noRanked === true ? <Form.Text className='mb-1'>
-                                            <span className='mb-1' style={{color: 'red'}}>{`Por favor, califique las aptitudes de ${element.nameUser}`}</span></Form.Text> : ''
+                                            <span className='mb-1' style={{color: 'red'}}>{`Por favor, califique las aptitudes de ${element.razonSocial}`}</span></Form.Text> : ''
                                         }
                                     </Row>
                                     <div className="mb-2" hidden={hiddenProgress}>

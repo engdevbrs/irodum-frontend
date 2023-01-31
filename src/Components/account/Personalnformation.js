@@ -1,4 +1,4 @@
-import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Container, Form, Row } from 'react-bootstrap'
 import Axios from 'axios'
 import '../css/Personalnformation.css'
@@ -298,7 +298,7 @@ const PersonalInformation = () => {
     }
 
     useEffect(() => {
-        Axios.get("54.174.104.208:3001/api/localidades").then((res)=>{
+        Axios.get("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/localidades").then((res)=>{
             setLocalidades(res.data);
         });        
         document.addEventListener('handleEvent', handleSubmit);
@@ -306,7 +306,7 @@ const PersonalInformation = () => {
         return () => {
             document.removeEventListener('handleEvent', handleSubmit);
         }
-    },[]);
+    },[handleSubmit]);
 
     return (
         <Container className='form mt-5 mb-5'>

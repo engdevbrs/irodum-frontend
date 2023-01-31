@@ -21,8 +21,10 @@ const TermsConditions = () => {
     const handleChange = (e) => {
         if(userData === "" || userData === undefined){
             setUserDataPyme({ ...userDataPyme, ['agreeconditions']: e.target.checked });
+            setUserDataPyme({ ...userDataPyme, ['type']: 1 });
         }else if(userDataPyme === "" || userDataPyme === undefined){
             setUserData({ ...userData, ['agreeconditions']: e.target.checked });
+            setUserData({ ...userData, ['type']: 0 });
         }
         setDisabledButton(!disabledButton)
         TermsConditions.disabled = disabledButton;
@@ -36,9 +38,9 @@ const TermsConditions = () => {
     }
 
     useEffect(() => {      
-        document.addEventListener('handleEventPyme', handleSubmit);
+        document.addEventListener(userData === "" || userData === undefined ? 'handleEventPyme' : 'handleEvent', handleSubmit);
         return () => {
-            document.removeEventListener('handleEventPyme', handleSubmit);
+            document.removeEventListener(userData === "" || userData === undefined ? 'handleEventPyme' : 'handleEvent', handleSubmit);
         }
     },[userData,userDataPyme]);
 

@@ -12,7 +12,7 @@ const ViewClientProjects = ({id}) => {
 
   useEffect(() =>{
     setTimeout(() => {
-        Axios.get("54.174.104.208:3001/api/image/view-projects/" + id)
+        Axios.get("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/image/view-projects/" + id)
           .then((result) => {
               if(result.status === 200){
                 setResponse(result.status)
@@ -31,15 +31,15 @@ const ViewClientProjects = ({id}) => {
     <>
     <Container className={projectsData.length > 0 ? '' : 'projects-container' }>
     <div id='denied' className="container mt-5 mb-5" hidden={!loading}>
-            <div className="denied">
-                <div className="wrapper text-center">
-                    <img src={workersprojects} alt="imagen de confirmación" style={{width: '15rem'}}/>
-                </div>
-                    <div className="success-account mb-3">
-                    Obteniendo proyectos...
-                </div>
-            </div>
-        </div>
+          <div className="denied">
+              <div className="wrapper text-center">
+                  <img src={workersprojects} alt="imagen de confirmación" style={{width: '15rem'}}/>
+              </div>
+                  <div className="success-account mb-3">
+                  Obteniendo proyectos...
+              </div>
+          </div>
+      </div>
     {
       projectsData.length > 0 ? 
       <>
@@ -56,11 +56,11 @@ const ViewClientProjects = ({id}) => {
                   <Card className='mt-3 mb-3 rounded-3'>
                     <Card.Header style={{ color: 'rgb(226 226 226)', backgroundColor: '#202A34' , fontSize: '14px'}}>
                     <Row>
-                        <Col className='col-8 text-start'>Realizado a {value.clientName}</Col>
-                        <Col className='col-4 text-end'>{"El dia " + dateFormatted.toLocaleDateString()}</Col>
+                        <Col className='col-12 text-start'>Realizado a {value.clientName}</Col>
+                        <Col className='col-12 text-start'>{"El dia " + dateFormatted.toLocaleDateString()}</Col>
                     </Row> 
                     </Card.Header>
-                    <img src={'54.174.104.208:3001/' + value.imageName} 
+                    <img src={'http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/' + value.imageName} 
                         alt={'project'} style={{height: '200px'}}/>
                     <Card.Body>
                         <Card.Title>Descripción del trabajo</Card.Title>
@@ -68,8 +68,8 @@ const ViewClientProjects = ({id}) => {
                     </Card.Body>
                     <Card.Footer style={{ color: 'rgb(226 226 226)', backgroundColor: '#202A34', fontSize: '14px' }}>
                     <Row>
-                        <Col className='col-6 text-start'>Celular: {value.clientCell}</Col>
-                        <Col className='col-6 text-end'>{value.clientEmail !== "" ? "Email: " + value.clientEmail : ""}</Col>
+                        <Col className='col-12 text-start'>Celular del cliente: {value.clientCell}</Col>
+                        <Col className='col-12 text-start'>{value.clientEmail !== "" ? "Email del cliente: " + value.clientEmail : ""}</Col>
                     </Row>
                     </Card.Footer>
                   </Card>
@@ -80,15 +80,15 @@ const ViewClientProjects = ({id}) => {
       }
       </Row></>
       : 
-      <>
+      <div hidden={loading}>
       <Card className='shadow rounded-0 d-flex align-items-center justify-content-center text-center' style={{height: '50vh'}}>
-          <h5 className='mt-2'><strong>El trabajador no ha subido ningún proyecto aún</strong></h5>
+          <h5 className='mt-2'><strong>El usuario no ha subido ningún proyecto aún</strong></h5>
           <div>
           <img className='mt-4' variant="top" src={emptyprojects} 
               alt={'project'} style={{height: '200px', width: 'auto', padding: '15px'}}/>
           </div> 
       </Card>
-      </>
+      </div>
     }
     </Container>
     </>

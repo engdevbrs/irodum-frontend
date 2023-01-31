@@ -1,6 +1,4 @@
 import React from 'react'
-import borisProfile from '../assets/boris-profile.jpeg'
-import fabianProfile from '../assets/fabian-profile.jpg'
 import meta from '../assets/meta.png'
 import fundation from '../assets/fundation.png'
 

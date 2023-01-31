@@ -17,7 +17,7 @@ const Menu = () =>{
   const { jobs } = Constants;
   const { worksearcher, setWorksearcher } = useHomeContext();
   const { userData } = useLoginContext()
-  const [ userPhoto, setUserPhoto] = useState([])
+  const [ photoEmployed, setphotoEmployed] = useState([])
   const [ userName, setUserName] = useState([])
   const [ projectsData, setProjectsData ] = useState([])
   const [ isLoggedIn, setLoggedIn] = useState(false)
@@ -44,7 +44,7 @@ const Menu = () =>{
 
   const logOut = () =>{
     localStorage.removeItem('accessToken')
-    localStorage.removeItem('userPhoto')
+    localStorage.removeItem('photoEmployed')
     setLoggedIn(false)
   }
 
@@ -89,15 +89,15 @@ const Menu = () =>{
     if(userData.token !== undefined || localStorage.getItem('accessToken')){
         const token = localStorage.getItem('accessToken');
         const ispyme = JSON.parse(localStorage.getItem('ispyme'));
-        Axios.post(ispyme ? "54.174.104.208:3001/api/user-info-pyme" : "54.174.104.208:3001/api/user-info", {
+        Axios.post(ispyme ? "http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user-info-pyme" : "http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user-info", {
             'authorization' : `${userData.token || token}`
         })
           .then((result) => {
               if(result.status === 200){
                 setLoggedIn(true)
-                setUserPhoto(result.data[0].userPhoto)
-                setUserName(ispyme ? result.data[0].razonSocial: result.data[0].nameUser)
-                Axios.get("54.174.104.208:3001/api/user/user-requests",{
+                setphotoEmployed(result.data[0].photoEmployed)
+                setUserName(ispyme ? result.data[0].razonSocial : result.data[0].nameEmployed)
+                Axios.get("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user/user-requests/"+ result.data[0].idEmployed,{
                   headers: {
                       'authorization': `${token}`
                       }
@@ -115,21 +115,21 @@ const Menu = () =>{
                 });
               }else{
                 localStorage.removeItem('accessToken')
-                localStorage.removeItem('userPhoto')
+                localStorage.removeItem('photoEmployed')
                 localStorage.removeItem('ispyme')
                 setLoggedIn(false)
-                setUserPhoto("")
+                setphotoEmployed("")
               }
           }).catch(error => {
             localStorage.removeItem('accessToken')
-            localStorage.removeItem('userPhoto')
+            localStorage.removeItem('photoEmployed')
             localStorage.removeItem('ispyme')
-            setUserPhoto("")
+            setphotoEmployed("")
             setLoggedIn(false)
           });
     }
 
-  },[userData.token, isLoggedIn, userPhoto,worksearcher])
+  },[userData.token, isLoggedIn, photoEmployed,worksearcher])
 
   return (
       <>
@@ -156,13 +156,13 @@ const Menu = () =>{
                     <i className='fas fa-file-alt mt-1' style={{fontSize:'24px','color': '#5f738f'}}></i>
                       <span className="position-absolute start-80 translate-middle badge rounded-pill bg-danger mt-1">
                       {projectsData.length}
-                      </span>        
+                      </span>
                   </li>
                   <li className="nav-item me-0 me-lg-0 dropdown">
                     <div className="nav-link dropdown-toggle" id="navbarDropdown1" type="button" data-bs-toggle="dropdown"
                       aria-expanded="false" style={{color: 'grey'}}>
-                      <img id="photoUser" src={(userPhoto !== null && userPhoto !== undefined && userPhoto !== "" && userPhoto.length > 0)  ? 
-                      '54.174.104.208:3001/api/images/'+ userPhoto : perfil} className="rounded-circle" height="35" width="35"
+                      <img id="photoUser" src={(photoEmployed !== null && photoEmployed !== undefined && photoEmployed !== "" && photoEmployed.length > 0)  ? 
+                      'http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/images/'+ photoEmployed : perfil} className="rounded-circle" height="35" width="35"
                         alt=""/>
                     </div>
                     <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown1">
@@ -198,7 +198,6 @@ const Menu = () =>{
             <div className="menu-pages">
               <Link to={'/'} className="nav-menu-item" onClick={() => menuToggle()}><i className="fas fa-home me-3"></i>Inicio</Link>
               <Link to={'/trabajadores'}  className="nav-menu-item" onClick={() => menuToggle()}><i className="fas fa-hard-hat me-3"></i>Trabajadores</Link>
-              <Link to={'/pymes'}  className="nav-menu-item" onClick={() => menuToggle()}><i className="fas fa-briefcase me-3"></i>Pymes</Link>
               <Link to={'/sobre-nosotros'}  className="nav-menu-item" onClick={() => menuToggle()}><i className="fas fa-exclamation-circle me-3"></i>Sobre Nosotros</Link>
               <Link to={'/preguntas-frecuentes'} className="nav-menu-item" onClick={() => menuToggle()}><i className="fas fa-question-circle me-3"></i>Preguntas Frecuentes</Link>
               <Link to={'/contacto'} className="nav-menu-item" onClick={() => menuToggle()}><i className="fas fa-address-book me-3"></i>Contacto</Link>
@@ -214,7 +213,7 @@ const Menu = () =>{
           <Toast.Header style={{backgroundColor:'#7A3838',color: '#dfe3ec'}}>
             <strong className="me-auto">Hola, {userName}</strong>
           </Toast.Header>
-          <Toast.Body>Tienes {projectsData.length} peticiones de trabajo, revisa tu bandeja de solicitudes 
+          <Toast.Body>Tienes {projectsData.length} {projectsData.length > 1 ? "peticiones" : "petición"} de trabajo, revisa tu bandeja de solicitudes 
           haciendo click <Link to={'/mis-solicitudes'} style={{ color: '#dfe3ec' }} onClick={() => setShow(false)}><strong>AQUÍ</strong>.</Link>
           </Toast.Body>
         </Toast>

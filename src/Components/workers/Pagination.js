@@ -33,39 +33,41 @@ const Pagination = (props) => {
             currentItems.map((element,key) =>{
                 return(
                     <>
-                    <div className="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 mt-2" key={element.iduser_pyme}>
+                    <div className="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 mt-2" key={element.idEmployed}>
                         <div className="single_advisor_profile wow fadeInUp" data-wow-delay="0.2s" style={{"visibility": "visible", "animationDelay": "0.2s", "animationName": "fadeInUp"}}>
-                        <div className="advisor_thumb" style={{'backgroundColor': (element.userColor !== undefined && element.userColor !== null && element.userColor !== "") ? element.userColor : '#3f43fd'}}>
+                        <div className="advisor_thumb" style={{'backgroundColor': (element.colorEmployed !== undefined && element.colorEmployed !== null && element.colorEmployed !== "") ? element.colorEmployed : 'rgb(227 227 227)'}}>
+                        <p className="designation" style={{fontSize: '14px', fontWeight: '500'}}>{element.employedClass === "independiente" ? "Trabajador independiente" : "Pequeña y mediana empresa"}</p>
+
                         <Row className='d-flex align-content-center'>
                             <Col md={8} sm={8} xs={8} className='d-flex align-content-center'>
-                                <span style={{ color: "rgb(36 36 36)", fontWeight: '500' }}>{element.accountType === "independiente" ? element.workareaUser : element.economicActivity}</span>
+                                <span style={{ color: "rgb(36 36 36)", fontWeight: '500' }}>{element.employedClass === "independiente" ? element.nameUser + " " + element.LastNameEmployed : element.nameUser}</span>
                             </Col>
                             <Col md={4} sm={4} xs={4} className='d-flex justify-content-end align-items-end'>
                                 <Rating
-                                initialValue={element.ranking !== null ? element.ranking : 0}
+                                initialValue={element.rankingEmployed !== null ? element.rankingEmployed : 0}
                                 size={18}
                                 fillColor='orange'
                                 emptyColor='gray'
                                 allowFraction={true}
                                 readonly={true}
                                 style={{ marginRight: '3px', display: 'flex',justifyItems: 'center' }}
-                                /><span style={{color: 'rgb(245 245 245)', fontSize: '13px', fontWeight: '600'}}>({element.ranking !== null ? element.ranking : 0})</span>
+                                /><span style={{color: 'rgb(245 245 245)', fontSize: '13px', fontWeight: '600'}}>({element.rankingEmployed !== null ? element.rankingEmployed : 0})</span>
                             </Col>
                         </Row>
-                        <p className="designation" style={{fontSize: '14px', fontWeight: '500'}}><i className="fa fa-clock-o"></i>{" "+element.experienceYears+" años de experiencia"}</p>
-                            <img src={(element.userPhoto !== undefined && element.userPhoto !== null && element.userPhoto !== "") ? '54.174.104.208:3001/api/images/' + element.userPhoto : perfil} 
+                        <p className="designation" style={{fontSize: '14px', fontWeight: '500'}}><i className="fa fa-clock-o"></i>{" "+element.experienceYears+" años de servicio"}</p>
+                            <img src={(element.photoEmployed !== undefined && element.photoEmployed !== null && element.photoEmployed !== "") ? 'http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/images/' + element.photoEmployed : perfil} 
                             style={{height: '15rem'}} alt={'imagen de perfil'} />
                             <div className="social-info">
                             {
-                                (element.facebookSite !== "" && element.facebookSite !== null && element.facebookSite !== undefined ) ? <a href={element.facebookSite} target='_blank' rel='noreferrer'><i className="fa fa-facebook"></i></a>
+                                (element.facebookSite !== "" && element.facebookSite !== null && element.facebookSite !== undefined ) ? <a href={`https://${element.facebookSite}`} target='_blank' rel='noreferrer'><i className="fa fa-facebook"></i></a>
                                 : <></>
                             }
                             {
-                                (element.instagramSite !== "" && element.instagramSite !== null && element.instagramSite !== undefined ) ? <a href={element.instagramSite} target='_blank' rel='noreferrer'><i className="fa fa-instagram"></i></a>
+                                (element.instagramSite !== "" && element.instagramSite !== null && element.instagramSite !== undefined ) ? <a href={`https://${element.instagramSite}`} target='_blank' rel='noreferrer'><i className="fa fa-instagram"></i></a>
                                 : <></>
                             }
                             {
-                                (element.webSite !== "" && element.webSite !== null && element.webSite !== undefined ) ? <a href={''+element.webSite} target='_blank' rel='noreferrer'><i className="fas fa-globe-americas"></i></a>
+                                (element.webSite !== "" && element.webSite !== null && element.webSite !== undefined ) ? <a href={`http://${element.webSite}`} target='_blank' rel='noreferrer'><i className="fas fa-globe-americas"></i></a>
                                 : <></>
                             }
                             {
@@ -75,10 +77,10 @@ const Pagination = (props) => {
                             </div>
                         </div>
                         <div className="single_advisor_details_info">
-                            <h6>{element.accountType === "independiente" ? element.nameUser + " " + element.lastnamesUser : element.razonSocial}</h6>
-                            <p className="designation">{element.chargeUser}</p>
+                            <h6>{element.employedClass === "independiente" ? element.workArea : element.chargeEmployed}</h6>
+                            <p className="designation">{element.employedClass === "independiente" ? element.chargeEmployed : ''}</p>
                             <p className="designation">{element.workResume}</p>
-                            <Link to={element.accountType === "independiente" ? `/trabajadores/perfil/vista/${element.id}` : `/trabajadores/perfil-pyme/vista/${element.iduser_pyme}`} className="btn btn-danger mt-2">Ver Perfil</Link>
+                            <Link to={`/trabajadores/perfil/vista/${element.employedClass}/${element.idEmployed}`} className="btn btn-danger mt-2">Ver Perfil</Link>
                         </div>
                         </div>
                     </div>

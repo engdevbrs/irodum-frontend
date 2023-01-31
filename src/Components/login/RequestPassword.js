@@ -24,7 +24,7 @@ const RecoverPassword = () => {
         if(value1.length >= "8" && value1.match(/[A-Z]/) && value1.match(/[0-9]/) &&
         value1.match(/[a-z]/) && value1.match(/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/) && ((value1 === value2) && (value1 !==""))){
             
-            Axios.put("54.174.104.208:3001/api/forgot-password", { password: value1, email: response.data })
+            Axios.put("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/forgot-password", { password: value1, email: response.data })
             .then((result) => {
                 if(result.status === 200){
                     Swal.fire({
@@ -155,7 +155,7 @@ const RecoverPassword = () => {
     }
 
     useEffect(() => {
-        Axios.get(`54.174.104.208:3001/resetear-password/${id}/${token}`)
+        Axios.get(`http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/resetear-password/${id}/${token}`)
         .then((result) => {
             setTimeout(() =>{
                 setLoading(false);

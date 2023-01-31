@@ -53,7 +53,7 @@ const ToDoList = () => {
             denyButtonText: `Cancelar`,
             }).then((result) => {
                 if(result.isConfirmed){
-                    Axios.put("54.174.104.208:3001/api/user/request-confirm", requestConfirmObject , 
+                    Axios.put("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user/request-confirm", requestConfirmObject , 
                     {
                         headers: {
                         'authorization': `${token}`
@@ -61,7 +61,7 @@ const ToDoList = () => {
                     }
                     ).then((result) => {
                         if(result.status === 200){
-                            getProjects(token)
+                            getProjects(userInfo.idEmployed)
                             Swal.fire('La solicitud fue confirmada con éxito!', '', 'success')
                             setShow(false)
                             setEnableConfirm(false)
@@ -82,14 +82,14 @@ const ToDoList = () => {
             estado: 'rechazado',
         }
         MySwal.fire({
-            title: 'Estás seguro de rechazar ésta solicitud ?',
+            title: '¿Estás seguro de rechazar ésta solicitud?',
             showDenyButton: true,
             showCancelButton: false,
             confirmButtonText: `Rechazar`,
             denyButtonText: `Cancelar`,
             }).then((result) => {
                 if(result.isConfirmed){
-                    Axios.put("54.174.104.208:3001/api/user/request-reject", requestRejectObject , 
+                    Axios.put("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user/request-reject", requestRejectObject , 
                     {
                         headers: {
                         'authorization': `${token}`
@@ -97,7 +97,7 @@ const ToDoList = () => {
                     }
                     ).then((result) => {
                         if(result.status === 200){
-                            getProjects(token)
+                            getProjects(userInfo.idEmployed)
                             Swal.fire('La solicitud fue rechazada', '', 'success')
                         }
                     }).catch(error => {
@@ -115,7 +115,7 @@ const ToDoList = () => {
                 estado: 'pendiente',
                 actionbutton: 'wspbutton'
             }
-            Axios.put("54.174.104.208:3001/api/update/agreement", wspContactObject, 
+            Axios.put("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/update/agreement", wspContactObject, 
             {
                 headers: {
                 'authorization': `${token}`
@@ -124,7 +124,7 @@ const ToDoList = () => {
             ).then((result) => {
                 if(result.status === 200){
                     setShowModalContact(false)
-                    getProjects(token)
+                    getProjects(userInfo.idEmployed)
                     Swal.fire('La solicitud pasó a pendiente de confirmación', '', 'success')
                 }
             }).catch(error => {
@@ -137,13 +137,13 @@ const ToDoList = () => {
                 estado: 'pendiente',
                 actionbutton: 'emailbutton',
                 message: txtarea,
-                nameWorker: userInfo.nameUser,
-                emailWorker: modalData.emailWorker,
-                nameClient: modalData.nombre,
-                emailClient: modalData.email,
+                nameWorker: userInfo.employedClass === "independiente" ? userInfo.nameUser : userInfo.razonSocial,
+                emailWorker: modalData.emailEmployed,
+                nameClient: modalData.customerName,
+                emailClient: modalData.emailCustomer,
                 requestInfo: modalData.descripcionTrabajo
             }
-            Axios.put("54.174.104.208:3001/api/update/agreement",emailContactObject, 
+            Axios.put("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/update/agreement",emailContactObject, 
             {
                 headers: {
                 'authorization': `${token}`
@@ -152,7 +152,7 @@ const ToDoList = () => {
             ).then((result) => {
                 if(result.status === 200){
                     setShowModalContact(false)
-                    getProjects(token)
+                    getProjects(userInfo.idEmployed)
                     Swal.fire('La solicitud pasó a pendiente de confirmación', '', 'success')
                 }
             }).catch(error => {
@@ -161,13 +161,8 @@ const ToDoList = () => {
         }
     }
 
-    const getProjects = () => {
-        const token = localStorage.getItem('accessToken');
-        Axios.get("54.174.104.208:3001/api/user/user-requests",{
-            headers: {
-                'authorization': `${token}`
-                }
-        })
+    const getProjects = (id) => {
+        Axios.get("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user/user-requests/"+ id)
           .then((result) => {
               if(result.status === 200){
                 let notconfirmed = (result.data).filter(function(params) {
@@ -218,7 +213,7 @@ const ToDoList = () => {
                 <Row className='d-grid d-sm-flex justify-content-sm-center'>
                 <Col className="mb-4 text-center">
                     <h6>Chat de Whatsapp</h6>
-                    <a href={`https://wa.me/${props.info[0].celular}`} target='_blank' rel="noreferrer">
+                    <a href={`https://wa.me/${props.info[0].cellphoneCustomer}`} target='_blank' rel="noreferrer">
                         <img src={whatsapp} alt="imagen de wsp" onClick={() => setShowWspConfirm(true)} style={{width: '32px'}}/>
                     </a>
                 </Col>
@@ -244,7 +239,7 @@ const ToDoList = () => {
                             <strong>Para:</strong> 
                             </Form.Label>
                             <Col sm="10">
-                            <Form.Control plaintext readOnly defaultValue={props.info[0].email} />
+                            <Form.Control plaintext readOnly defaultValue={props.info[0].emailCustomer} />
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} className="mb-2" controlId="formPlaintextEmail">
@@ -252,7 +247,7 @@ const ToDoList = () => {
                             <strong>CC:</strong> 
                             </Form.Label>
                             <Col sm="10">
-                            <Form.Control plaintext readOnly defaultValue={props.info[0].emailWorker} />
+                            <Form.Control plaintext readOnly defaultValue={props.info[0].emailEmployed} />
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} className="mb-2" controlId="formPlaintextAsunto">
@@ -297,18 +292,18 @@ const ToDoList = () => {
     }
 
     const getAccess = async (token) =>{
-        await Axios.post("54.174.104.208:3001/api/user-info", {
+        const ispyme = JSON.parse(localStorage.getItem('ispyme'));
+        await Axios.post(ispyme ? "http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user-info-pyme" : "http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user-info",{
             'authorization' : `${token}`
         })
           .then((result) => {
               if(result.status === 200){
                     setResponse(result.status)
                     setUserInfo(result.data[0])
-                    setLoading(false)
+                    getProjects(result.data[0].idEmployed)
               }
           }).catch(error => {
                 setResponse(error.response.status)
-                setLoading(false)
                 clearTimeout()
           });
     }
@@ -341,14 +336,15 @@ const ToDoList = () => {
     const allowAccess = () =>{
         let maxDate = new Date()
         maxDate.setFullYear(maxDate.getFullYear()+1)
+        const ispyme = JSON.parse(localStorage.getItem('ispyme'));
         return(
-            <>
-                <div hidden={loading}>
+            <div hidden={loading}>
+                <div>
                 <Col>
                     <Nav aria-label="breadcrumb" className="bg-light p-3 mb-4">
                         <ol className="breadcrumb mb-0">
                             <li className="breadcrumb-item"><Link to={'/'} >Inicio</Link></li>
-                            <li className="breadcrumb-item"><Link to={'/perfil'} >Mi Perfil</Link></li>
+                            <li className="breadcrumb-item"><Link to={ispyme ? '/perfil-pyme' : '/perfil'} >Mi Perfil</Link></li>
                             <li className="breadcrumb-item active" aria-current="page">Solicitudes</li>
                         </ol>
                     </Nav>
@@ -493,20 +489,20 @@ const ToDoList = () => {
                                         let direccion = null
                                         if(values.calle !== ''){
                                             if(values.pasaje !== ''){
-                                                direccion = values.calle+' '+values.NumeroCasa+', Pasaje '+values.pasaje+', '+values.comuna
+                                                direccion = values.calle+' '+values.NumeroCasa+', Pasaje '+values.pasaje+', '+values.communeEmployed
                                             }else{
-                                                direccion = values.calle+' '+values.NumeroCasa+','+values.comuna
+                                                direccion = values.calle+' '+values.NumeroCasa+','+values.communeEmployed
                                             }
                                         }else{
-                                            direccion = values.dptoDirec+', Piso '+values.NumeroPiso+', Departamento '+values.NumeroDepto+', '+values.comuna
+                                            direccion = values.dptoDirec+', Piso '+values.NumeroPiso+', Departamento '+values.NumeroDepto+', '+values.communeEmployed
                                         }
                                         return(
                                             <>
                                                 <tr key={key}>
-                                                    <td>{values.nombre+' '+values.apellidos}</td>
-                                                    <td>{values.rut}</td>
+                                                    <td>{values.customerName+' '+values.lastNameCustomer}</td>
+                                                    <td>{values.rutCustomer}</td>
                                                     <td>{direccion}</td>
-                                                    <td>{values.celular}</td>
+                                                    <td>{values.cellphoneCustomer}</td>
                                                     <td>{values.descripcionTrabajo}</td>
                                                     <td>
                                                         <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
@@ -570,20 +566,20 @@ const ToDoList = () => {
                                         let direccion = null
                                         if(values.calle !== ''){
                                             if(values.pasaje !== ''){
-                                                direccion = values.calle+' '+values.NumeroCasa+', Pasaje '+values.pasaje+', '+values.comuna
+                                                direccion = values.calle+' '+values.NumeroCasa+', Pasaje '+values.pasaje+', '+values.communeEmployed
                                             }else{
-                                                direccion = values.calle+' '+values.NumeroCasa+','+values.comuna
+                                                direccion = values.calle+' '+values.NumeroCasa+','+values.communeEmployed
                                             }
                                         }else{
-                                            direccion = values.dptoDirec+', Piso '+values.NumeroPiso+', Departamento '+values.NumeroDepto+', '+values.comuna
+                                            direccion = values.dptoDirec+', Piso '+values.NumeroPiso+', Departamento '+values.NumeroDepto+', '+values.communeEmployed
                                         }
                                         return(
                                             <>
                                                 <tr key={key}>
                                                     <td>{values.nombre+' '+values.apellidos}</td>
-                                                    <td>{values.rut}</td>
+                                                    <td>{values.rutCustomer}</td>
                                                     <td>{direccion}</td>
-                                                    <td>{values.celular}</td>
+                                                    <td>{values.cellphoneCustomer}</td>
                                                     <td>{values.descripcionTrabajo}</td>
                                                     <td>{values.startDate}</td>
                                                 </tr>
@@ -629,20 +625,20 @@ const ToDoList = () => {
                                         let direccion = null
                                         if(values.calle !== ''){
                                             if(values.pasaje !== ''){
-                                                direccion = values.calle+' '+values.NumeroCasa+', Pasaje '+values.pasaje+', '+values.comuna
+                                                direccion = values.calle+' '+values.NumeroCasa+', Pasaje '+values.pasaje+', '+values.communeEmployed
                                             }else{
-                                                direccion = values.calle+' '+values.NumeroCasa+','+values.comuna
+                                                direccion = values.calle+' '+values.NumeroCasa+','+values.communeEmployed
                                             }
                                         }else{
-                                            direccion = values.dptoDirec+', Piso '+values.NumeroPiso+', Departamento '+values.NumeroDepto+', '+values.comuna
+                                            direccion = values.dptoDirec+', Piso '+values.NumeroPiso+', Departamento '+values.NumeroDepto+', '+values.communeEmployed
                                         }
                                         return(
                                             <>
                                                 <tr key={key}>
                                                     <td>{values.nombre+' '+values.apellidos}</td>
-                                                    <td>{values.rut}</td>
+                                                    <td>{values.rutCustomer}</td>
                                                     <td>{direccion}</td>
-                                                    <td>{values.celular}</td>
+                                                    <td>{values.cellphoneCustomer}</td>
                                                     <td>{values.descripcionTrabajo}</td>
                                                     <td>Rechazada</td>
                                                 </tr>
@@ -669,22 +665,22 @@ const ToDoList = () => {
                         </Tabs>
                     </Container>
                 </section>
-            </>
+            </div>
         )
     }
 
     useEffect(() =>{
         document.getElementById('menuHolder').scrollIntoView();
         setTimeout(() =>{
-            const getToken = localStorage.getItem('accessToken');
-            if(getToken === null){
-                setLoading(false);
-                setResponse(500);
-            }else{
-                getAccess(getToken)
-            }
+            setLoading(false);
         },1720)
-        getProjects()
+        const getToken = localStorage.getItem('accessToken');
+        if(getToken === null){
+            setLoading(false);
+            setResponse(500);
+        }else{
+            getAccess(getToken)
+        }
     },[])
 
   return (

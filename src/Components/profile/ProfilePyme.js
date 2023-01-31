@@ -11,7 +11,6 @@ import { Rating } from 'react-simple-star-rating'
 import web from '../assets/web.png'
 import instagram from '../assets/instagram.png'
 import facebook from '../assets/facebook.png'
-import twitter from '../assets/twitter.png'
 import accesDenied from '../assets/access-denied.png'
 import loadingprofilegf from '../assets/loading-profile.gif'
 import perfil from '../assets/perfil.png'
@@ -61,7 +60,7 @@ const ProfilePyme = () => {
             }).then((result) => {
                 if(result.isConfirmed){
                     showProgress(false)
-                    Axios.put("54.174.104.208:3001/api/images-pyme",
+                    Axios.put("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/images",
                     formData,
                     {
                         headers: {
@@ -77,11 +76,11 @@ const ProfilePyme = () => {
                             const token = localStorage.getItem('accessToken');
                             setCancelButton(false);
                             setSavePhoto(false)
-                            deletePrevUserPhoto()
+                            deletePrevphotoEmployed()
                             Swal.fire('Su foto ha sido actualizada con éxito!', '', 'success')
                             showProgress(true)
                             getAccess(token)
-                            document.getElementById('photoUser').src = "54.174.104.208:3001" + result.data.imagePath
+                            document.getElementById('photoUser').src = "http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001" + result.data.imagePath
                         }
                     }).catch(error => {
                         Swal.fire('No pudimos cambiar tu foto de perfil', '', 'warning')
@@ -120,7 +119,7 @@ const ProfilePyme = () => {
             }).then((result) => {
                 if(result.isConfirmed){
                     showProgressSpec(false)
-                    Axios.post('54.174.104.208:3001/api/upload/speciality',specialityFormFile, config)
+                    Axios.post('http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/upload/speciality/'+ dataUser[0].idEmployed,specialityFormFile, config)
                     .then((result) => {
                         if(result.status === 200){
                             Swal.fire({
@@ -137,7 +136,7 @@ const ProfilePyme = () => {
                                     handleCloseSpeciality()
                                 }
                             })
-                            Axios.get("54.174.104.208:3001/api/download/speciality/" + dataUser[0].id)
+                            Axios.get("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/download/speciality/" + dataUser[0].id)
                                 .then((result) => {
                                     if(result.status === 200){
                                         setEspecialitiesWorker(result.data)
@@ -171,8 +170,8 @@ const ProfilePyme = () => {
         }
     };
 
-    const deletePrevUserPhoto = () =>{
-        Axios.delete('54.174.104.208:3001/api/images/delete/' + getPhoto)
+    const deletePrevphotoEmployed = () =>{
+        Axios.delete('http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/images/delete/' + getPhoto)
           .then((result) => {
               if(result.status === 200){
                 console.log(result);
@@ -204,7 +203,7 @@ const ProfilePyme = () => {
                 denyButtonText: `Cancelar`,
               }).then((result) => {
                 if (result.isConfirmed) {
-                    Axios.put("54.174.104.208:3001/api/update-pyme", {newArrayValues ,'authorization' : `${token}`})
+                    Axios.put("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/update-user", {newArrayValues ,'authorization' : `${token}`})
                     .then((result) => {
                         if(result.status === 200){
                             Swal.fire({
@@ -238,32 +237,16 @@ const ProfilePyme = () => {
     }
 
     const getAccess = (token) =>{
-        Axios.post("54.174.104.208:3001/api/user-info-pyme", {
+        Axios.post("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user-info-pyme", {
             'authorization' : `${token}`
         }).then((result) => {
               if(result.status === 200){
                     setResponse(result.status)
-                    setLoading(false)
                     setDataUser(result.data)
-                    localStorage.setItem('userPhoto', "54.174.104.208:3001/api/images/" + result.data[0].userPhoto)
-                    setGetPhoto(result.data[0].userPhoto)
-                    Axios.get("54.174.104.208:3001/api/worker/ratings/" + result.data[0].iduser_pyme)
-                        .then((result) => {
-                            if(result.status === 200){
-                                setRatingScore(result.data)
-                            }
-                        }).catch(error => {
-                            setRatingScore([])
-                        });
-                    Axios.get("54.174.104.208:3001/api/worker/evaluations/" + result.data[0].iduser_pyme)
-                        .then((result) => {
-                            if(result.status === 200){
-                                    setCommentsWorker(result.data)
-                            }
-                        }).catch(error => {
-                            setCommentsWorker([])
-                        });
-                    Axios.get("54.174.104.208:3001/api/download/speciality-pyme/" + result.data[0].iduser_pyme)
+                    localStorage.setItem('photoEmployed', "http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/images/" + result.data[0].photoEmployed)
+                    setGetPhoto(result.data[0].photoEmployed)
+                    
+                    Axios.get("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/download/speciality/" + result.data[0].idEmployed)
                         .then((result) => {
                             if(result.status === 200){
                                 setEspecialitiesWorker(result.data)
@@ -271,10 +254,21 @@ const ProfilePyme = () => {
                         }).catch(error => {
                             setEspecialitiesWorker([])
                         });
+                    
+                    Axios.get("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/worker/ratings/" + result.data[0].idEmployed)
+                        .then((result) => {
+                            if(result.status === 200){
+                                setRatingScore(result.data)
+                                setCommentsWorker(result.data)
+                            }
+                        }).catch(error => {
+                            setRatingScore([])
+                            setCommentsWorker([])
+                        });
+                    
               }
           }).catch(error => {
                 setResponse(error.response.status)
-                setLoading(false)
                 clearTimeout()
           });
     }
@@ -368,8 +362,8 @@ const ProfilePyme = () => {
 
     const allowAccess = () =>{
         return(
-        <>
-            <div hidden={loading}>
+        <div hidden={loading}>
+            <div>
                 <Col>
                     <Nav aria-label="breadcrumb" className="bg-light p-3 mb-4">
                         <ol className="breadcrumb mb-0">
@@ -392,13 +386,13 @@ const ProfilePyme = () => {
                     }
                     return(
                         <>
-                            <Container className='profile-container shadow-lg rounded-4 mt-3 mb-5 p-4' style={element.userColor !== undefined ? { 'backgroundColor': element.userColor} : {'backgroundColor': {colorCard}}}>
+                            <Container className='profile-container shadow-lg rounded-4 mt-3 mb-5 p-4' style={element.colorEmployed !== undefined ? { 'backgroundColor': element.colorEmployed} : {'backgroundColor': {colorCard}}}>
                                 <Row className='mt-3 mb-3'>
                                     <Col lg={4} >
                                         <Card className='perfil shadow mb-4' key={key}>
                                         <input className="form-control" type="file" id="formFile" name='formFile' accept="image/*" onChange={(e) => setEnableSave(!enableSave)} hidden/>
                                         <img id='upload' className='upload mt-2' src={uploadPhoto} style={{ width: '5rem' }} alt="" hidden={inputs} onClick={open_file} />
-                                        <img id='userPhoto' className='userphoto mt-2' variant="top" src={(element.userPhoto !== undefined && element.userPhoto !== null && element.userPhoto !== "") ? localStorage.getItem('userPhoto') : perfil} alt={'foto perfil'} style={{ width: '12rem'}} />
+                                        <img id='photoEmployed' className='photoEmployed mt-2' variant="top" src={(element.photoEmployed !== undefined && element.photoEmployed !== null && element.photoEmployed !== "") ? localStorage.getItem('photoEmployed') : perfil} alt={'foto perfil'} style={{ width: '12rem'}} />
                                         <Card.Body>
                                             <Card.Title><strong>{element.razonSocial}</strong></Card.Title>
                                             <h6 style={{color: 'grey'}}>
@@ -449,10 +443,10 @@ const ProfilePyme = () => {
                                             <ListGroup className='social-media p-2' variant="flush">
                                                 <ListGroup.Item>{
                                                 inputs === true ? <><div><img src={web} alt=''/></div><div className='form-floating col-10'>
-                                                    <input type="text" className='form-control' id='floatingWebsite' defaultValue={element.webSite !== undefined ? element.webSite : ''} name='website' placeholder='floatingWebsite' />
+                                                    <input type="text" className='form-control' id='floatingWebsite' defaultValue={element.webSite !== undefined ? element.webSite : '#'} name='website' placeholder='floatingWebsite' />
                                                     <label htmlFor='floatingWebsite'>Ingrese su sitio web</label>
                                                 </div></> : 
-                                                <><img src={web} alt=''/><a href={element.webSite !== undefined ? ''+element.webSite : '#'} target="_blank" rel="noopener noreferrer">{element.webSite !== undefined ? element.webSite : 'Sitio Web'}</a>
+                                                <><img src={web} alt=''/><a href={element.webSite !== undefined ? ''+element.webSite : '#'} target="_blank" rel="noopener noreferrer">Sitio Web</a>
                                                 </>
                                                 }</ListGroup.Item>
                                                 <ListGroup.Item>{
@@ -468,13 +462,6 @@ const ProfilePyme = () => {
                                                     <label htmlFor='floatingFacebook'>URL perfil de facebook</label>
                                                 </div></> : 
                                                 <><img src={facebook} alt=''/><a href={element.facebookSite !== undefined ? element.facebookSite : '#'} target="_blank" rel="noopener noreferrer">Facebook</a>
-                                                </>}</ListGroup.Item>
-                                                <ListGroup.Item>{
-                                                inputs === true ? <><img src={twitter} alt=''/><div className='form-floating col-10'>
-                                                    <input type="text" className='form-control' id='floatingTwitter' defaultValue={element.twitterSite !== undefined ? element.twitterSite : '#'} name='twitter' placeholder='floatingTwitter'/>
-                                                    <label htmlFor='floatingTwitter'>URL perfil de twitter</label>
-                                                </div></> : 
-                                                <><img src={twitter} alt=''/><a href={element.twitterSite !== undefined ? element.twitterSite : '#'} target="_blank" rel="noopener noreferrer">Twitter</a>
                                                 </>}</ListGroup.Item>
                                             </ListGroup>
                                         </Card>
@@ -497,7 +484,7 @@ const ProfilePyme = () => {
                                             <p className="mb-0">Email</p>
                                             </Col>
                                             <Col sm={9}>
-                                                <p className="text-muted mb-0">{element.email}</p>
+                                                <p className="text-muted mb-0">{element.emailEmployed}</p>
                                             </Col>
                                         </Row>
                                         <hr/>
@@ -523,7 +510,7 @@ const ProfilePyme = () => {
                                             <p className="mb-0">Lugar de residencia</p>
                                             </Col>
                                             <Col sm={9}>
-                                            <p className="text-muted mb-0">{element.regionUser + ", " + element.cityUser + ", " + element.communeUser}</p>
+                                            <p className="text-muted mb-0">{element.regionEmployed + ", " + element.cityEmployed + ", " + element.communeEmployed}</p>
                                             </Col>
                                         </Row>
                                         <hr/>
@@ -547,7 +534,7 @@ const ProfilePyme = () => {
                                                 </Col>
                                                 <Col sm={9}>
                                                     <Form.Text><p style={{color: '#349568'}}>Procure usar tonos claros</p></Form.Text>
-                                                    <input type="color" className="form-control form-control-color" id="colorInput" name='colorInput' onChange={(e) => setColorCard(e.target.value)} defaultValue={element.userColor !== undefined ? element.userColor : colorCard} title="Elija su color favorito"/>
+                                                    <input type="color" className="form-control form-control-color" id="colorInput" name='colorInput' onChange={(e) => setColorCard(e.target.value)} defaultValue={element.colorEmployed !== undefined ? element.colorEmployed : colorCard} title="Elija su color favorito"/>
                                                 </Col>
                                             </Row></> : <></>
                                         }
@@ -665,21 +652,22 @@ const ProfilePyme = () => {
                     )
                 })
             }
-        </>)
+        </div>)
     }
 
     useEffect(() =>{
         
         document.getElementById('menuHolder').scrollIntoView();
         setTimeout(() =>{
-            const getToken = localStorage.getItem('accessToken');
-            if(getToken === null){
-                setLoading(false);
-                setResponse(500);
-            }else{
-                getAccess(getToken);
-            }
+            setLoading(false);
         },1720)
+        const getToken = localStorage.getItem('accessToken');
+        if(getToken === null){
+            setLoading(false);
+            setResponse(500);
+        }else{
+            getAccess(getToken);
+        }
     },[])
 
     return (

@@ -24,7 +24,7 @@ const Comments = ({data}) => {
                 <Card.Header style={{ color: 'rgb(226 226 226)', backgroundColor: '#202A34' }}>
                     <Row xs={1} sm={1} md={2}>
                       <Col className='text-xl-start'>
-                        Comentario realizado por: {value.workerName + " " + value.workerLastName}
+                        Evaluado por: {value.customerName + " " + value.lastNameCustomer}
                       </Col>
                       <Col className='text-xl-end'>
                         El día: {value.dateComment}
@@ -43,7 +43,7 @@ const Comments = ({data}) => {
                     return(
                       <>
                         <div className="col-lg-4 col-md-6 col-sm-12 mb-4 mb-lg-2">
-                        <img className='img-comment shadow rounded' src={'54.174.104.208:3001/' + image.originalname} 
+                        <img className='img-comment shadow rounded' src={'http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/' + image.originalname} 
                               alt={'project'}/>
                         </div>
                       </>

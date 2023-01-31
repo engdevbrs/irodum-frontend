@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import '../css/footer.css';
 import { Link } from 'react-router-dom';
 import instagram from '../assets/instagram.png'
