@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { Card, Container, Row } from 'react-bootstrap'
+import { Card, Container } from 'react-bootstrap'
 import rate from '../assets/rate.png'
 import '../css/Comments.css'
 

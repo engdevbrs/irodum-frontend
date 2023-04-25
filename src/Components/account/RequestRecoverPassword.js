@@ -2,8 +2,11 @@ import React, { useState } from 'react'
 import Axios  from 'axios';
 import { Alert, Button, Card, Container, Form, Row } from 'react-bootstrap'
 import olvidarpass from '../assets/olvidar.png'
+import { useEffect } from 'react';
 
 const RequestRecoverPassword = () => {
+
+    
 
     const [emailValid, setEmailValid] = useState(true);
     const[ userValid, setUserValid ]=useState(false);
@@ -32,7 +35,7 @@ const RequestRecoverPassword = () => {
     }
 
     const recoverPass = (mailValue) =>{
-        Axios.post("54.174.104.208:3001/api/recover-password", {mailValue})
+        Axios.post("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/recover-password", {mailValue})
           .then((result) => {
               if(result.status === 200){
                 setUserValid(true)
@@ -46,11 +49,16 @@ const RequestRecoverPassword = () => {
           }).catch(error => {
           });
     }
+    
+    useEffect(() =>{
+        document.getElementById("menuHolder").scrollIntoView();
+    },[])
 
   return (
+    
     <>
         <Container className='mt-5 mb-5 p-5'>
-            <Row lg={1} className='d-flex justify-content-center'>
+            <Row id='recoverpw' lg={1} className='d-flex justify-content-center'>
                 <Card className='d-flex align-items-center shadow p-2' style={{ width: '30rem', border: 'none'}}>
                 <Card.Img className='mt-4' variant="top" src={olvidarpass} style={{ width: '8rem' }}/>
                 <Card.Body>

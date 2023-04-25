@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom';
 const PymeWorkers = () => {
 
   const { worksearcher, setWorksearcher } = useHomeContext()
-  const { jobs } = Constants;
+  const { economicActivities } = Constants;
   const [show, setShow] = useState(false);
   const [filtered, setFiltered] = useState(false);
   const [usuarios, setUsuarios ] = useState([]);
@@ -36,9 +36,10 @@ const PymeWorkers = () => {
       let city = document.getElementById('city').value
       let comunne = document.getElementById('comunne').value
       let area = document.getElementById('area').value
+      area = area.charAt(0).toUpperCase() + area.slice(1).toLowerCase()
       let filterer = usuarios.filter(function(params) {
         if(region === "" && area !== ""){
-          return params.workareaUser === area
+          return params.economicActivity === area
         }else if(region !== "" && city !== "" && comunne !== "" && area === ""){
           return params.regionUser === region && params.cityUser === city &&  params.communeUser === comunne
         }else if(region !== "" && city !== "" && area === ""){
@@ -46,11 +47,11 @@ const PymeWorkers = () => {
         }else if(region !== "" && area === ""){
           return params.regionUser === region
         }else if(region !== "" && city !== "" && comunne !== "" && area !== ""){
-          return params.regionUser === region && params.cityUser === city &&  params.communeUser === comunne && params.workareaUser === area
+          return params.regionUser === region && params.cityUser === city &&  params.communeUser === comunne && params.economicActivity === area
         }else if(region !== "" && city !== "" && area !== ""){
-          return params.regionUser === region && params.cityUser === city && params.workareaUser === area
+          return params.regionUser === region && params.cityUser === city && params.economicActivity === area
         }else if(region !== "" && area !== ""){
-          return params.regionUser === region && params.workareaUser === area
+          return params.regionUser === region && params.economicActivity === area
         }
       })
       handleClose()
@@ -60,9 +61,9 @@ const PymeWorkers = () => {
 
   const  clearFilters = () => {
     if(worksearcher !== ''){
-      Axios.get("54.174.104.208:3001/api/usuarios").then((res)=>{
+      Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/pymes").then((res)=>{
         setFiltered(false)
-        setUsuarios(res.data)
+        setUsuarios(res.data[0])
         setWorksearcher("")
         handleClose()
       });
@@ -102,21 +103,21 @@ const PymeWorkers = () => {
   }
   
   useEffect(() => {
-      Axios.get("54.174.104.208:3001/api/pymes").then((res)=>{
+      Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/pymes").then((res)=>{
         if(worksearcher !== ''){
-          let filtererFromHome = (res.data).filter(function(params) {
+          let filtererFromHome = (res.data[0]).filter(function(params) {
             return params.workareaUser === worksearcher.oficio
           })
-          setUsuarios(res.data)
+          setUsuarios(res.data[0])
           setUsuariosFiltered(filtererFromHome)
           setFiltered(true)
           setValueFromSearcher(worksearcher.oficio)
           setWorksearcher("")
         }else{
-          setUsuarios(res.data);
+          setUsuarios(res.data[0]);
         }
       });
-      Axios.get("54.174.104.208:3001/api/localidades").then((res)=>{
+      Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/localidades").then((res)=>{
             setLocalidades(res.data);
       });  
   },[worksearcher])
@@ -147,17 +148,17 @@ const PymeWorkers = () => {
           </div>
         </div>
         <Col className='d-flex justify-content-end mt-3 mb-3'>
-        <strong style={{fontSize:'16px', color: '#384451'}}>Filtrar{' '}</strong>
+        <strong style={{fontSize:'16px', color: '#384451'}}>Búsqueda avanzada{' '}</strong>
           <p onClick={handleShow} className="me-2" style={{color:'#5f738f'}}>
           <FaFilter cursor={'pointer'} size={26} />
           </p>
         </Col>
         <Offcanvas show={show} onHide={handleClose} placement={'end'}>
         <Offcanvas.Header closeButton closeVariant='white'>
-          <Offcanvas.Title>Filtrar Trabajadores</Offcanvas.Title>
+          <Offcanvas.Title>Filtrar PYMES</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-              <h6 className='mb-2 mt-2'>Localidad del trabajador</h6>
+              <h6 className='mb-2 mt-2'>Ubicación de PYME</h6>
               <div>
                   <Form.Select id='region' name='region'  defaultValue={'' || regionValue}
                   onChange={(e) => {handleRegionChange(e); setRegionValue(e.target.value)}}>
@@ -206,15 +207,15 @@ const PymeWorkers = () => {
                   </Form.Select>
                   <label htmlFor='comunne' className='form-label'>Comuna</label>
               </div>
-              <h6 className='mb-2'>Especialidad del trabajador</h6>
+              <h6 className='mb-2'>Actividad económica</h6>
               <div>
               <Form.Select id='area' name='area' defaultValue={filtered ? valueFromSearcher : '' || areaValue } onChange={(e) => setAreaValue(e.target.value)}>
-                  <option disabled selected value="">Seleccionar especialidad</option>
+                  <option selected value="">Seleccionar especialidad</option>
                   {
-                      jobs.map((jobs,key) =>{
+                      economicActivities.map((jobs,key) =>{
                           return(
                               <>
-                                  <option key={key} value={jobs}>{jobs}</option>
+                                  <option key={key} value={jobs.name}>{jobs.name}</option>
                               </>
                           )
                       })
@@ -237,7 +238,7 @@ const PymeWorkers = () => {
                     <img src={noworkersfounded} alt="imagen de confirmación" style={{width: '12rem'}}/>
                 </div>
                 <div className="d-grid gap-2 mt-5">
-                  <Button className="btn btn-danger px-4" onClick={e => clearFilters()} >Ver a todos los trabajadores</Button>
+                  <Button className="btn btn-danger px-4" onClick={e => clearFilters()} >Ver todas las PYMES</Button>
               </div>
             </div>
           </div> : ''
