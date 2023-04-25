@@ -1,10 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import instagram from '../assets/instagram.png'
 import facebook from '../assets/facebook.png'
 import twitter from '../assets/twitter.png'
 import { Link } from 'react-router-dom'
 
 const FAQ = () => {
+
+    useEffect(() => {
+        document.getElementById("menuHolder").scrollIntoView();      
+    },[]);
+
   return (
     <>
         <section className="py-5">

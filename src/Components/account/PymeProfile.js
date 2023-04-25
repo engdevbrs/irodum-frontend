@@ -88,7 +88,8 @@ const PymeProfile = () => {
         }
     }
 
-    useEffect(() => {      
+    useEffect(() => {    
+        document.getElementById("menuHolder").scrollIntoView();  
         document.addEventListener('handleEventPyme', handleSubmit);
         return () => {
             document.removeEventListener('handleEventPyme', handleSubmit);

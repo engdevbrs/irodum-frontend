@@ -6,10 +6,11 @@ import PersonalInformation from "./Personalnformation";
 import StepperControl from "./StepperControl";
 import WorkProfile from "./WorkProfile";
 import CreateNewUser from "./CreateUser";
-import TermsConditions from "./TermsAndConditions";
+import TermsConditionsAccept from "./TermsConditionsAccept";
 import Confirm from "./Confirm";
 
 function CreateAccount() {
+
   const [currentStep, setCurrentStep] = useState(0);
   const navigate = useNavigate();
 
@@ -30,7 +31,7 @@ function CreateAccount() {
       case 2:
         return <CreateNewUser />;
       case 3:
-        return <TermsConditions />;
+        return <TermsConditionsAccept />;
       case 4:
         return <Confirm />;
       default:

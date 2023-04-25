@@ -77,7 +77,6 @@ const PersonalInformationPyme = () => {
         
         let arrayValues = [];
         const formValues = document.getElementsByClassName('personalForm')[0].elements;
-
         let checkNameValue = checkName(document.getElementById('name').value);
         let checkRutValue = checkRut(document.getElementById('rut'));
         let checkEconomicActivityValue = checkEconomicActivity(document.getElementById('economicActivity').value);
@@ -268,7 +267,8 @@ const PersonalInformationPyme = () => {
     }
 
     useEffect(() => {
-        Axios.get("54.174.104.208:3001/api/localidades").then((res)=>{
+        document.getElementById("menuHolder").scrollIntoView();
+        Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/localidades").then((res)=>{
             setLocalidades(res.data);
         });        
         document.addEventListener('handleEventPyme', handleSubmit);
