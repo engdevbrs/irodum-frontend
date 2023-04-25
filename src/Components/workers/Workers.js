@@ -4,6 +4,9 @@ import Axios from 'axios'
 import { FaFilter } from "react-icons/fa";
 import '../css/Workers.css';
 import noworkersfounded from '../assets/search-empty.png'
+import pyme from '../assets/empresa.png'
+import worker from '../assets/obrero.png'
+import all from '../assets/all.jpg'
 import Constants from '../../Constants/Constants';
 import { useHomeContext } from '../contexts/WorkerContext';
 import Pagination from './Pagination';
@@ -12,7 +15,7 @@ import { Link } from 'react-router-dom';
 const Workers = () => {
 
   const { worksearcher, setWorksearcher } = useHomeContext()
-  const { jobs } = Constants;
+  const { jobs, economicActivities } = Constants;
   const [show, setShow] = useState(false);
   const [filtered, setFiltered] = useState(false);
   const [usuarios, setUsuarios ] = useState([]);
@@ -25,7 +28,11 @@ const Workers = () => {
   const [cityValue, setCityValue] = useState([]);
   const [comunneValue, setComunneValue] = useState([]);
   const [areaValue, setAreaValue] = useState([]);
+  const [economicActivity, setEconomicActivity] = useState([]);
   const [valueFromSearcher, setValueFromSearcher ] = useState([]);
+
+  const [hiddenIndependent, setHiddenIndependent] = useState(true);
+  const [hiddenPymes, setHiddenPymes] = useState(true);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -36,23 +43,57 @@ const Workers = () => {
       let city = document.getElementById('city').value
       let comunne = document.getElementById('comunne').value
       let area = document.getElementById('area').value
-      let filterer = usuarios.filter(function(params) {
-        if(region === "" && area !== ""){
-          return params.workareaUser === area
-        }else if(region !== "" && city !== "" && comunne !== "" && area === ""){
-          return params.regionUser === region && params.cityUser === city &&  params.communeUser === comunne
-        }else if(region !== "" && city !== "" && area === ""){
-          return params.regionUser === region && params.cityUser === city
-        }else if(region !== "" && area === ""){
-          return params.regionUser === region
-        }else if(region !== "" && city !== "" && comunne !== "" && area !== ""){
-          return params.regionUser === region && params.cityUser === city &&  params.communeUser === comunne && params.workareaUser === area
-        }else if(region !== "" && city !== "" && area !== ""){
-          return params.regionUser === region && params.cityUser === city && params.workareaUser === area
-        }else if(region !== "" && area !== ""){
-          return params.regionUser === region && params.workareaUser === area
-        }
-      })
+      let giro = document.getElementById('giro').value
+      let filterer = ""
+      if(hiddenIndependent === false){
+        filterer = usuarios.filter(function(params) {
+          if(region === "" && area !== ""){
+            return params.workArea === area
+          }else if(region !== "" && city !== "" && comunne !== "" && area === ""){
+            return params.regionEmployed === region && params.cityEmployed === city &&  params.communeEmployed === comunne
+          }else if(region !== "" && city !== "" && area === ""){
+            return params.regionEmployed === region && params.cityEmployed === city
+          }else if(region !== "" && area === ""){
+            return params.regionEmployed === region
+          }else if(region !== "" && city !== "" && comunne !== "" && area !== ""){
+            return params.regionEmployed === region && params.cityEmployed === city &&  params.communeEmployed === comunne && params.workArea === area
+          }else if(region !== "" && city !== "" && area !== ""){
+            return params.regionEmployed === region && params.cityEmployed === city && params.workArea === area
+          }else if(region !== "" && area !== ""){
+            return params.regionEmployed === region && params.workArea === area
+          }
+        })
+      }else if(hiddenPymes === false){
+        filterer = usuarios.filter(function(params) {
+          if(region === "" && giro !== ""){
+            return params.chargeEmployed === giro
+          }else if(region !== "" && city !== "" && comunne !== "" && giro === ""){
+            return params.regionEmployed === region && params.cityEmployed === city &&  params.communeEmployed === comunne
+          }else if(region !== "" && city !== "" && giro === ""){
+            return params.regionEmployed === region && params.cityEmployed === city
+          }else if(region !== "" && giro === ""){
+            return params.regionEmployed === region
+          }else if(region !== "" && city !== "" && comunne !== "" && giro !== ""){
+            return params.regionEmployed === region && params.cityEmployed === city &&  params.communeEmployed === comunne && params.chargeEmployed === giro
+          }else if(region !== "" && city !== "" && giro !== ""){
+            return params.regionEmployed === region && params.cityEmployed === city && params.chargeEmployed === giro
+          }else if(region !== "" && giro !== ""){
+            return params.regionEmployed === region && params.chargeEmployed === giro
+          }
+        })
+      }else if(hiddenIndependent === true && hiddenPymes === true){
+        filterer = usuarios.filter(function(params) {
+          if(region !== "" && city === "" && comunne === ""){
+            return params.regionEmployed === region
+          }else if(region !== "" && city !== "" && comunne === ""){
+            return params.regionEmployed === region && params.cityEmployed === city
+          }else if(region !== "" && city !== "" && comunne !== ""){
+            return params.regionEmployed === region && params.cityEmployed === city  && params.communeEmployed === comunne
+          }else if(region === "" && city === "" && comunne === ""){
+            return usuarios
+          }
+        })
+      }
       handleClose()
       setFiltered(true)
       setUsuariosFiltered(filterer)
@@ -60,9 +101,9 @@ const Workers = () => {
 
   const  clearFilters = () => {
     if(worksearcher !== ''){
-      Axios.get("54.174.104.208:3001/api/usuarios").then((res)=>{
+      Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/usuarios").then((res)=>{
         setFiltered(false)
-        setUsuarios(res.data)
+        setUsuarios(res.data[0])
         setWorksearcher("")
         handleClose()
       });
@@ -76,6 +117,27 @@ const Workers = () => {
     }
   };
 
+
+  const filterPymes = () =>{
+    
+    let filteredByPymes = usuarios.filter(function(params) {
+      return params.employedClass === "pyme"
+    })
+    setUsuariosFiltered(filteredByPymes)
+    setFiltered(true)
+    console.log(filteredByPymes);
+  }
+
+  const filterIndependent = () =>{
+    
+    let filteredByIndependent = usuarios.filter(function(params) {
+      return params.employedClass === "independiente"
+    })
+    setUsuariosFiltered(filteredByIndependent)
+    setFiltered(true)
+    setValueFromSearcher([])
+    console.log(filteredByIndependent);
+  }
 
   const handleRegionChange = (e) => {
     const ciudadIndex = document.getElementById('region').value;
@@ -102,21 +164,24 @@ const Workers = () => {
   }
   
   useEffect(() => {
-      Axios.get("54.174.104.208:3001/api/usuarios").then((res)=>{
+      document.getElementById("menuHolder").scrollIntoView();
+      Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/usuarios").then((res)=>{
         if(worksearcher !== ''){
-          let filtererFromHome = (res.data).filter(function(params) {
-            return params.workareaUser === worksearcher.oficio
+          let filtererFromHome = (res.data[0]).filter(function(params) {
+            return params.workArea === worksearcher.oficio
           })
-          setUsuarios(res.data)
+          setUsuarios(res.data[0])
           setUsuariosFiltered(filtererFromHome)
           setFiltered(true)
           setValueFromSearcher(worksearcher.oficio)
           setWorksearcher("")
+          setHiddenPymes(true); 
+          setHiddenIndependent(false)
         }else{
-          setUsuarios(res.data);
+          setUsuarios(res.data[0]);
         }
       });
-      Axios.get("54.174.104.208:3001/api/localidades").then((res)=>{
+      Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/localidades").then((res)=>{
             setLocalidades(res.data);
       });  
   },[worksearcher])
@@ -141,13 +206,13 @@ const Workers = () => {
             <div className="col-12 col-sm-8 col-lg-6">
               <div className="section_heading text-center wow fadeInUp" data-wow-delay="0.2s" style={{"visibility": "visible", "animationDelay": "0.2s", "animationName": "fadeInUp"}}>
                 <h3>Nuestra gran <span> Comunidad</span></h3>
-                <p>A continuación le mostraremos a nuestros trabajadores y sus servicios laborales.</p>
+                <p>A continuación le mostraremos a nuestros colaboradores y sus servicios laborales.</p>
               <div className="line"></div>
             </div>
           </div>
         </div>
         <Col className='d-flex justify-content-end mt-3 mb-3'>
-        <strong style={{fontSize:'16px', color: '#384451'}}>Filtrar{' '}</strong>
+        <strong style={{fontSize:'16px', color: '#384451'}}>Búsqueda avanzada{' '}</strong>
           <p onClick={handleShow} className="me-2" style={{color:'#5f738f'}}>
           <FaFilter cursor={'pointer'} size={26} />
           </p>
@@ -206,9 +271,9 @@ const Workers = () => {
                   </Form.Select>
                   <label htmlFor='comunne' className='form-label'>Comuna</label>
               </div>
-              <h6 className='mb-2'>Especialidad del trabajador</h6>
+              <h6 className='mb-2' hidden={hiddenIndependent}>Especialidad del trabajador</h6>
               <div>
-              <Form.Select id='area' name='area' defaultValue={filtered ? valueFromSearcher : '' || areaValue } onChange={(e) => setAreaValue(e.target.value)}>
+              <Form.Select id='area' name='area' hidden={hiddenIndependent} defaultValue={filtered ? valueFromSearcher : '' || areaValue } onChange={(e) => setAreaValue(e.target.value)}>
                   <option disabled selected value="">Seleccionar especialidad</option>
                   {
                       jobs.map((jobs,key) =>{
@@ -221,12 +286,58 @@ const Workers = () => {
                   }
                 </Form.Select>
               </div>
+              <h6 className='mb-2' hidden={hiddenPymes}>Actividad económica o Giro</h6>
+              <div>
+              <Form.Select id='giro' name='giro' hidden={hiddenPymes} defaultValue={'' || economicActivity } onChange={(e) => setEconomicActivity(e.target.value)}>
+                  <option disabled selected value="">Seleccionar actividad económica o giro</option>
+                  {
+                      economicActivities.map((activities,key) =>{
+                          return(
+                              <>
+                                  <option key={key} value={activities.name}>{activities.name}</option>
+                              </>
+                          )
+                      })
+                  }
+                </Form.Select>
+              </div>
               <div className="d-grid gap-2 mt-3">
                   <Button className="btn-filtrar px-4" size="sm" onClick={filterWorkers} >Buscar trabajador</Button>
                   <Button className="btn-clear px-4" size="sm" onClick={e => clearFilters()} >Limpiar búsqueda</Button>
               </div>
         </Offcanvas.Body>
       </Offcanvas>
+        <div>
+          <div className="row d-flex justify-content-center">
+            <div className="cardtipo col-lg-6 mb-3 mb-lg-0">
+              <div className="hover hover-1 text-white rounded" style={{cursor: 'pointer' }} onClick={() => {filterPymes(); setHiddenPymes(false); setHiddenIndependent(true)}}><img src={pyme} alt="" />
+                <div className="hover-overlay"></div>
+                <div className="hover-1-content" >
+                  <h3 className="hover-1-title text-uppercase font-weight-bold mb-0"> <span className="font-weight-light"></span>PYMES</h3>
+                  <p className="hover-1-description font-weight-light mb-0">Ver sólo pequeñas y medianas empresas.</p>
+                </div>
+              </div>
+            </div>
+            <div className="cardtipo col-lg-6 mb-3">
+              <div className="hover hover-1 text-white rounded" style={{cursor: 'pointer' }} onClick={() => {filterIndependent(); setHiddenPymes(true); setHiddenIndependent(false)}}><img src={worker} alt=""/>
+                <div className="hover-overlay"></div>
+                <div className="hover-1-content" >
+                  <h3 className="hover-1-title text-uppercase font-weight-bold mb-0"> <span className="font-weight-light"></span>Independientes</h3>
+                  <p className="hover-1-description font-weight-light mb-0">Ver trabajadores independientes.</p>
+                </div>
+              </div>
+            </div>
+            <div className="cardtipo col-lg-6 mb-3">
+              <div className="hover hover-1 text-white rounded" style={{cursor: 'pointer' }} onClick={() => {clearFilters(); setHiddenPymes(true); setHiddenIndependent(true)}}><img src={all} alt=""/>
+                <div className="hover-overlay"></div>
+                <div className="hover-1-content" >
+                  <h3 className="hover-1-title text-uppercase font-weight-bold mb-0"> <span className="font-weight-light"></span>Todo</h3>
+                  <p className="hover-1-description font-weight-light mb-0">Ver PYMES e independientes.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div className="row shadow-lg rounded-3 p-2">
         {
           filtered === true && usuariosFiltered.length === 0 ? 

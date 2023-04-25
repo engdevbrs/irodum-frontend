@@ -1,8 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import '../css/AccountType.css'
 
 const AccountType = () => {
+
+    useEffect(() =>{
+        document.getElementById("menuHolder").scrollIntoView();
+        }
+    )
+    
   return (
     <>
         <header className="py-5">

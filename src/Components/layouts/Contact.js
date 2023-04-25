@@ -4,6 +4,8 @@ import { Alert, Form } from 'react-bootstrap';
 
 const Contact = () => {
 
+    
+
     const [nombreValid, setNombreValid] = useState(false);
     const [cellphoneValid, setCellphoneValid] = useState(false);
     const [emailValid, setEmailValid] = useState(false);
@@ -28,7 +30,7 @@ const Contact = () => {
                 cell: document.getElementById('phone').value,
                 message: document.getElementById('message').value
             }
-            Axios.post('54.174.104.208:3001/api/contact-email',emailContactObject)
+            Axios.post('http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/contact-email',emailContactObject)
             .then((result) => {
                 if(result.status === 200){
                     setEmailNotSent(false)
@@ -120,7 +122,7 @@ const Contact = () => {
     }
 
     useEffect(() => {
-
+        document.getElementById("menuHolder").scrollIntoView();      
     },[]);
 
   return (

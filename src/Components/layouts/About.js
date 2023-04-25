@@ -1,20 +1,24 @@
-import React from 'react'
-import borisProfile from '../assets/boris-profile.jpeg'
-import fabianProfile from '../assets/fabian-profile.jpg'
+import React, { useEffect } from 'react'
 import meta from '../assets/meta.png'
 import fundation from '../assets/fundation.png'
 
 const About = () => {
-  return (
+
+    useEffect(() => {
+        document.getElementById("menuHolder").scrollIntoView();      
+
+    },[]);
+
+    return (
     <>
     <header className="py-5">
         <div className="container px-5">
             <div className="row justify-content-center">
                 <div className="col-lg-8 col-xxl-6">
                     <div className="text-center my-5">
-                        <h1 className="fw-bolder mb-3">Nuestra misión es brindar la posibilidad de encontrar y buscar trabajos de oficios</h1>
+                        <h1 className="fw-bolder mb-3">Nuestra misión es crear un marketplace de oficios y aumentar las oportunidades laborales.</h1>
                         <p className="fw-normal text-muted mb-4">"Crear una comunidad de trabajos cotidianos que ayuden a las personas a solucionar sus problemas con agilidad,
-                         proporcionando un valor añadido a través de altos conocimientos técnicos ofrecidos por nuestros colaboradores"</p>
+                            proporcionando un valor añadido a través de altos conocimientos técnicos ofrecidos por nuestros colaboradores"</p>
                         <a className="btn btn-primary btn-lg" href="#scroll-target">Leer nuestra historia</a>
                     </div>
                 </div>
@@ -49,7 +53,7 @@ const About = () => {
         </div>
     </section>
     </>
-  )
+    )
 }
 
 export default About

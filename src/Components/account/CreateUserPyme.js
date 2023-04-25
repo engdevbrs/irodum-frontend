@@ -8,10 +8,6 @@ import Col from 'react-bootstrap/Col';
 const CreateNewUserPyme = () => {
 
     const { userDataPyme, setUserDataPyme } = useStepperContextPyme();
-    const [disabledButton, setDisabledButton] = useState(true);
-
-    const TermsConditions = document.getElementById('nextButton');
-    TermsConditions.disabled = disabledButton;
 
     const [value1, setValue1] = useState("");
     const [value2, setValue2] = useState("");
@@ -19,21 +15,39 @@ const CreateNewUserPyme = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setUserDataPyme({ ...userDataPyme, [name]: value });
-
     };
 
-
     const handleChange1=(event)=>{
-        setValue1(event.target.value);
+        const valueAux1 = event.target.value
+        setValue1(valueAux1);
+        if(valueAux1.length >= "8" && valueAux1.match(/[A-Z]/) && valueAux1.match(/[0-9]/) &&
+        valueAux1.match(/[a-z]/) && valueAux1.match(/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/) && ((valueAux1 === value2) && (valueAux1 !==""))){
+            const TermsConditions = document.getElementById('nextButton');
+            TermsConditions.disabled = false;
+        }else{
+            const TermsConditions = document.getElementById('nextButton');
+            TermsConditions.disabled = true;
+        }
     }
     
     const handleChange2=(event)=>{
-        setValue2(event.target.value);
+        const valueAux2 = event.target.value
+        setValue2(valueAux2);
+        if(value1.length >= "8" && value1.match(/[A-Z]/) && value1.match(/[0-9]/) &&
+        value1.match(/[a-z]/) && value1.match(/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/) && ((value1 === valueAux2) && (value1 !==""))){
+            const TermsConditions = document.getElementById('nextButton');
+            TermsConditions.disabled = false;
+        }else{
+            const TermsConditions = document.getElementById('nextButton');
+            TermsConditions.disabled = true;
+        }
     }
    
     const handleSubmit = (event) =>{
-        if(value1.length >= "8" && value1.match(/[A-Z]/) && value1.match(/[0-9]/) &&
-        value1.match(/[a-z]/) && value1.match(/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/) && ((value1 === value2) && (value1 !==""))){     
+        const newValue1 = document.getElementById('pass').value;
+        const newValue2 = document.getElementById('confirmpass').value;
+        if(newValue1.length >= "8" && newValue1.match(/[A-Z]/) && newValue1.match(/[0-9]/) &&
+        newValue1.match(/[a-z]/) && newValue1.match(/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/) && ((newValue1 === newValue2) && (newValue1 !==""))){     
 
             Object.defineProperty(event, 'continue', {
                 value: true,
@@ -43,17 +57,17 @@ const CreateNewUserPyme = () => {
     }
 
     useEffect(() =>{
-        if(value1.length >= "8" && value1.match(/[A-Z]/) && value1.match(/[0-9]/) &&
-        value1.match(/[a-z]/) && value1.match(/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/) && ((value1 === value2) && (value1 !==""))){
-            setDisabledButton(false);
-        }else{
-            setDisabledButton(true);
-        }
+
+        document.getElementById("menuHolder").scrollIntoView();
+
+        const TermsConditions = document.getElementById('nextButton');
+        TermsConditions.disabled = true;
+
         document.addEventListener('handleEventPyme', handleSubmit);
         return () => {
             document.removeEventListener('handleEventPyme', handleSubmit);
         }
-    },[value1,value2,disabledButton]);
+    },[]);
 
     return (
         <>

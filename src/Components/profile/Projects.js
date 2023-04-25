@@ -1,26 +1,33 @@
 import React, { useEffect, useState } from 'react'
-import { Card, Col, Container, Row } from 'react-bootstrap'
+import { Card, Col, Container, Modal, Row } from 'react-bootstrap'
 import Axios  from 'axios'
 import '../css/Projects.css'
 import emptywork from '../assets/emptywork.png'
 
 const Projects = () => {
+
   const [ projectsData, setProjectsData ] = useState([])
+  const [imgfullscreen, setImgFullscreen] = useState(true);
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const getProjects = () => {
+
     const token = localStorage.getItem('accessToken');
-    Axios.get("54.174.104.208:3001/api/image/user-projects",{
+    Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/image/user-projects",{
         headers: {
             'authorization': `${token}`
             }
     })
-      .then((result) => {
-          if(result.status === 200){
-            setProjectsData(result.data)
-          }
-      }).catch(error => {
-            setProjectsData(error.response.status)
-      });
+    .then((result) => {
+        if(result.status === 200){
+          setProjectsData(result.data)
+        }
+    }).catch(error => {
+          setProjectsData(error.response.status)
+    });
+    
   }
 
   useEffect(() =>{
@@ -49,16 +56,16 @@ const Projects = () => {
                       <Col className='col-6 text-end'>{"El dia " + dateFormatted.toLocaleDateString()}</Col>
                   </Row> 
                 </Card.Header>
-                <img  src={'54.174.104.208:3001/' + value.imageName} 
-                    alt={'project'} style={{height: '200px'}}/>
+                <img src={'http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/' + value.imageName} 
+                    alt={'project'} style={{height: '200px',cursor: 'pointer'}} onClick={() =>{setImgFullscreen('http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/' + value.imageName); handleShow()}}/>
                 <Card.Body>
                     <Card.Title>Descripción del trabajo</Card.Title>
                     <Card.Text>{value.workResume}</Card.Text>
                 </Card.Body>
                 <Card.Footer style={{ color: 'rgb(226 226 226)', backgroundColor: '#202A34' , fontSize: '14px' }}>
                 <Row>
-                    <Col className='col-6 text-start'>Celular: {value.clientCell}</Col>
-                    <Col className='col-6 text-end'>{value.clientEmail !== "" ? "Email: " + value.clientEmail : ""}</Col>
+                    <Col className='col-12 text-start'>Celular: {value.clientCell}</Col>
+                    <Col className='col-12 text-start'>{value.clientEmail !== "" ? "Email: " + value.clientEmail : ""}</Col>
                 </Row>
                 </Card.Footer>
               </Card>
@@ -67,6 +74,11 @@ const Projects = () => {
         )
       })
     }
+    <Modal show={show} size="lg" onHide={handleClose} centered>
+          <Modal.Header closeButton>
+          </Modal.Header>
+          <img className='img-fluid' src={imgfullscreen} alt={imgfullscreen} />
+    </Modal>
     </Row>
      : <>
         <Card className='shadow rounded-0 d-flex align-items-center justify-content-center text-center' style={{height: '50vh'}}>
