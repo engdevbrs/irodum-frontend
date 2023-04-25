@@ -21,15 +21,16 @@ const Footer = () => {
                             <li><Link to={'/'} >Inicio</Link></li>
                             <li><Link to={'/trabajadores'} >Trabajadores</Link></li>
                             <li><Link to={'/crear-cuenta'} >Crear cuenta</Link></li>
-                            <li><Link to={'/login'} >Iniciar sesión</Link></li>
+                            <li><Link to={'/solicitud-recuperar-clave'} >Recuperar contraseña</Link></li>
                         </ul>
                     </div>
                     <div className="col-lg-4 col-md-4">
                         <h5 className="text-white mb-3">Ayuda</h5>
                         <ul className="list-unstyled text-muted">
-                            <li><Link to={'/preguntas-frecuentes'} href="/preguntas-frecuentes">Preguntas frecuentes</Link></li>
-                            <li><Link to={'/sobre-nosotros'} href="/sobre-nosotros">Sobre nosotros</Link></li>
-                            <li><Link to={'#'}>Términos y condiciones</Link></li>
+                            <li><Link to={'/preguntas-frecuentes'} >Preguntas frecuentes</Link></li>
+                            <li><Link to={'/sobre-nosotros'} >Sobre nosotros</Link></li>
+                            <li><Link to={'/contacto'}>Contáctanos</Link></li>
+                            <li><Link to={'/terminos-y-condiciones'}>Términos y condiciones</Link></li>
                             <li><Link to={'#'}>Comentarios</Link></li>
                         </ul>
                     </div>

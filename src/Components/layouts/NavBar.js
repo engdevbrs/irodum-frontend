@@ -89,7 +89,7 @@ const Menu = () =>{
     if(userData.token !== undefined || localStorage.getItem('accessToken')){
         const token = localStorage.getItem('accessToken');
         const ispyme = JSON.parse(localStorage.getItem('ispyme'));
-        Axios.post(ispyme ? "http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user-info-pyme" : "http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user-info", {
+        Axios.post(ispyme ? "http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user-info-pyme" : "http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user-info", {
             'authorization' : `${userData.token || token}`
         })
           .then((result) => {
@@ -97,7 +97,7 @@ const Menu = () =>{
                 setLoggedIn(true)
                 setphotoEmployed(result.data[0].photoEmployed)
                 setUserName(ispyme ? result.data[0].razonSocial : result.data[0].nameEmployed)
-                Axios.get("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user/user-requests/"+ result.data[0].idEmployed,{
+                Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user/user-requests/"+ result.data[0].idEmployed,{
                   headers: {
                       'authorization': `${token}`
                       }
@@ -133,7 +133,7 @@ const Menu = () =>{
 
   return (
       <>
-        <div id="menuHolder">
+        <div id="menuHolder" >
           <div role="navigation" id="mainNavigation">
             <div className="flexMain">
               <div className="col-lg-3 col-md-3 col-sm-3 col-3">
@@ -162,7 +162,7 @@ const Menu = () =>{
                     <div className="nav-link dropdown-toggle" id="navbarDropdown1" type="button" data-bs-toggle="dropdown"
                       aria-expanded="false" style={{color: 'grey'}}>
                       <img id="photoUser" src={(photoEmployed !== null && photoEmployed !== undefined && photoEmployed !== "" && photoEmployed.length > 0)  ? 
-                      'http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/images/'+ photoEmployed : perfil} className="rounded-circle" height="35" width="35"
+                      'http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/images/'+ photoEmployed : perfil} className="rounded-circle" height="35" width="35"
                         alt=""/>
                     </div>
                     <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown1">

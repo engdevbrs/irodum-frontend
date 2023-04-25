@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Card, Col, Container, Row } from 'react-bootstrap'
+import { Card, Col, Container, Modal, Row } from 'react-bootstrap'
 import Axios  from 'axios'
 import '../css/Projects.css'
 import emptyprojects from '../assets/emptyprojects.png'
@@ -9,10 +9,14 @@ const ViewClientProjects = ({id}) => {
   const [ projectsData, setProjectsData ] = useState([])
   const [ response, setResponse ] = useState([])
   const [ loading, setLoading ] = useState(true)
+  const [imgfullscreen, setImgFullscreen] = useState(true);
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   useEffect(() =>{
     setTimeout(() => {
-        Axios.get("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/image/view-projects/" + id)
+        Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/image/view-projects/" + id)
           .then((result) => {
               if(result.status === 200){
                 setResponse(result.status)
@@ -60,8 +64,8 @@ const ViewClientProjects = ({id}) => {
                         <Col className='col-12 text-start'>{"El dia " + dateFormatted.toLocaleDateString()}</Col>
                     </Row> 
                     </Card.Header>
-                    <img src={'http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/' + value.imageName} 
-                        alt={'project'} style={{height: '200px'}}/>
+                    <img src={'http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/' + value.imageName} 
+                        alt={'project'} style={{height: '200px',cursor: 'pointer'}} onClick={() =>{setImgFullscreen('http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/' + value.imageName); handleShow()}}/>
                     <Card.Body>
                         <Card.Title>Descripción del trabajo</Card.Title>
                         <Card.Text>{value.workResume}</Card.Text>
@@ -78,6 +82,11 @@ const ViewClientProjects = ({id}) => {
             )
         })
       }
+        <Modal show={show} size="lg" onHide={handleClose} centered>
+          <Modal.Header closeButton>
+          </Modal.Header>
+          <img className='img-fluid' src={imgfullscreen} alt={imgfullscreen} />
+        </Modal>
       </Row></>
       : 
       <div hidden={loading}>

@@ -53,7 +53,7 @@ const ToDoList = () => {
             denyButtonText: `Cancelar`,
             }).then((result) => {
                 if(result.isConfirmed){
-                    Axios.put("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user/request-confirm", requestConfirmObject , 
+                    Axios.put("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user/request-confirm", requestConfirmObject , 
                     {
                         headers: {
                         'authorization': `${token}`
@@ -89,7 +89,7 @@ const ToDoList = () => {
             denyButtonText: `Cancelar`,
             }).then((result) => {
                 if(result.isConfirmed){
-                    Axios.put("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user/request-reject", requestRejectObject , 
+                    Axios.put("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user/request-reject", requestRejectObject , 
                     {
                         headers: {
                         'authorization': `${token}`
@@ -115,7 +115,7 @@ const ToDoList = () => {
                 estado: 'pendiente',
                 actionbutton: 'wspbutton'
             }
-            Axios.put("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/update/agreement", wspContactObject, 
+            Axios.put("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/update/agreement", wspContactObject, 
             {
                 headers: {
                 'authorization': `${token}`
@@ -137,13 +137,13 @@ const ToDoList = () => {
                 estado: 'pendiente',
                 actionbutton: 'emailbutton',
                 message: txtarea,
-                nameWorker: userInfo.employedClass === "independiente" ? userInfo.nameUser : userInfo.razonSocial,
+                nameWorker: userInfo.employedClass === "independiente" ? userInfo.nameEmployed : userInfo.razonSocial,
                 emailWorker: modalData.emailEmployed,
                 nameClient: modalData.customerName,
                 emailClient: modalData.emailCustomer,
                 requestInfo: modalData.descripcionTrabajo
             }
-            Axios.put("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/update/agreement",emailContactObject, 
+            Axios.put("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/update/agreement",emailContactObject, 
             {
                 headers: {
                 'authorization': `${token}`
@@ -162,7 +162,7 @@ const ToDoList = () => {
     }
 
     const getProjects = (id) => {
-        Axios.get("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user/user-requests/"+ id)
+        Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user/user-requests/"+ id)
           .then((result) => {
               if(result.status === 200){
                 let notconfirmed = (result.data).filter(function(params) {
@@ -293,7 +293,7 @@ const ToDoList = () => {
 
     const getAccess = async (token) =>{
         const ispyme = JSON.parse(localStorage.getItem('ispyme'));
-        await Axios.post(ispyme ? "http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user-info-pyme" : "http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user-info",{
+        await Axios.post(ispyme ? "http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user-info-pyme" : "http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user-info",{
             'authorization' : `${token}`
         })
           .then((result) => {
@@ -576,7 +576,7 @@ const ToDoList = () => {
                                         return(
                                             <>
                                                 <tr key={key}>
-                                                    <td>{values.nombre+' '+values.apellidos}</td>
+                                                    <td>{values.customerName+' '+values.lastNameCustomer}</td>
                                                     <td>{values.rutCustomer}</td>
                                                     <td>{direccion}</td>
                                                     <td>{values.cellphoneCustomer}</td>
@@ -635,7 +635,7 @@ const ToDoList = () => {
                                         return(
                                             <>
                                                 <tr key={key}>
-                                                    <td>{values.nombre+' '+values.apellidos}</td>
+                                                    <td>{values.customerName+' '+values.lastNameCustomer}</td>
                                                     <td>{values.rutCustomer}</td>
                                                     <td>{direccion}</td>
                                                     <td>{values.cellphoneCustomer}</td>

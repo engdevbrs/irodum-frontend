@@ -6,7 +6,7 @@ import PersonalnformationPyme from "./PersonalnformationPyme";
 import StepperControlPyme from "./StepperControlPyme";
 import PymeProfile from "./PymeProfile";
 import CreateNewUserPyme from "./CreateUserPyme";
-import TermsConditions from "./TermsAndConditions";
+import TermsConditionsAccept from "./TermsConditionsAccept";
 import Confirm from "./Confirm";
 
 function CreateAccount() {
@@ -30,7 +30,7 @@ function CreateAccount() {
       case 2:
         return <CreateNewUserPyme />;
       case 3:
-        return <TermsConditions />;
+        return <TermsConditionsAccept />;
       case 4:
         return <Confirm />;
       default:

@@ -14,29 +14,30 @@ const Confirm = () => {
   const [ loadingrequest, setLoadingRequest] = useState(true); 
 
   const handleCreate =  async () => {
-      Axios.post("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/create-user", userData === "" || userData === undefined ? userDataPyme : userData)
+      Axios.post("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/create-user", userData === "" || userData === undefined ? userDataPyme : userData)
       .then((result) => {
           if(result.status === 200){
               setResult(result.status);
               setLoadingRequest(false);
-              Axios.post("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/welcomeMail", userData === "" || userData === undefined ? userDataPyme : userData)
+              Axios.post("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/welcomeMail", userData === "" || userData === undefined ? userDataPyme : userData)
               .then((response) => {
                 if(response.status === 200){
-                  console.log(response);
+                  setResult(response.status);
                 }
               }).catch(error => {
-                  console.log(error);
+                setResult(error.response.status);
               });
               clearTimeout();
           }
       }).catch(error => {
-          setResult(error.response);
+          setResult(error.response.status);
           setLoadingRequest(false);
           clearTimeout();
       });
   }
 
   useEffect(() =>{
+    document.getElementById("menuHolder").scrollIntoView();
     setTimeout(() => {
       handleCreate();
     }, 2500);

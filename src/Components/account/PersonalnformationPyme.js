@@ -267,7 +267,8 @@ const PersonalInformationPyme = () => {
     }
 
     useEffect(() => {
-        Axios.get("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/localidades").then((res)=>{
+        document.getElementById("menuHolder").scrollIntoView();
+        Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/localidades").then((res)=>{
             setLocalidades(res.data);
         });        
         document.addEventListener('handleEventPyme', handleSubmit);

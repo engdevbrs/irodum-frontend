@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, Form } from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import './Login.css';
@@ -20,7 +20,7 @@ const Login = () =>  {
 
     const submitForm = (e) =>{
         e.preventDefault();
-        Axios.post("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/login", {userName,userPass})
+        Axios.post("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/login", {userName,userPass})
           .then((result) => {
               if(result.status === 200){
                   localStorage.setItem("accessToken", result.data.accessToken);
@@ -38,6 +38,11 @@ const Login = () =>  {
                 setwarnCredentials(true)
           });
     }; 
+
+    useEffect(() => {
+        document.getElementById("menuHolder").scrollIntoView();      
+
+    },[]);
 
     return(
     <>

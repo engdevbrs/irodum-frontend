@@ -336,13 +336,13 @@ const ViewPymeProfile = () => {
 
             arrayValues.push(dataUser[0].email,dataUser[0].rutUser,dataUser[0].razonSocial,id)
 
-            Axios.post('http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/request-work',arrayValues)
+            Axios.post('http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/request-work',arrayValues)
             .then((result) => {
                 if(result.status === 200){
                     setResponseRequest(result.status)
                     setShowAlert(true)
                     clearForm()
-                    Axios.post('http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/requestEmail',arrayValues)
+                    Axios.post('http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/requestEmail',arrayValues)
                     .then((result) => {
                         if(result.status === 200){
                             console.log(result);
@@ -426,7 +426,7 @@ const ViewPymeProfile = () => {
                 }).then((result) => {
                     if(result.isConfirmed){
                         showProgress(false)
-                        Axios.post('http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/rating-worker',formFileMultiple, config)
+                        Axios.post('http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/rating-worker',formFileMultiple, config)
                         .then((result) => {
                             if(result.status === 200){
                                 Swal.fire({
@@ -442,7 +442,7 @@ const ViewPymeProfile = () => {
                                         handleCloseComment()
                                     }
                                 })
-                                Axios.get("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/worker/ratings/" + id)
+                                Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/worker/ratings/" + id)
                                 .then((result) => {
                                     if(result.status === 200){
                                         let sumaTotal = null
@@ -457,7 +457,7 @@ const ViewPymeProfile = () => {
                                         console.log(sumaTotal);
                                         setRatingScore(result.data)
                                         setCommentsWorker(result.data)
-                                        Axios.put("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/worker/update-rating/" +id, {rankingTotal: sumaTotal})
+                                        Axios.put("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/worker/update-rating/" +id, {rankingTotal: sumaTotal})
                                         .then((result) => {
                                             if(result.status === 200){
                                                 console.log("resultado: ",result.data);
@@ -817,7 +817,7 @@ const ViewPymeProfile = () => {
     }
     
     useEffect(() =>{
-        Axios.get("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/view/profile-pyme/" + id)
+        Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/view/profile-pyme/" + id)
         .then((result) => {
             if(result.status === 200){
                   setDataUser(result.data)
@@ -825,10 +825,10 @@ const ViewPymeProfile = () => {
         }).catch(error => {
               setResponse([])
       });
-        Axios.get("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/localidades").then((res)=>{
+        Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/localidades").then((res)=>{
             setLocalidades(res.data);
         }); 
-        Axios.get("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/worker/ratings/" + id)
+        Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/worker/ratings/" + id)
           .then((result) => {
               if(result.status === 200){
                 setRatingScore(result.data)
@@ -838,7 +838,7 @@ const ViewPymeProfile = () => {
             setResponse([])
         });
 
-        Axios.get("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/download/speciality/" + id)
+        Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/download/speciality/" + id)
         .then((result) => {
             if(result.status === 200){
                 setEspecialitiesWorker(result.data)

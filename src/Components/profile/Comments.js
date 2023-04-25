@@ -1,10 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Rating } from 'react-simple-star-rating'
-import { Card, Col, Container, Row } from 'react-bootstrap'
+import { Button, Card, Col, Container, Modal, Row } from 'react-bootstrap'
 import '../css/Comments.css'
 import comment from '../assets/comment.png'
 
 const Comments = ({data}) => {
+
+  const [imgfullscreen, setImgFullscreen] = useState(true);
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+
+
   return (
     <>
     <Container className={data.length > 0 ? '' : 'comments-container'}>
@@ -35,16 +43,15 @@ const Comments = ({data}) => {
                 <Row>
                     <p className='text-start p-2'><strong>Comentario: </strong>{value.workerComment}</p>
                     {
-                      comment.length > 0 ? <><p className='text-start p-2'><strong>Evidencias del trabajo</strong></p><hr/></> : <></>
+                      comment.length > 0 ? <><p className='text-start p-2'><strong>Evidencias del trabajo</strong></p></> : <></>
                     }
-                    
                 {
-                  comment.map(image =>{
+                  comment.map((image,idx) =>{
                     return(
                       <>
-                        <div className="col-lg-4 col-md-6 col-sm-12 mb-4 mb-lg-2">
-                        <img className='img-comment shadow rounded' src={'http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/' + image.originalname} 
-                              alt={'project'}/>
+                        <div className="col-lg-3 col-md-4 col-6">
+                          <img key={idx} className='img-fluid img-thumbnail' src={'http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/' + image.originalname} 
+                                alt={'project'} id={`${image.originalname}`} style={{cursor: 'pointer'}} onClick={() =>{setImgFullscreen('http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/' + image.originalname); handleShow()}}/>
                         </div>
                       </>
                     )
@@ -72,6 +79,11 @@ const Comments = ({data}) => {
             )
           })
         }
+        <Modal show={show} size="lg" onHide={handleClose} centered>
+          <Modal.Header closeButton>
+          </Modal.Header>
+          <img className='img-fluid' src={imgfullscreen} alt={imgfullscreen} />
+        </Modal>
         </Row>
         </> : 
         <>

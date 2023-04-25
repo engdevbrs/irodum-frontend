@@ -106,12 +106,13 @@ const WorkProfile = () => {
         }
     }
 
-    useEffect(() => {      
+    useEffect(() => {  
+        document.getElementById("menuHolder").scrollIntoView();    
         document.addEventListener('handleEvent', handleSubmit);
         return () => {
             document.removeEventListener('handleEvent', handleSubmit);
         }
-    },[switchCharge]);
+    },[]);
     
     return (
         <>

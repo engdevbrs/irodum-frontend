@@ -101,7 +101,7 @@ const Workers = () => {
 
   const  clearFilters = () => {
     if(worksearcher !== ''){
-      Axios.get("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/usuarios").then((res)=>{
+      Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/usuarios").then((res)=>{
         setFiltered(false)
         setUsuarios(res.data[0])
         setWorksearcher("")
@@ -135,6 +135,7 @@ const Workers = () => {
     })
     setUsuariosFiltered(filteredByIndependent)
     setFiltered(true)
+    setValueFromSearcher([])
     console.log(filteredByIndependent);
   }
 
@@ -163,7 +164,8 @@ const Workers = () => {
   }
   
   useEffect(() => {
-      Axios.get("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/usuarios").then((res)=>{
+      document.getElementById("menuHolder").scrollIntoView();
+      Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/usuarios").then((res)=>{
         if(worksearcher !== ''){
           let filtererFromHome = (res.data[0]).filter(function(params) {
             return params.workArea === worksearcher.oficio
@@ -179,7 +181,7 @@ const Workers = () => {
           setUsuarios(res.data[0]);
         }
       });
-      Axios.get("http://http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/localidades").then((res)=>{
+      Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/localidades").then((res)=>{
             setLocalidades(res.data);
       });  
   },[worksearcher])
@@ -204,7 +206,7 @@ const Workers = () => {
             <div className="col-12 col-sm-8 col-lg-6">
               <div className="section_heading text-center wow fadeInUp" data-wow-delay="0.2s" style={{"visibility": "visible", "animationDelay": "0.2s", "animationName": "fadeInUp"}}>
                 <h3>Nuestra gran <span> Comunidad</span></h3>
-                <p>A continuación le mostraremos a nuestros trabajadores y sus servicios laborales.</p>
+                <p>A continuación le mostraremos a nuestros colaboradores y sus servicios laborales.</p>
               <div className="line"></div>
             </div>
           </div>

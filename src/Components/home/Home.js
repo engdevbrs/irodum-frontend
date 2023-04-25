@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import '../css/Home.css';
 import slide1 from '../assets/slide1.jpg';
 import slide2 from '../assets/slide2.jpeg';
@@ -19,6 +19,10 @@ import { Link } from 'react-router-dom';
 import Categories from './Categories';
 
 const Home = () => {
+  useEffect(() =>{
+      document.getElementById("menuHolder").scrollIntoView();
+    }
+  )
 
   return (
     <>

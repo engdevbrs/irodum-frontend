@@ -21,6 +21,7 @@ import RecoverPassword from './Components/login/RequestPassword';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PymeWorkers from './Components/workers/PymeWorkers';
 import ViewByTypeEmployed from './Components/profile/ViewByTypeEmployed';
+import TermsAndConditions from './Components/layouts/TermsAndConditions';
 
 const App = () => {
     return (
@@ -45,6 +46,7 @@ const App = () => {
                     <Route path='mis-proyectos' element= { <UserProjects /> } />
                     <Route path='mis-solicitudes' element= { <ToDoList /> } />
                     <Route path='contacto' element= { <Contact /> } />
+                    <Route path='terminos-y-condiciones' element= { <TermsAndConditions /> } />
                     <Route path='*' element={ <Navigate replace to = "/"/> } />
                 </Route>
             </Routes>
