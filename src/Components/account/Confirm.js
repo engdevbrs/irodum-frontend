@@ -3,7 +3,7 @@ import Axios from 'axios'
 import '../css/CreateUser.css';
 import finalcheck from '../assets/final-check.png'
 import finalerror from '../assets/final-error.png'
-import loadingrequestgf from '../assets/loading-request.gif'
+import loadingrequestgf from '../assets/loading-request.svg'
 import { useStepperContext } from '../contexts/StepperContext';
 import { useStepperContextPyme } from '../contexts/StepperContextPyme.js'
 
@@ -14,12 +14,12 @@ const Confirm = () => {
   const [ loadingrequest, setLoadingRequest] = useState(true); 
 
   const handleCreate =  async () => {
-      Axios.post("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/create-user", userData === "" || userData === undefined ? userDataPyme : userData)
+      Axios.post("http://54.174.104.208:3001/api/create-user", userData === "" || userData === undefined ? userDataPyme : userData)
       .then((result) => {
           if(result.status === 200){
               setResult(result.status);
               setLoadingRequest(false);
-              Axios.post("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/welcomeMail", userData === "" || userData === undefined ? userDataPyme : userData)
+              Axios.post("http://54.174.104.208:3001/api/welcomeMail", userData === "" || userData === undefined ? userDataPyme : userData)
               .then((response) => {
                 if(response.status === 200){
                   setResult(response.status);

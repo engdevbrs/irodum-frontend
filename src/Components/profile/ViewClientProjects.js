@@ -3,7 +3,7 @@ import { Card, Col, Container, Modal, Row } from 'react-bootstrap'
 import Axios  from 'axios'
 import '../css/Projects.css'
 import emptyprojects from '../assets/emptyprojects.png'
-import workersprojects from '../assets/workers-projects.gif'
+import workersprojects from '../assets/loading-profile-projects.svg'
 
 const ViewClientProjects = ({id}) => {
   const [ projectsData, setProjectsData ] = useState([])
@@ -16,7 +16,7 @@ const ViewClientProjects = ({id}) => {
 
   useEffect(() =>{
     setTimeout(() => {
-        Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/image/view-projects/" + id)
+        Axios.get("http://54.174.104.208:3001/api/image/view-projects/" + id)
           .then((result) => {
               if(result.status === 200){
                 setResponse(result.status)
@@ -64,15 +64,14 @@ const ViewClientProjects = ({id}) => {
                         <Col className='col-12 text-start'>{"El dia " + dateFormatted.toLocaleDateString()}</Col>
                     </Row> 
                     </Card.Header>
-                    <img src={'http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/' + value.imageName} 
-                        alt={'project'} style={{height: '200px',cursor: 'pointer'}} onClick={() =>{setImgFullscreen('http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/' + value.imageName); handleShow()}}/>
+                    <img src={'http://54.174.104.208:3001/' + value.imageName} 
+                        alt={'project'} style={{height: '200px',cursor: 'pointer'}} onClick={() =>{setImgFullscreen('http://54.174.104.208:3001/' + value.imageName); handleShow()}}/>
                     <Card.Body>
                         <Card.Title>Descripción del trabajo</Card.Title>
                         <Card.Text>{value.workResume}</Card.Text>
                     </Card.Body>
                     <Card.Footer style={{ color: 'rgb(226 226 226)', backgroundColor: '#202A34', fontSize: '14px' }}>
                     <Row>
-                        <Col className='col-12 text-start'>Celular del cliente: {value.clientCell}</Col>
                         <Col className='col-12 text-start'>{value.clientEmail !== "" ? "Email del cliente: " + value.clientEmail : ""}</Col>
                     </Row>
                     </Card.Footer>

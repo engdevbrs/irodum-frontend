@@ -27,7 +27,7 @@ const Specialities = ({data,id}) => {
             denyButtonText: `Cancelar`,
           }).then((result) => {
             if (result.isConfirmed) {
-                Axios.delete("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/delete-especiality" + especialityToDelete,
+                Axios.delete("http://54.174.104.208:3001/api/delete-especiality" + especialityToDelete,
                 {
                     headers: {
                     'authorization': `${token}`
@@ -44,7 +44,7 @@ const Specialities = ({data,id}) => {
                         confirmButtonText: 'Aceptar'
                       }).then((result) => {
                         if(result.isConfirmed){
-                            Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/download/speciality/" + id,
+                            Axios.get("http://54.174.104.208:3001/api/download/speciality/" + id,
                                 { headers: {
                                     'Content-Type': 'multipart/form-data;',
                                     'Authorization': `${token}`
@@ -103,7 +103,7 @@ const Specialities = ({data,id}) => {
                     return(
                         <>
                             <td >{values.descript}</td>
-                            <td ><a href={"http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/" + values.image.originalname} 
+                            <td ><a href={"http://54.174.104.208:3001/" + values.image.originalname} 
                             target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }} >{values.image.originalname}</a></td>
                             <td className="text-center">
                                 <i id={values.idEspeciality} className='fas fa-trash-alt' onClick={(e) => deleteEspeciality(e)} 

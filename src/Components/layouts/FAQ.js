@@ -16,7 +16,7 @@ const FAQ = () => {
                 <div className="container px-5 my-5">
                     <div className="text-center mb-5">
                         <h1 className="fw-bolder">Preguntas frecuentes</h1>
-                        <p className="lead fw-normal text-muted mb-0" style={{color: '#5f738f'}}>Cómo podemos ayudarte?</p>
+                        <p className="lead fw-normal text-muted mb-0" style={{color: '#5f738f'}}>¿Cómo podemos ayudarte?</p>
                     </div>
                     <div className="row gx-5">
                         <div className="col-xl-8">
@@ -54,8 +54,7 @@ const FAQ = () => {
                                                 calificaciones en el caso de que haya sido calificado, comentarios, rating y si el trabajador ha subido 
                                                 proyectos realizados también podrás visualizarlos.
                                                 <br/>
-                                                Te recomendamos siempre validar los datos dispuestos en los perfiles de trabajadores, ver la puntuación y comentarios 
-                                                disponibles.
+                                                Te recomendamos siempre validar los datos dispuestos en los perfiles de trabajadores.
                                             </p>
                                         </div>
                                     </div>

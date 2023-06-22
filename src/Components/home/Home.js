@@ -26,12 +26,12 @@ const Home = () => {
 
   return (
     <>
-      <header className="bg-dark py-5">
+      <header className="mainpage py-5">
           <Container className="px-5">
               <Row className="gx-5 align-items-center justify-content-center">
                 <Col className="col-lg-8 col-xl-7 col-xxl-6">
                     <div className="my-5 text-center text-xl-start">
-                        <h1 className="display-5 fw-bolder text-white mb-2">Una nueva forma de encontar oportunidades</h1>
+                        <h1 className="display-5 fw-bolder text-white mb-2">Una nueva forma de encontrar oportunidades</h1>
                         <p className="lead fw-normal text-white-50 mb-4">Registro rápido y sencillo, crea tu perfil de trabajador y presenta a la comunidad tus habilidades de manera gratuita!</p>
                         <div className="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
                             <Link to={'/crear-cuenta'} className="btn btn-primary btn-lg px-4 me-sm-3">Comenzar</Link>
@@ -59,14 +59,13 @@ const Home = () => {
         <Row lg={2} className='information row row-cols-1 row-cols-md-2 g-4'>
         <Col>
         <h2 className="our-fundation fw-bolder mt-2" style={{color: '#5f738f'}}>Irodum.com</h2>
-        <p className="fw-normal text-muted"><strong>E</strong>s una plataforma que tiene por objetivo crear una comunidad
-              con personas que ofrezcan sus conocimientos técnicos sobre un oficio en particular, para que usuarios de cualquier parte de Chile puedan
-              acceder a su perfil laboral, la cuál tendrá una serie de información útil para el futuro cliente, esta será de ayuda
-              para que cuando las personas requieran de una asistencia tengan una idea de con quién está tratando y a quién le está solicitando los servicios.
-                    </p>
+        <p className="fw-normal text-muted"><strong>E</strong>s una aplicación web que tiene por objetivo crear una comunidad
+              con trabajadores que ofrezcan sus conocimientos técnicos sobre un oficio en particular, por ejemplo: Carpintero, soldador, pintor, etc. 
+             <br/> Puesto que irodum es una plataforma nacional, tu cliente podrá tomar contacto contigo desde cualquier parte de Chile,
+              lo que conlleva a que los colaboradores tengan un alcance más amplio y su cartera de clientes aumente.</p>
         </Col>
         <Col className="information-card">
-          <img src={working} alt="..." style={{width: '20rem'}}/>
+          <img src={working} alt="..." style={{width: '15rem'}}/>
         </Col>
         </Row>
       </Container>
@@ -92,7 +91,7 @@ const Home = () => {
                           <ul className='fw-normal text-muted' style={{ listStyle: "none", padding: '0px' }}>
                             <li>Visibilidad a nivel nacional.</li>
                             <li>Aumento de tus ingresos.</li>
-                            <li>Ayudar a las personas con tus trabajos.</li>
+                            <li>Solucionar problemas a tus clientes.</li>
                             <li>Hacer crecer tu experiencia laboral.</li>
                           </ul>
                       </div>
@@ -100,7 +99,7 @@ const Home = () => {
                           <div className="feature bg-gradient text-white rounded-3 mb-3"><img src={vidalaboral} alt="" width={64}/></div>
                           <h2 className="h5" style={{color: '#202A34'}}>Estabilidad</h2>
                           <p className="fw-normal text-muted">Probabilidades de ser contactado por empresas que requieran tus servicios,
-                          y en lo posible ser contratado.</p>
+                          y en lo posible ser contratado de forma permanente.</p>
                       </div>
                       <div className="col h-100">
                           <div className="feature bg-gradient text-white rounded-3 mb-3"><img src={curriculum} alt="" width={64}/></div>
@@ -118,13 +117,14 @@ const Home = () => {
         </div>
       </Container>
       <Container className="mt-4">
+        <div className="col-lg-4 mb-5 mb-lg-0"><h2 className="fw-bolder mb-0" style={{color: '#5f738f'}}>Nuestro objetivo</h2></div>
         <Row xs={1} className='mb-5'>
         <Col className='col-lg-4 col-md-6 col-sm-12 mt-3'>
           <Card className="card-features shadow h-100 p-3">
           <Card.Img variant="top" src={ tools } alt="..." style={{width: '64px'}}/>
             <Card.Body>
             <Card.Title style={{color: '#202A34'}}>Variedad de servicios</Card.Title>
-              <Card.Text className='fw-normal text-muted'>Nuestro objetivo es poseer una gran variedad de oficios y trabajadores, la cuál solvente la necesidad temporal del cliente.
+              <Card.Text className='fw-normal text-muted'>Poseer una gran variedad de oficios, la cuales solventen las necesidades actuales de los clientes.
               </Card.Text>
             </Card.Body>
             <Card.Body >
@@ -136,8 +136,8 @@ const Home = () => {
             <Card.Img variant="top" src={ worker } alt="..." style={{width: '64px'}}/>
             <Card.Body>
             <Card.Title style={{color: '#202A34'}}>Fácil comunicación</Card.Title>
-              <Card.Text className='fw-normal text-muted'>Encontrar trabajadores independientes que cumplan un oficio en particular desde cualquier parte de Chile,
-              con el fin de tomar contacto de forma sencilla y rápida.
+              <Card.Text className='fw-normal text-muted'>Generar un medio de comunicación rápido y sencillo entre el cliente y el trabajador, sin intermediarios, 
+              con el fin de agilizar la solución a la necesidad presente del cliente.
               </Card.Text>
             </Card.Body>
           </Card>

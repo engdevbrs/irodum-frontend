@@ -50,8 +50,8 @@ const Comments = ({data}) => {
                     return(
                       <>
                         <div className="col-lg-3 col-md-4 col-6">
-                          <img key={idx} className='img-fluid img-thumbnail' src={'http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/' + image.originalname} 
-                                alt={'project'} id={`${image.originalname}`} style={{cursor: 'pointer'}} onClick={() =>{setImgFullscreen('http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/' + image.originalname); handleShow()}}/>
+                          <img key={idx} className='img-fluid img-thumbnail' src={'http://54.174.104.208:3001/' + image.originalname} 
+                                alt={'project'} id={`${image.originalname}`} style={{cursor: 'pointer'}} onClick={() =>{setImgFullscreen('http://54.174.104.208:3001/' + image.originalname); handleShow()}}/>
                         </div>
                       </>
                     )

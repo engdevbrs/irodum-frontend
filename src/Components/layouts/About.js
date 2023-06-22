@@ -30,11 +30,10 @@ const About = () => {
             <div className="row gx-5 align-items-center">
                 <div className="col-lg-6 text-center"><img id='scroll-target' className="img-fluid rounded mb-5 mb-lg-0" src={fundation} style={{width: '18rem'}} alt="..."/></div>
                 <div className="col-lg-6">
-                    <h2 className="our-fundation fw-bolder">Nuestra Aplicación</h2>
+                    <h2 className="our-fundation fw-bolder">Sobre nuestra Aplicación</h2>
                     <p className="fw-normal text-muted mb-0">Nuestra idea nace en tiempos de pandemia, luego de que gran cantidad de personas quedaran sin trabajo.
-                    Muchos nos vimos en la necesidad de buscar una fuente de ingreso alternativa para solventar nuestras necesidades económicas, que, en ocasiones
-                    no se pudo lograr por la falta de oportunidades. De esta necesidad nace <strong>Irodum</strong>, para darles a todas aquellas personas la oportunidad
-                    de pertenecer a una comunidad de trabajadores, que sean buscados y contactados por diferentes clientes.
+                    Muchos nos vimos en la necesidad de buscar una fuente de ingreso alternativa para solventar nuestras necesidades económicas. De esta necesidad nace <strong>Irodum</strong>, para darles a todas aquellas personas la posibilidad
+                    de pertenecer a una comunidad de trabajadores con el fin de brindarles el espacio y oportunidades necesarias para lograr una vida fructífera.
                     </p>
                 </div>
             </div>
@@ -45,9 +44,9 @@ const About = () => {
             <div className="row gx-5 align-items-center">
                 <div className="col-lg-6 order-first order-lg-last text-center"><img className="img-fluid rounded mb-5 mb-lg-0" src={meta} style={{width: '15rem'}} alt="..."/></div>
                 <div className="col-lg-6">
-                    <h2 className="fw-bolder">Nuestro Objetivo</h2>
-                    <p className="fw-normal text-muted mb-0">El propósito de esta herramienta es crear una posibilidad extra para las personas y que les permita
-                    tener una visibilidad y alcance a una gran cantidad de personas que requieran de sus servicios y habilidades.</p>
+                    <h2 className="fw-bolder">Nuestra misión</h2>
+                    <p className="fw-normal text-muted mb-0">El propósito de esta herramienta es crear una posibilidad extra de trabajo para las personas, que les permita
+                    expandir su cartera de clientes ya sea a nivel comunal, como también nacional.</p>
                 </div>
             </div>
         </div>

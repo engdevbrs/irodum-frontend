@@ -12,7 +12,7 @@ import web from '../assets/web.png'
 import instagram from '../assets/instagram.png'
 import facebook from '../assets/facebook.png'
 import accesDenied from '../assets/access-denied.png'
-import loadingprofilegf from '../assets/loading-profile.gif'
+import loadingprofilegf from '../assets/loading-profile.svg'
 import perfil from '../assets/perfil.png'
 import uploadPhoto from '../assets/upload-photo.png'
 import Projects from './Projects'
@@ -60,7 +60,7 @@ const Profile = () => {
             }).then((result) => {
                 if(result.isConfirmed){
                     showProgress(false)
-                    Axios.put("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/images",
+                    Axios.put("http://54.174.104.208:3001/api/images",
                     formData,
                     {
                         headers: {
@@ -80,7 +80,7 @@ const Profile = () => {
                             Swal.fire('Su foto ha sido actualizada con éxito!', '', 'success')
                             showProgress(true)
                             getAccess(token)
-                            document.getElementById('photoUser').src = "http://ec2-54-174-104-208.compute-1.amazonaws.com:3001" + result.data.imagePath
+                            document.getElementById('photoUser').src = "http://54.174.104.208:3001" + result.data.imagePath
                         }
                     }).catch(error => {
                         Swal.fire('No pudimos cambiar tu foto de perfil', '', 'warning')
@@ -119,7 +119,7 @@ const Profile = () => {
             }).then((result) => {
                 if(result.isConfirmed){
                     showProgressSpec(false)
-                    Axios.post('http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/upload/speciality/'+ dataUser[0].idEmployed,specialityFormFile, config)
+                    Axios.post('http://54.174.104.208:3001/api/upload/speciality/'+ dataUser[0].idEmployed,specialityFormFile, config)
                     .then((result) => {
                         if(result.status === 200){
                             Swal.fire({
@@ -136,7 +136,7 @@ const Profile = () => {
                                     handleCloseSpeciality()
                                 }
                             })
-                            Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/download/speciality/" + dataUser[0].idEmployed)
+                            Axios.get("http://54.174.104.208:3001/api/download/speciality/" + dataUser[0].idEmployed)
                                 .then((result) => {
                                     if(result.status === 200){
                                         setEspecialitiesWorker(result.data)
@@ -170,7 +170,7 @@ const Profile = () => {
     };
 
     const deletePrevphotoEmployed = () =>{
-        Axios.delete('http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/images/delete/' + getPhoto)
+        Axios.delete('http://54.174.104.208:3001/api/images/delete/' + getPhoto)
           .then((result) => {
               if(result.status === 200){
                 console.log(result);
@@ -202,7 +202,7 @@ const Profile = () => {
                 denyButtonText: `Cancelar`,
               }).then((result) => {
                 if (result.isConfirmed) {
-                    Axios.put("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/update-user", {newArrayValues ,'authorization' : `${token}`})
+                    Axios.put("http://54.174.104.208:3001/api/update-user", {newArrayValues ,'authorization' : `${token}`})
                     .then((result) => {
                         if(result.status === 200){
                             Swal.fire({
@@ -236,16 +236,16 @@ const Profile = () => {
     }
 
     const getAccess = (token) =>{
-        Axios.post("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user-info", {
+        Axios.post("http://54.174.104.208:3001/api/user-info", {
             'authorization' : `${token}`
         })
           .then((result) => {
               if(result.status === 200){
                     setResponse(result.status)
                     setDataUser(result.data)
-                    localStorage.setItem('photoEmployed', "http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/images/" + result.data[0].photoEmployed)
+                    localStorage.setItem('photoEmployed', "http://54.174.104.208:3001/api/images/" + result.data[0].photoEmployed)
                     setGetPhoto(result.data[0].photoEmployed)
-                    Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/worker/ratings/" + result.data[0].idEmployed)
+                    Axios.get("http://54.174.104.208:3001/api/worker/ratings/" + result.data[0].idEmployed)
                         .then((result) => {
                             if(result.status === 200){
                                 setRatingScore(result.data)
@@ -255,7 +255,7 @@ const Profile = () => {
                             setRatingScore([])
                             setCommentsWorker([])
                         });
-                    Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/download/speciality/" + result.data[0].idEmployed)
+                    Axios.get("http://54.174.104.208:3001/api/download/speciality/" + result.data[0].idEmployed)
                         .then((result) => {
                             if(result.status === 200){
                                 setEspecialitiesWorker(result.data)

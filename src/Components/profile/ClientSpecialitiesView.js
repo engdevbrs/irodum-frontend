@@ -14,7 +14,7 @@ const SpecialitiesClient = ({data}) => {
                                 <span className='text-muted'>{values.descript}</span>
                             </Col>
                             <Col sm={6} xs={6}>
-                                <p className="text-muted text-center mb-2"><a href={"http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/" + values.image.originalname} 
+                                <p className="text-muted text-center mb-2"><a href={"http://54.174.104.208:3001/" + values.image.originalname} 
                                 target="_blank" rel="noreferrer" style={{ color: 'blue' }} >Ver certificación</a></p>
                             </Col>
                             </Row>

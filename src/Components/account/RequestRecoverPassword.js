@@ -35,7 +35,7 @@ const RequestRecoverPassword = () => {
     }
 
     const recoverPass = (mailValue) =>{
-        Axios.post("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/recover-password", {mailValue})
+        Axios.post("http://54.174.104.208:3001/api/recover-password", {mailValue})
           .then((result) => {
               if(result.status === 200){
                 setUserValid(true)
@@ -64,8 +64,8 @@ const RequestRecoverPassword = () => {
                 <Card.Body>
                     <Card.Title className='text-center'>¿Olvidaste tu contraseña?</Card.Title>
                     <Card.Text className='text-center'>
-                        Está bien, ésto pasa! <br/> Ingresa tu email con el cual te registraste y 
-                        luego haz click en el botón de abajo para recuperar tu contraseña.
+                        Está bien, ésto pasa!. <br/> Ingresa el email con el cual te registraste y 
+                        luego haz click en el botón <strong>Recuperar contraseña</strong> para continuar con el proceso de recuperación.
                     </Card.Text>
                     <div className='form-floating mb-3'>
                         <input type="email" className='form-control' id='clientEmail' name='clientEmail' placeholder='correo@gmail.com'

@@ -20,7 +20,7 @@ const Login = () =>  {
 
     const submitForm = (e) =>{
         e.preventDefault();
-        Axios.post("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/login", {userName,userPass})
+        Axios.post("http://54.174.104.208:3001/api/login", {userName,userPass})
           .then((result) => {
               if(result.status === 200){
                   localStorage.setItem("accessToken", result.data.accessToken);

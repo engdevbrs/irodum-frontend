@@ -5,7 +5,7 @@ import withReactContent from 'sweetalert2-react-content'
 import Axios  from 'axios'
 import { Link } from 'react-router-dom'
 import accesDenied from '../assets/access-denied.png'
-import loadingprofilegf from '../assets/loading-profile-requests.gif'
+import loadingprofilegf from '../assets/loading-profile-requests.svg'
 import norequests from '../assets/no-requests.png'
 import norequestsconfirmeds from '../assets/no-requests-confirmeds.png'
 import whatsapp from '../assets/whatsapp.png'
@@ -53,7 +53,7 @@ const ToDoList = () => {
             denyButtonText: `Cancelar`,
             }).then((result) => {
                 if(result.isConfirmed){
-                    Axios.put("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user/request-confirm", requestConfirmObject , 
+                    Axios.put("http://54.174.104.208:3001/api/user/request-confirm", requestConfirmObject , 
                     {
                         headers: {
                         'authorization': `${token}`
@@ -89,7 +89,7 @@ const ToDoList = () => {
             denyButtonText: `Cancelar`,
             }).then((result) => {
                 if(result.isConfirmed){
-                    Axios.put("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user/request-reject", requestRejectObject , 
+                    Axios.put("http://54.174.104.208:3001/api/user/request-reject", requestRejectObject , 
                     {
                         headers: {
                         'authorization': `${token}`
@@ -115,7 +115,7 @@ const ToDoList = () => {
                 estado: 'pendiente',
                 actionbutton: 'wspbutton'
             }
-            Axios.put("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/update/agreement", wspContactObject, 
+            Axios.put("http://54.174.104.208:3001/api/update/agreement", wspContactObject, 
             {
                 headers: {
                 'authorization': `${token}`
@@ -143,7 +143,7 @@ const ToDoList = () => {
                 emailClient: modalData.emailCustomer,
                 requestInfo: modalData.descripcionTrabajo
             }
-            Axios.put("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/update/agreement",emailContactObject, 
+            Axios.put("http://54.174.104.208:3001/api/update/agreement",emailContactObject, 
             {
                 headers: {
                 'authorization': `${token}`
@@ -162,7 +162,7 @@ const ToDoList = () => {
     }
 
     const getProjects = (id) => {
-        Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user/user-requests/"+ id)
+        Axios.get("http://54.174.104.208:3001/api/user/user-requests/"+ id)
           .then((result) => {
               if(result.status === 200){
                 let notconfirmed = (result.data).filter(function(params) {
@@ -293,7 +293,7 @@ const ToDoList = () => {
 
     const getAccess = async (token) =>{
         const ispyme = JSON.parse(localStorage.getItem('ispyme'));
-        await Axios.post(ispyme ? "http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user-info-pyme" : "http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/user-info",{
+        await Axios.post(ispyme ? "http://54.174.104.208:3001/api/user-info-pyme" : "http://54.174.104.208:3001/api/user-info",{
             'authorization' : `${token}`
         })
           .then((result) => {
@@ -489,12 +489,12 @@ const ToDoList = () => {
                                         let direccion = null
                                         if(values.calle !== ''){
                                             if(values.pasaje !== ''){
-                                                direccion = values.calle+' '+values.NumeroCasa+', Pasaje '+values.pasaje+', '+values.communeEmployed
+                                                direccion = values.calle+' '+values.NumeroCasa+', Pasaje '+values.pasaje+', '+values.comuna
                                             }else{
-                                                direccion = values.calle+' '+values.NumeroCasa+','+values.communeEmployed
+                                                direccion = values.calle+' '+values.NumeroCasa+','+values.comuna
                                             }
                                         }else{
-                                            direccion = values.dptoDirec+', Piso '+values.NumeroPiso+', Departamento '+values.NumeroDepto+', '+values.communeEmployed
+                                            direccion = values.dptoDirec+', Piso '+values.NumeroPiso+', Departamento '+values.NumeroDepto+', '+values.comuna
                                         }
                                         return(
                                             <>
@@ -566,12 +566,12 @@ const ToDoList = () => {
                                         let direccion = null
                                         if(values.calle !== ''){
                                             if(values.pasaje !== ''){
-                                                direccion = values.calle+' '+values.NumeroCasa+', Pasaje '+values.pasaje+', '+values.communeEmployed
+                                                direccion = values.calle+' '+values.NumeroCasa+', Pasaje '+values.pasaje+', '+values.comuna
                                             }else{
-                                                direccion = values.calle+' '+values.NumeroCasa+','+values.communeEmployed
+                                                direccion = values.calle+' '+values.NumeroCasa+','+values.comuna
                                             }
                                         }else{
-                                            direccion = values.dptoDirec+', Piso '+values.NumeroPiso+', Departamento '+values.NumeroDepto+', '+values.communeEmployed
+                                            direccion = values.dptoDirec+', Piso '+values.NumeroPiso+', Departamento '+values.NumeroDepto+', '+values.comuna
                                         }
                                         return(
                                             <>
@@ -625,12 +625,12 @@ const ToDoList = () => {
                                         let direccion = null
                                         if(values.calle !== ''){
                                             if(values.pasaje !== ''){
-                                                direccion = values.calle+' '+values.NumeroCasa+', Pasaje '+values.pasaje+', '+values.communeEmployed
+                                                direccion = values.calle+' '+values.NumeroCasa+', Pasaje '+values.pasaje+', '+values.comuna
                                             }else{
-                                                direccion = values.calle+' '+values.NumeroCasa+','+values.communeEmployed
+                                                direccion = values.calle+' '+values.NumeroCasa+','+values.comuna
                                             }
                                         }else{
-                                            direccion = values.dptoDirec+', Piso '+values.NumeroPiso+', Departamento '+values.NumeroDepto+', '+values.communeEmployed
+                                            direccion = values.dptoDirec+', Piso '+values.NumeroPiso+', Departamento '+values.NumeroDepto+', '+values.comuna
                                         }
                                         return(
                                             <>
@@ -688,7 +688,7 @@ const ToDoList = () => {
         <div id='denied' className="container mt-5 mb-5" hidden={!loading}>
             <div className="denied" style={{height: '60vh'}}>
                 <div className="wrapper text-center">
-                    <img src={loadingprofilegf} alt="imagen de confirmación" style={{width: '15rem'}}/>
+                    <img src={loadingprofilegf} alt="imagen de confirmación" style={{width: '8rem'}}/>
                 </div>
                     <div className="success-account mb-3">
                     Obteniendo sus solicitudes...

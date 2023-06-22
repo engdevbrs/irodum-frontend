@@ -299,8 +299,21 @@ const PersonalInformation = () => {
     useEffect(() => {
 
         document.getElementById("menuHolder").scrollIntoView();
-        Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/localidades").then((res)=>{
+        Axios.get("http://54.174.104.208:3001/api/localidades").then((res)=>{
             setLocalidades(res.data);
+
+            if(userData['city'] !== undefined){
+                const ciudadesIndex = (res.data).find(element => {
+                    return element.region === userData['region'];
+                });
+                setCiudades(ciudadesIndex.ciudad);
+                if(userData['comunne'] !== undefined){
+                    const comunasData = (ciudadesIndex.ciudad).find(element => {
+                        return element[0] === userData['city'];
+                    });
+                    setComunas(comunasData[1].comunas);
+                }
+            }
         });        
         document.addEventListener('handleEvent', handleSubmit);
 

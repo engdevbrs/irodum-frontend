@@ -101,7 +101,7 @@ const Workers = () => {
 
   const  clearFilters = () => {
     if(worksearcher !== ''){
-      Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/usuarios").then((res)=>{
+      Axios.get("http://54.174.104.208:3001/api/usuarios").then((res)=>{
         setFiltered(false)
         setUsuarios(res.data[0])
         setWorksearcher("")
@@ -165,7 +165,7 @@ const Workers = () => {
   
   useEffect(() => {
       document.getElementById("menuHolder").scrollIntoView();
-      Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/usuarios").then((res)=>{
+      Axios.get("http://54.174.104.208:3001/api/usuarios").then((res)=>{
         if(worksearcher !== ''){
           let filtererFromHome = (res.data[0]).filter(function(params) {
             return params.workArea === worksearcher.oficio
@@ -181,7 +181,7 @@ const Workers = () => {
           setUsuarios(res.data[0]);
         }
       });
-      Axios.get("http://ec2-54-174-104-208.compute-1.amazonaws.com:3001/api/localidades").then((res)=>{
+      Axios.get("http://54.174.104.208:3001/api/localidades").then((res)=>{
             setLocalidades(res.data);
       });  
   },[worksearcher])
