@@ -29,7 +29,7 @@ const Profile = () => {
     const [ inputs , setInputs ] = useState(false)
     const [ validationCell, setValidationCell ] = useState(false)
     const [ cancelButton, setCancelButton ] = useState(false)
-    const [ colorCard, setColorCard ] = useState("#ffffff")
+    const [ colorCard, setColorCard ] = useState("#33D09C")
     const [ savePhoto, setSavePhoto ] = useState(false)
     const [ getPhoto, setGetPhoto ] = useState(false)
     const [ enableSave, setEnableSave ] = useState(false)
@@ -52,7 +52,7 @@ const Profile = () => {
         const formData = new FormData();
         formData.append('formFile',imagefile.files[0])
         MySwal.fire({
-            title: 'Estás seguro de cambiar tu foto de perfil?',
+            title: '¿Estás seguro de cambiar tu foto de perfil?',
             showDenyButton: true,
             showCancelButton: false,
             confirmButtonText: `Cambiar`,
@@ -60,7 +60,7 @@ const Profile = () => {
             }).then((result) => {
                 if(result.isConfirmed){
                     showProgress(false)
-                    Axios.put("http://54.174.104.208:3001/api/images",
+                    Axios.put("http://services.irodum.com:3001/api/images",
                     formData,
                     {
                         headers: {
@@ -80,10 +80,10 @@ const Profile = () => {
                             Swal.fire('Su foto ha sido actualizada con éxito!', '', 'success')
                             showProgress(true)
                             getAccess(token)
-                            document.getElementById('photoUser').src = "http://54.174.104.208:3001" + result.data.imagePath
+                            document.getElementById('photoUser').src = "http://services.irodum.com:3001" + result.data.imagePath
                         }
                     }).catch(error => {
-                        Swal.fire('No pudimos cambiar tu foto de perfil', '', 'warning')
+                        Swal.fire('No pudimos cambiar su foto de perfil', '', 'warning')
                     });
                 }
                 setCancelButton(true)
@@ -119,7 +119,7 @@ const Profile = () => {
             }).then((result) => {
                 if(result.isConfirmed){
                     showProgressSpec(false)
-                    Axios.post('http://54.174.104.208:3001/api/upload/speciality/'+ dataUser[0].idEmployed,specialityFormFile, config)
+                    Axios.post('http://services.irodum.com:3001/api/upload/speciality/'+ dataUser[0].idEmployed,specialityFormFile, config)
                     .then((result) => {
                         if(result.status === 200){
                             Swal.fire({
@@ -136,7 +136,7 @@ const Profile = () => {
                                     handleCloseSpeciality()
                                 }
                             })
-                            Axios.get("http://54.174.104.208:3001/api/download/speciality/" + dataUser[0].idEmployed)
+                            Axios.get("http://services.irodum.com:3001/api/download/speciality/" + dataUser[0].idEmployed)
                                 .then((result) => {
                                     if(result.status === 200){
                                         setEspecialitiesWorker(result.data)
@@ -170,7 +170,7 @@ const Profile = () => {
     };
 
     const deletePrevphotoEmployed = () =>{
-        Axios.delete('http://54.174.104.208:3001/api/images/delete/' + getPhoto)
+        Axios.delete('http://services.irodum.com:3001/api/images/delete/' + getPhoto)
           .then((result) => {
               if(result.status === 200){
                 console.log(result);
@@ -202,7 +202,7 @@ const Profile = () => {
                 denyButtonText: `Cancelar`,
               }).then((result) => {
                 if (result.isConfirmed) {
-                    Axios.put("http://54.174.104.208:3001/api/update-user", {newArrayValues ,'authorization' : `${token}`})
+                    Axios.put("http://services.irodum.com:3001/api/update-user", {newArrayValues ,'authorization' : `${token}`})
                     .then((result) => {
                         if(result.status === 200){
                             Swal.fire({
@@ -236,16 +236,16 @@ const Profile = () => {
     }
 
     const getAccess = (token) =>{
-        Axios.post("http://54.174.104.208:3001/api/user-info", {
+        Axios.post("http://services.irodum.com:3001/api/user-info", {
             'authorization' : `${token}`
         })
           .then((result) => {
               if(result.status === 200){
                     setResponse(result.status)
                     setDataUser(result.data)
-                    localStorage.setItem('photoEmployed', "http://54.174.104.208:3001/api/images/" + result.data[0].photoEmployed)
+                    localStorage.setItem('photoEmployed', "http://services.irodum.com:3001/api/images/" + result.data[0].photoEmployed)
                     setGetPhoto(result.data[0].photoEmployed)
-                    Axios.get("http://54.174.104.208:3001/api/worker/ratings/" + result.data[0].idEmployed)
+                    Axios.get("http://services.irodum.com:3001/api/worker/ratings/" + result.data[0].idEmployed)
                         .then((result) => {
                             if(result.status === 200){
                                 setRatingScore(result.data)
@@ -255,7 +255,7 @@ const Profile = () => {
                             setRatingScore([])
                             setCommentsWorker([])
                         });
-                    Axios.get("http://54.174.104.208:3001/api/download/speciality/" + result.data[0].idEmployed)
+                    Axios.get("http://services.irodum.com:3001/api/download/speciality/" + result.data[0].idEmployed)
                         .then((result) => {
                             if(result.status === 200){
                                 setEspecialitiesWorker(result.data)
@@ -388,7 +388,7 @@ const Profile = () => {
                                 <Row className='mt-3 mb-3'>
                                     <Col lg={4} >
                                         <Card className='perfil shadow mb-4' key={key}>
-                                        <input className="form-control" type="file" id="formFile" name='formFile' accept="image/*" onChange={(e) => setEnableSave(!enableSave)} hidden/>
+                                        <input className="form-control" type="file" id="formFile" formEncType='multipart/form-data' name='formFile' accept="image/*" onChange={(e) => setEnableSave(!enableSave)} hidden/>
                                         <img id='upload' className='upload mt-2' src={uploadPhoto} style={{ width: '5rem' }} alt="" hidden={inputs} onClick={open_file} />
                                         <img id='photoEmployed' className='photoEmployed mt-2' variant="top" src={(element.photoEmployed !== undefined && element.photoEmployed !== null && element.photoEmployed !== "") ? localStorage.getItem('photoEmployed') : perfil} alt={'foto perfil'} style={{ width: '12rem'}} />
                                         <Card.Body>
@@ -532,7 +532,7 @@ const Profile = () => {
                                                 </Col>
                                                 <Col sm={9}>
                                                     <Form.Text><p style={{color: '#349568'}}>Procure usar tonos claros</p></Form.Text>
-                                                    <input type="color" className="form-control form-control-color" id="colorInput" name='colorInput' onChange={(e) => setColorCard(e.target.value)} defaultValue={element.colorEmployed !== undefined ? element.colorEmployed : colorCard} title="Elija su color favorito"/>
+                                                    <input type="color" className="form-control form-control-color" id="colorInput" name='colorInput' onChange={(e) => setColorCard(e.target.value)} defaultValue={(element.colorEmployed !== undefined || element.colorEmployed !== null) ? element.colorEmployed : colorCard} title="Elija su color favorito"/>
                                                 </Col>
                                             </Row></> : <></>
                                         }

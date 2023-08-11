@@ -38,6 +38,7 @@ const TermsConditionsAccept = () => {
     }
 
     useEffect(() => {
+        document.getElementById("nextButton").style.display = "block";
         document.getElementById("menuHolder").scrollIntoView();      
         document.addEventListener(userData === "" || userData === undefined ? 'handleEventPyme' : 'handleEvent', handleSubmit);
         return () => {

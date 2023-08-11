@@ -6,6 +6,7 @@ import rate from '../assets/rate.png'
 import '../css/Comments.css'
 
 const Ratings = ({data}) => {
+    
 
     const [ratingTotal, setRatingTotal] = useState([]);
 

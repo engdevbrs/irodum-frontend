@@ -299,7 +299,7 @@ const PersonalInformation = () => {
     useEffect(() => {
 
         document.getElementById("menuHolder").scrollIntoView();
-        Axios.get("http://54.174.104.208:3001/api/localidades").then((res)=>{
+        Axios.get("http://services.irodum.com:3001/api/localidades").then((res)=>{
             setLocalidades(res.data);
 
             if(userData['city'] !== undefined){

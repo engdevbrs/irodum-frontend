@@ -4,6 +4,7 @@ import Axios from 'axios'
 import { FaFilter } from "react-icons/fa";
 import '../css/Workers.css';
 import noworkersfounded from '../assets/search-empty.png'
+import worktools from '../assets/work-tools.png'
 import pyme from '../assets/empresa.png'
 import worker from '../assets/obrero.png'
 import all from '../assets/all.jpg'
@@ -101,7 +102,7 @@ const Workers = () => {
 
   const  clearFilters = () => {
     if(worksearcher !== ''){
-      Axios.get("http://54.174.104.208:3001/api/usuarios").then((res)=>{
+      Axios.get("http://services.irodum.com:3001/api/usuarios").then((res)=>{
         setFiltered(false)
         setUsuarios(res.data[0])
         setWorksearcher("")
@@ -165,7 +166,7 @@ const Workers = () => {
   
   useEffect(() => {
       document.getElementById("menuHolder").scrollIntoView();
-      Axios.get("http://54.174.104.208:3001/api/usuarios").then((res)=>{
+      Axios.get("http://services.irodum.com:3001/api/usuarios").then((res)=>{
         if(worksearcher !== ''){
           let filtererFromHome = (res.data[0]).filter(function(params) {
             return params.workArea === worksearcher.oficio
@@ -181,7 +182,7 @@ const Workers = () => {
           setUsuarios(res.data[0]);
         }
       });
-      Axios.get("http://54.174.104.208:3001/api/localidades").then((res)=>{
+      Axios.get("http://services.irodum.com:3001/api/localidades").then((res)=>{
             setLocalidades(res.data);
       });  
   },[worksearcher])
@@ -345,11 +346,18 @@ const Workers = () => {
             <div className="denied" style={{height: '60vh'}}>
             <h6>Lo sentimos, no encontramos ningún trabajador con sus requerimientos.</h6>
                 <div className="wrapper text-center mt-3">
-                    <img src={noworkersfounded} alt="imagen de confirmación" style={{width: '12rem'}}/>
+                    <img src={noworkersfounded} alt="imagen de confirmación" style={{width: '8rem'}}/>
                 </div>
                 <div className="d-grid gap-2 mt-5">
                   <Button className="btn btn-danger px-4" onClick={e => clearFilters()} >Ver a todos los trabajadores</Button>
               </div>
+            </div>
+          </div> : usuarios.length === 0 ?           <div id='denied' className="container mt-5 mb-5 text-center" hidden={usuariosFiltered.length > 1 ? true : false}>
+            <div className="denied" style={{height: '60vh'}}>
+            <h6>Lo sentimos, no hay trabajadores registrados aún.</h6>
+                <div className="wrapper text-center mt-3">
+                    <img src={worktools} alt="imagen de confirmación" style={{width: '8rem'}}/>
+                </div>
             </div>
           </div> : ''
         }

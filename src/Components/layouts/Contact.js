@@ -30,7 +30,7 @@ const Contact = () => {
                 cell: document.getElementById('phone').value,
                 message: document.getElementById('message').value
             }
-            Axios.post('http://54.174.104.208:3001/api/contact-email',emailContactObject)
+            Axios.post('http://services.irodum.com:3001/api/contact-email',emailContactObject)
             .then((result) => {
                 if(result.status === 200){
                     setEmailNotSent(false)

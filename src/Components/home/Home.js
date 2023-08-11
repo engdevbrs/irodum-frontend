@@ -27,8 +27,9 @@ const Home = () => {
   return (
     <>
       <header className="mainpage py-5">
-          <Container className="px-5">
-              <Row className="gx-5 align-items-center justify-content-center">
+          <section className="container px-5">
+            <div className='wave'>
+            <Row className="gx-5 align-items-center justify-content-center">
                 <Col className="col-lg-8 col-xl-7 col-xxl-6">
                     <div className="my-5 text-center text-xl-start">
                         <h1 className="display-5 fw-bolder text-white mb-2">Una nueva forma de encontrar oportunidades</h1>
@@ -53,7 +54,8 @@ const Home = () => {
                       </Carousel>
                 </Col>
               </Row>
-          </Container>
+            </div>
+          </section>
       </header>
       <Container className="mt-5">
         <Row lg={2} className='information row row-cols-1 row-cols-md-2 g-4'>
@@ -116,7 +118,7 @@ const Home = () => {
           <hr style={{width: '70%', height: '2px'}} />
         </div>
       </Container>
-      <Container className="mt-4">
+      <Container className="benefits mt-4">
         <div className="col-lg-4 mb-5 mb-lg-0"><h2 className="fw-bolder mb-0" style={{color: '#5f738f'}}>Nuestro objetivo</h2></div>
         <Row xs={1} className='mb-5'>
         <Col className='col-lg-4 col-md-6 col-sm-12 mt-3'>

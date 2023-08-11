@@ -53,7 +53,7 @@ const ToDoList = () => {
             denyButtonText: `Cancelar`,
             }).then((result) => {
                 if(result.isConfirmed){
-                    Axios.put("http://54.174.104.208:3001/api/user/request-confirm", requestConfirmObject , 
+                    Axios.put("http://services.irodum.com:3001/api/user/request-confirm", requestConfirmObject , 
                     {
                         headers: {
                         'authorization': `${token}`
@@ -89,7 +89,7 @@ const ToDoList = () => {
             denyButtonText: `Cancelar`,
             }).then((result) => {
                 if(result.isConfirmed){
-                    Axios.put("http://54.174.104.208:3001/api/user/request-reject", requestRejectObject , 
+                    Axios.put("http://services.irodum.com:3001/api/user/request-reject", requestRejectObject , 
                     {
                         headers: {
                         'authorization': `${token}`
@@ -115,7 +115,7 @@ const ToDoList = () => {
                 estado: 'pendiente',
                 actionbutton: 'wspbutton'
             }
-            Axios.put("http://54.174.104.208:3001/api/update/agreement", wspContactObject, 
+            Axios.put("http://services.irodum.com:3001/api/update/agreement", wspContactObject, 
             {
                 headers: {
                 'authorization': `${token}`
@@ -143,7 +143,7 @@ const ToDoList = () => {
                 emailClient: modalData.emailCustomer,
                 requestInfo: modalData.descripcionTrabajo
             }
-            Axios.put("http://54.174.104.208:3001/api/update/agreement",emailContactObject, 
+            Axios.put("http://services.irodum.com:3001/api/update/agreement",emailContactObject, 
             {
                 headers: {
                 'authorization': `${token}`
@@ -162,7 +162,7 @@ const ToDoList = () => {
     }
 
     const getProjects = (id) => {
-        Axios.get("http://54.174.104.208:3001/api/user/user-requests/"+ id)
+        Axios.get("http://services.irodum.com:3001/api/user/user-requests/"+ id)
           .then((result) => {
               if(result.status === 200){
                 let notconfirmed = (result.data).filter(function(params) {
@@ -293,7 +293,7 @@ const ToDoList = () => {
 
     const getAccess = async (token) =>{
         const ispyme = JSON.parse(localStorage.getItem('ispyme'));
-        await Axios.post(ispyme ? "http://54.174.104.208:3001/api/user-info-pyme" : "http://54.174.104.208:3001/api/user-info",{
+        await Axios.post(ispyme ? "http://services.irodum.com:3001/api/user-info-pyme" : "http://services.irodum.com:3001/api/user-info",{
             'authorization' : `${token}`
         })
           .then((result) => {
@@ -534,7 +534,7 @@ const ToDoList = () => {
                             </>
                             : 
                             <>
-                                <Card className='d-flex align-items-center rounded-0 justify-content-center text-center' style={{height: '60vh'}}>
+                                <Card className='d-flex align-items-center rounded-0 justify-content-center text-center p-4' style={{height: '60vh'}}>
                                     <h5><strong>Por el momento no tienes solicitudes</strong></h5>
                                     <div className="mt-4">
                                     <img variant="top" src={norequests} 
@@ -556,6 +556,7 @@ const ToDoList = () => {
                                         <th>Rut</th>
                                         <th>Dirección</th>
                                         <th>Teléfono</th>
+                                        <th>Email cliente</th>
                                         <th>Descripción del trabajo</th>
                                         <th>Comienzo del trabajo</th>
                                     </tr>
@@ -580,6 +581,7 @@ const ToDoList = () => {
                                                     <td>{values.rutCustomer}</td>
                                                     <td>{direccion}</td>
                                                     <td>{values.cellphoneCustomer}</td>
+                                                    <td>{values.emailCustomer}</td>
                                                     <td>{values.descripcionTrabajo}</td>
                                                     <td>{values.startDate}</td>
                                                 </tr>
@@ -593,7 +595,7 @@ const ToDoList = () => {
                             </>
                             : 
                             <>
-                            <Card className='d-flex align-items-center rounded-0 justify-content-center text-center' style={{height: '60vh'}}>
+                            <Card className='d-flex align-items-center rounded-0 justify-content-center text-center p-4' style={{height: '60vh'}}>
                                     <h5><strong>Por el momento no tienes solicitudes confirmadas</strong></h5>
                                     <div className="mt-4">
                                     <img variant="top" src={norequestsconfirmeds} 
@@ -615,6 +617,7 @@ const ToDoList = () => {
                                         <th>Rut</th>
                                         <th>Dirección</th>
                                         <th>Teléfono</th>
+                                        <th>Email cliente</th>
                                         <th>Descripción del trabajo</th>
                                         <th>Estado</th>
                                     </tr>
@@ -639,6 +642,7 @@ const ToDoList = () => {
                                                     <td>{values.rutCustomer}</td>
                                                     <td>{direccion}</td>
                                                     <td>{values.cellphoneCustomer}</td>
+                                                    <td>{values.emailCustomer}</td>
                                                     <td>{values.descripcionTrabajo}</td>
                                                     <td>Rechazada</td>
                                                 </tr>
@@ -652,7 +656,7 @@ const ToDoList = () => {
                             </>
                             : 
                             <>
-                                <Card className='d-flex align-items-center justify-content-center text-center rounded-0' style={{height: '60vh'}}>
+                                <Card className='d-flex align-items-center rounded-0 justify-content-center text-center p-4' style={{height: '60vh'}}>
                                     <h5><strong>Por el momento no haz rechazado ningúna solicitud</strong></h5>
                                     <div className="mt-4">
                                     <img variant="top" src={norequestsconfirmeds} 

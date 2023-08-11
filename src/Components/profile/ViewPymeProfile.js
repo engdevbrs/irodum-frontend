@@ -334,15 +334,15 @@ const ViewPymeProfile = () => {
                 
             })
 
-            arrayValues.push(dataUser[0].email,dataUser[0].rutUser,dataUser[0].razonSocial,id)
+            arrayValues.push(dataUser[0].email,dataUser[0].rutUser,dataUser[0].razonSocial,id,dataUser[0].emailEmployed)
 
-            Axios.post('http://54.174.104.208:3001/api/request-work',arrayValues)
+            Axios.post('http://services.irodum.com:3001/api/request-work',arrayValues)
             .then((result) => {
                 if(result.status === 200){
                     setResponseRequest(result.status)
                     setShowAlert(true)
                     clearForm()
-                    Axios.post('http://54.174.104.208:3001/api/requestEmail',arrayValues)
+                    Axios.post('http://services.irodum.com:3001/api/requestEmail',arrayValues)
                     .then((result) => {
                         if(result.status === 200){
                             console.log(result);
@@ -418,7 +418,7 @@ const ViewPymeProfile = () => {
             formFileMultiple.append('params', JSON.stringify(arrayValues))
 
             MySwal.fire({
-                title: 'Estás seguro de subir esta evaluación?',
+                title: '¿Estás seguro de subir esta evaluación?',
                 showDenyButton: true,
                 showCancelButton: false,
                 confirmButtonText: `Evaluar`,
@@ -426,7 +426,7 @@ const ViewPymeProfile = () => {
                 }).then((result) => {
                     if(result.isConfirmed){
                         showProgress(false)
-                        Axios.post('http://54.174.104.208:3001/api/rating-worker',formFileMultiple, config)
+                        Axios.post('http://services.irodum.com:3001/api/rating-worker',formFileMultiple, config)
                         .then((result) => {
                             if(result.status === 200){
                                 Swal.fire({
@@ -442,29 +442,11 @@ const ViewPymeProfile = () => {
                                         handleCloseComment()
                                     }
                                 })
-                                Axios.get("http://54.174.104.208:3001/api/worker/ratings/" + id)
+                                Axios.get("http://services.irodum.com:3001/api/worker/ratings-comments/" + id)
                                 .then((result) => {
                                     if(result.status === 200){
-                                        let sumaTotal = null
-                                        if((result.data).length > 0){
-                                            (result.data).forEach(element => {
-                                                let ratingParse = JSON.parse(element.aptitudRating)
-                                                let sumaRating = (ratingParse.cuidadoso + ratingParse.honestidad + ratingParse.precio + ratingParse.puntualidad + ratingParse.responsabilidad) / 5;
-                                                sumaTotal = (sumaTotal + sumaRating);
-                                            });
-                                        }
-                                        sumaTotal = (sumaTotal / (result.data).length).toFixed(1)
-                                        console.log(sumaTotal);
                                         setRatingScore(result.data)
                                         setCommentsWorker(result.data)
-                                        Axios.put("http://54.174.104.208:3001/api/worker/update-rating/" +id, {rankingTotal: sumaTotal})
-                                        .then((result) => {
-                                            if(result.status === 200){
-                                                console.log("resultado: ",result.data);
-                                            }
-                                        }).catch(error => {
-                                            
-                                        });
                                     }
                                 }).catch(error => {
                                     setResponse([])
@@ -815,9 +797,10 @@ const ViewPymeProfile = () => {
     const handleRatingPrecio = (rate) => {
         setRatingScorePrecio(rate)
     }
+
     
     useEffect(() =>{
-        Axios.get("http://54.174.104.208:3001/api/view/profile-pyme/" + id)
+        Axios.get("http://services.irodum.com:3001/api/view/profile-pyme/" + id)
         .then((result) => {
             if(result.status === 200){
                   setDataUser(result.data)
@@ -825,10 +808,18 @@ const ViewPymeProfile = () => {
         }).catch(error => {
               setResponse([])
       });
-        Axios.get("http://54.174.104.208:3001/api/localidades").then((res)=>{
+        Axios.get("http://services.irodum.com:3001/api/localidades").then((res)=>{
             setLocalidades(res.data);
         }); 
-        Axios.get("http://54.174.104.208:3001/api/worker/ratings/" + id)
+        Axios.get("http://services.irodum.com:3001/api/download/speciality/" + id)
+        .then((result) => {
+            if(result.status === 200){
+                setEspecialitiesWorker(result.data)
+            }
+        }).catch(error => {
+            setEspecialitiesWorker([])
+        });
+        Axios.get("http://services.irodum.com:3001/api/worker/ratings/" + id)
           .then((result) => {
               if(result.status === 200){
                 setRatingScore(result.data)
@@ -837,16 +828,6 @@ const ViewPymeProfile = () => {
           }).catch(error => {
             setResponse([])
         });
-
-        Axios.get("http://54.174.104.208:3001/api/download/speciality/" + id)
-        .then((result) => {
-            if(result.status === 200){
-                setEspecialitiesWorker(result.data)
-            }
-        }).catch(error => {
-            setEspecialitiesWorker([])
-        });
-        
 
     },[switchCharge])
 
@@ -863,14 +844,7 @@ const ViewPymeProfile = () => {
             </Col>
             {
                 dataUser.map((element,key) =>{
-                    let sumaTotal = null;
-                    if(ratingScore.length > 0){
-                        ratingScore.forEach(element => {
-                            let ratingParse = JSON.parse(element.aptitudRating)
-                            let sumaRating = (ratingParse.cuidadoso + ratingParse.honestidad + ratingParse.precio + ratingParse.puntualidad + ratingParse.responsabilidad) / 5;
-                            sumaTotal = (sumaTotal + sumaRating);
-                        });
-                    }
+
                     return(
                         <>
                             <Container className='profile-container shadow-lg rounded-3 mt-3 mb-5 p-4'>
@@ -889,13 +863,13 @@ const ViewPymeProfile = () => {
                                     <h5 style={{color: 'rgb(226 226 226)'}}>Calificación</h5>
                                     <div className='d-flex align-items-center justify-content-center'>
                                         <Rating
-                                            initialValue={ratingScore.length > 0 ? (sumaTotal / ratingScore.length).toFixed(1) : 0}
+                                            initialValue={element.rankingEmployed === "0" ? parseInt(element.rankingEmployed,10) : parseFloat(element.rankingEmployed,10).toFixed(1)}
                                             size={32}
                                             fillColor='orange'
                                             emptyColor='gray'
                                             allowFraction={true}
                                             readonly={true}
-                                        /><span style={{color: 'rgb(226 226 226)', fontSize: '16px', fontWeight: '600'}}>({ratingScore.length > 0 ? (sumaTotal / ratingScore.length).toFixed(1) : 0})</span>
+                                        /><span style={{color: 'rgb(226 226 226)', fontSize: '16px', fontWeight: '600'}}>({element.rankingEmployed === "0" ? parseInt(element.rankingEmployed,10) : parseFloat(element.rankingEmployed,10).toFixed(1)})</span>
                                     </div>
                                     <span style={{color: 'rgb(226 226 226)', fontSize: '16px', fontWeight: '600'}}>({ratingScore.length} calificaciones)</span>
                                 </div>
@@ -1244,7 +1218,6 @@ const ViewPymeProfile = () => {
                                             <>
                                                 <i className="far fa-check-circle" style={{fontSize:'24px'}}></i>
                                                 <span>{' '}Su solicitud fue enviada con éxito, le recomendamos estar atento/a a su correo electrónico o whatsapp.
-                                                    <p className="mt-1">Se le ha enviado una copia del requerimiento a su email.</p>
                                                 </span>
                                             </>
                                             : 

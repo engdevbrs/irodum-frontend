@@ -13,7 +13,7 @@
     z-index: 1;
     border-radius: 10px 10px 0 0;
     margin: 0 auto;
-    padding: 30px 30px 0 30px;
+    padding: 20px 20px 0 20px;
     overflow: hidden;
 }
 .single_advisor_profile .advisor_thumb::after {
@@ -66,7 +66,7 @@
     position: relative;
     z-index: 1;
     padding: 30px;
-    text-align: right;
+    text-align: left;
     -webkit-transition-duration: 500ms;
     transition-duration: 500ms;
     border-radius: 0 0 10px 10px;

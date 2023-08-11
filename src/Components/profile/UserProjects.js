@@ -37,14 +37,14 @@ const UserProjects = () => {
     const deleteUserProject = (e) =>{
         const token = localStorage.getItem('accessToken');
         MySwal.fire({
-            title: 'Estás seguro de eliminar éste proyecto?',
+            title: '¿Estás seguro de eliminar éste proyecto?',
             showDenyButton: true,
             showCancelButton: false,
             confirmButtonText: `Eliminar`,
             denyButtonText: `Cancelar`,
             }).then((result) => {
                 if(result.isConfirmed){
-                    Axios.delete("http://54.174.104.208:3001/api/image/delete-project" + parseInt(e[1].value,10), 
+                    Axios.delete("http://services.irodum.com:3001/api/image/delete-project" + parseInt(e[1].value,10), 
                     {
                         headers: {
                         'authorization': `${token}`
@@ -84,7 +84,7 @@ const UserProjects = () => {
         formFile.append('params', JSON.stringify(uploadInfo))
         formFile.append('token',token)
         MySwal.fire({
-            title: 'Estás seguro de subir éste proyecto?',
+            title: '¿Estás seguro de subir éste proyecto?',
             showDenyButton: true,
             showCancelButton: false,
             confirmButtonText: `Subir`,
@@ -92,7 +92,7 @@ const UserProjects = () => {
             }).then((result) => {
                 if(result.isConfirmed){
                     showProgress(false)
-                    Axios.post("http://54.174.104.208:3001/api/image/upload-project/"+userData.idEmployed,formFile,config)
+                    Axios.post("http://services.irodum.com:3001/api/image/upload-project/"+userData.idEmployed,formFile,config)
                     .then((result) => {
                         if(result.status === 200){
                             setResponse(result.status)
@@ -179,7 +179,7 @@ const UserProjects = () => {
     
     const getProjects = () => {
         const token = localStorage.getItem('accessToken');
-        Axios.get("http://54.174.104.208:3001/api/image/user-projects",{
+        Axios.get("http://services.irodum.com:3001/api/image/user-projects",{
             headers: {
                 'authorization': `${token}`
                 }
@@ -195,7 +195,7 @@ const UserProjects = () => {
 
     const getAccess = async (token) =>{
         const ispyme = JSON.parse(localStorage.getItem('ispyme'));
-        await Axios.post(ispyme ? "http://54.174.104.208:3001/api/user-info-pyme" : "http://54.174.104.208:3001/api/user-info", {
+        await Axios.post(ispyme ? "http://services.irodum.com:3001/api/user-info-pyme" : "http://services.irodum.com:3001/api/user-info", {
             'authorization' : `${token}`
         })
           .then((result) => {
@@ -409,7 +409,7 @@ const UserProjects = () => {
                                                                     <Col className='col-12 text-start'>{"El dia " + dateFormatted.toLocaleDateString()}</Col>
                                                                 </Row> 
                                                             </Card.Header>
-                                                                <img src={'http://54.174.104.208:3001/' + value.imageName} 
+                                                                <img src={'http://services.irodum.com:3001/' + value.imageName} 
                                                                 alt={'project'} style={{height: '200px'}}/>
                                                             <i className='deletephoto fas fa-trash' value={value.id_img} key={value.id_img} onClick={e => deleteUserProject(e.target.attributes)}></i>
                                                             <Card.Body>
@@ -418,8 +418,8 @@ const UserProjects = () => {
                                                             </Card.Body>
                                                             <Card.Footer style={{ color: 'rgb(226 226 226)', backgroundColor: '#202A34' , fontSize: '14px'}}>
                                                             <Row>
-                                                                <Col className='col-6 text-start'>Celular: {value.clientCell}</Col>
-                                                                <Col className='col-6 text-end'>{value.clientEmail !== "" ? "Email: " + value.clientEmail : ""}</Col>
+                                                                <Col className='col-12 text-start col'>Celular: {value.clientCell}</Col>
+                                                                <Col className='col-12 text-start col'>{value.clientEmail !== "" ? "Email: " + value.clientEmail : ""}</Col>
                                                             </Row>
                                                             </Card.Footer>
                                                         </Card>

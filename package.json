@@ -24,7 +24,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "aws s3 sync build/ s3://irodum-dev --acl public-read"
+    "deploy": "aws s3 sync build/ s3://irodum-site --acl public-read"
   },
   "eslintConfig": {
     "extends": [

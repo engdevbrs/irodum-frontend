@@ -103,7 +103,7 @@ const PymeProfile = () => {
                 <Form id='formulario' className='formulario shadow p-3 rounded'>
                     <h3 className='mb-3 mt-1'>Perfil laboral</h3>
                     <Row>
-                    <Form.Text className='mb-2'><span className='mb-1' style={{color: 'red', fontWeight: '600'}}>Algunos campos son obligatorios</span></Form.Text>
+                    <Form.Text className='mb-2'><span className='mb-1' style={{color: 'red', fontWeight: '600'}}>Todos los campos son obligatorios</span></Form.Text>
                     </Row>
                     <Row>
                         <Col className="form-floating mb-3">

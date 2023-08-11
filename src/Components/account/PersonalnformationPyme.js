@@ -268,7 +268,7 @@ const PersonalInformationPyme = () => {
 
     useEffect(() => {
         document.getElementById("menuHolder").scrollIntoView();
-        Axios.get("http://54.174.104.208:3001/api/localidades").then((res)=>{
+        Axios.get("http://services.irodum.com:3001/api/localidades").then((res)=>{
             setLocalidades(res.data);
             if(userDataPyme['city'] !== undefined){
                 const ciudadesIndex = (res.data).find(element => {

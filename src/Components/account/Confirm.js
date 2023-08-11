@@ -6,28 +6,33 @@ import finalerror from '../assets/final-error.png'
 import loadingrequestgf from '../assets/loading-request.svg'
 import { useStepperContext } from '../contexts/StepperContext';
 import { useStepperContextPyme } from '../contexts/StepperContextPyme.js'
+import { Link } from 'react-router-dom';
 
 const Confirm = () => {
   const { userData } = useStepperContext();
   const { userDataPyme  } = useStepperContextPyme();
   const [ result, setResult] = useState([]);
+  const [ resultEmail, setResultEmail] = useState([]);
   const [ loadingrequest, setLoadingRequest] = useState(true); 
 
   const handleCreate =  async () => {
-      Axios.post("http://54.174.104.208:3001/api/create-user", userData === "" || userData === undefined ? userDataPyme : userData)
+      Axios.post("http://services.irodum.com:3001/api/create-user", userData === "" || userData === undefined ? userDataPyme : userData)
       .then((result) => {
           if(result.status === 200){
               setResult(result.status);
+              document.getElementById("nextButton").style.display = "block";
               setLoadingRequest(false);
-              Axios.post("http://54.174.104.208:3001/api/welcomeMail", userData === "" || userData === undefined ? userDataPyme : userData)
+              Axios.post("http://services.irodum.com:3001/api/welcomeMail", userData === "" || userData === undefined ? userDataPyme : userData)
               .then((response) => {
                 if(response.status === 200){
-                  setResult(response.status);
+                  setResultEmail(response.status);
                 }
               }).catch(error => {
-                setResult(error.response.status);
+                setResultEmail(error.response.status);
               });
               clearTimeout();
+          }else{
+            
           }
       }).catch(error => {
           setResult(error.response.status);
@@ -38,6 +43,7 @@ const Confirm = () => {
 
   useEffect(() =>{
     document.getElementById("menuHolder").scrollIntoView();
+    document.getElementById("nextButton").style.display = "none";
     setTimeout(() => {
       handleCreate();
     }, 2500);
@@ -67,6 +73,9 @@ const Confirm = () => {
                             </div>
                             <div className="success-account mb-3">
                               Verifique sus datos y vuelva a intentar de nuevo o más tarde.
+                            </div>
+                            <div className="mb-3">
+                              <Link to={'/crear-cuenta'} className="btn btn-danger btn-sm px-4 me-sm-3">Reintentar</Link>
                             </div>
                           </div>
                         </div> : 

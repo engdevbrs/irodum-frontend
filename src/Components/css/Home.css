@@ -1,9 +1,6 @@
 .mainpage{
-
-    background: hsla(213, 77%, 14%, 1);
-    background: linear-gradient(90deg, hsla(213, 77%, 14%, 1) 0%, hsla(202, 27%, 45%, 1) 100%);
-    background: -moz-linear-gradient(90deg, hsla(213, 77%, 14%, 1) 0%, hsla(202, 27%, 45%, 1) 100%);
-    background: -webkit-linear-gradient(90deg, hsla(213, 77%, 14%, 1) 0%, hsla(202, 27%, 45%, 1) 100%);
+    background: rgb(44,58,72);
+    background: linear-gradient(0deg, rgba(44,58,72,1) 0%, rgba(33,37,41,1) 61%);
 }
 
 .information{

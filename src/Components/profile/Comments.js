@@ -24,8 +24,7 @@ const Comments = ({data}) => {
           data.map((value, key) =>{
             let commentToString = Buffer.from(value.evidencesComment)
             let comment = JSON.parse(commentToString)
-            let ratingParse = JSON.parse(value.aptitudRating)
-            let sumaRating = (ratingParse.cuidadoso + ratingParse.honestidad + ratingParse.precio + ratingParse.puntualidad + ratingParse.responsabilidad) / 5;
+            let sumaRating = value.totalRating;
             return(
               <>
               <Card className='shadow-lg mb-5' style={{ padding: '0px'}}>
@@ -50,8 +49,8 @@ const Comments = ({data}) => {
                     return(
                       <>
                         <div className="col-lg-3 col-md-4 col-6">
-                          <img key={idx} className='img-fluid img-thumbnail' src={'http://54.174.104.208:3001/' + image.originalname} 
-                                alt={'project'} id={`${image.originalname}`} style={{cursor: 'pointer'}} onClick={() =>{setImgFullscreen('http://54.174.104.208:3001/' + image.originalname); handleShow()}}/>
+                          <img key={idx} className='img-fluid img-thumbnail' src={'http://services.irodum.com:3001/' + image.originalname} 
+                                alt={'project'} id={`${image.originalname}`} style={{cursor: 'pointer'}} onClick={() =>{setImgFullscreen('http://services.irodum.com:3001/' + image.originalname); handleShow()}}/>
                         </div>
                       </>
                     )
@@ -63,7 +62,7 @@ const Comments = ({data}) => {
                       <div className='d-flex align-items-center'>
                         <span className='me-1'>Evaluó con:</span>
                         <Rating
-                            initialValue={sumaRating}
+                            initialValue={parseFloat(sumaRating).toFixed(1)}
                             size={22}
                             fillColor='orange'
                             emptyColor='gray'
@@ -71,7 +70,7 @@ const Comments = ({data}) => {
                             readonly={true}
                             style={{ marginRight: '3px', display: 'flex',justifyItems: 'center' }}
                         />
-                        <span className='me-1'>({sumaRating})</span>
+                        <span className='me-1'>({parseFloat(sumaRating).toFixed(1)})</span>
                       </div>
                 </Card.Footer>
               </Card>
@@ -79,7 +78,7 @@ const Comments = ({data}) => {
             )
           })
         }
-        <Modal show={show} size="lg" onHide={handleClose} centered>
+        <Modal show={show} size="md" onHide={handleClose} centered>
           <Modal.Header closeButton>
           </Modal.Header>
           <img className='img-fluid' src={imgfullscreen} alt={imgfullscreen} />

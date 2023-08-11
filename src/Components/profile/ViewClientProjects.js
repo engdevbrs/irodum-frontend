@@ -16,7 +16,7 @@ const ViewClientProjects = ({id}) => {
 
   useEffect(() =>{
     setTimeout(() => {
-        Axios.get("http://54.174.104.208:3001/api/image/view-projects/" + id)
+        Axios.get("http://services.irodum.com:3001/api/image/view-projects/" + id)
           .then((result) => {
               if(result.status === 200){
                 setResponse(result.status)
@@ -64,8 +64,8 @@ const ViewClientProjects = ({id}) => {
                         <Col className='col-12 text-start'>{"El dia " + dateFormatted.toLocaleDateString()}</Col>
                     </Row> 
                     </Card.Header>
-                    <img src={'http://54.174.104.208:3001/' + value.imageName} 
-                        alt={'project'} style={{height: '200px',cursor: 'pointer'}} onClick={() =>{setImgFullscreen('http://54.174.104.208:3001/' + value.imageName); handleShow()}}/>
+                    <img src={'http://services.irodum.com:3001/' + value.imageName} 
+                        alt={'project'} style={{height: '200px',cursor: 'pointer'}} onClick={() =>{setImgFullscreen('http://services.irodum.com:3001/' + value.imageName); handleShow()}}/>
                     <Card.Body>
                         <Card.Title>Descripción del trabajo</Card.Title>
                         <Card.Text>{value.workResume}</Card.Text>
@@ -81,7 +81,7 @@ const ViewClientProjects = ({id}) => {
             )
         })
       }
-        <Modal show={show} size="lg" onHide={handleClose} centered>
+        <Modal show={show} onHide={handleClose} centered>
           <Modal.Header closeButton>
           </Modal.Header>
           <img className='img-fluid' src={imgfullscreen} alt={imgfullscreen} />
