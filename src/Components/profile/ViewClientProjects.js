@@ -16,7 +16,7 @@ const ViewClientProjects = ({id}) => {
 
   useEffect(() =>{
     setTimeout(() => {
-        Axios.get("http://services.irodum.com:3001/api/image/view-projects/" + id)
+        Axios.get("https://www.services.irodum.com/api/image/view-projects/" + id)
           .then((result) => {
               if(result.status === 200){
                 setResponse(result.status)
@@ -64,8 +64,8 @@ const ViewClientProjects = ({id}) => {
                         <Col className='col-12 text-start'>{"El dia " + dateFormatted.toLocaleDateString()}</Col>
                     </Row> 
                     </Card.Header>
-                    <img src={'http://services.irodum.com:3001/' + value.imageName} 
-                        alt={'project'} style={{height: '200px',cursor: 'pointer'}} onClick={() =>{setImgFullscreen('http://services.irodum.com:3001/' + value.imageName); handleShow()}}/>
+                    <img src={'https://www.services.irodum.com/' + value.imageName} 
+                        alt={'project'} style={{height: '200px',cursor: 'pointer'}} onClick={() =>{setImgFullscreen('https://www.services.irodum.com/' + value.imageName); handleShow()}}/>
                     <Card.Body>
                         <Card.Title>Descripción del trabajo</Card.Title>
                         <Card.Text>{value.workResume}</Card.Text>

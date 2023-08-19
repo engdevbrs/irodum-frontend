@@ -53,7 +53,7 @@ const ToDoList = () => {
             denyButtonText: `Cancelar`,
             }).then((result) => {
                 if(result.isConfirmed){
-                    Axios.put("http://services.irodum.com:3001/api/user/request-confirm", requestConfirmObject , 
+                    Axios.put("https://www.services.irodum.com/api/user/request-confirm", requestConfirmObject , 
                     {
                         headers: {
                         'authorization': `${token}`
@@ -89,7 +89,7 @@ const ToDoList = () => {
             denyButtonText: `Cancelar`,
             }).then((result) => {
                 if(result.isConfirmed){
-                    Axios.put("http://services.irodum.com:3001/api/user/request-reject", requestRejectObject , 
+                    Axios.put("https://www.services.irodum.com/api/user/request-reject", requestRejectObject , 
                     {
                         headers: {
                         'authorization': `${token}`
@@ -115,7 +115,7 @@ const ToDoList = () => {
                 estado: 'pendiente',
                 actionbutton: 'wspbutton'
             }
-            Axios.put("http://services.irodum.com:3001/api/update/agreement", wspContactObject, 
+            Axios.put("https://www.services.irodum.com/api/update/agreement", wspContactObject, 
             {
                 headers: {
                 'authorization': `${token}`
@@ -143,7 +143,7 @@ const ToDoList = () => {
                 emailClient: modalData.emailCustomer,
                 requestInfo: modalData.descripcionTrabajo
             }
-            Axios.put("http://services.irodum.com:3001/api/update/agreement",emailContactObject, 
+            Axios.put("https://www.services.irodum.com/api/update/agreement",emailContactObject, 
             {
                 headers: {
                 'authorization': `${token}`
@@ -162,7 +162,7 @@ const ToDoList = () => {
     }
 
     const getProjects = (id) => {
-        Axios.get("http://services.irodum.com:3001/api/user/user-requests/"+ id)
+        Axios.get("https://www.services.irodum.com/api/user/user-requests/"+ id)
           .then((result) => {
               if(result.status === 200){
                 let notconfirmed = (result.data).filter(function(params) {
@@ -293,7 +293,7 @@ const ToDoList = () => {
 
     const getAccess = async (token) =>{
         const ispyme = JSON.parse(localStorage.getItem('ispyme'));
-        await Axios.post(ispyme ? "http://services.irodum.com:3001/api/user-info-pyme" : "http://services.irodum.com:3001/api/user-info",{
+        await Axios.post(ispyme ? "https://www.services.irodum.com/api/user-info-pyme" : "https://www.services.irodum.com/api/user-info",{
             'authorization' : `${token}`
         })
           .then((result) => {

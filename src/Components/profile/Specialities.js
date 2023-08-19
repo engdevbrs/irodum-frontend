@@ -27,7 +27,7 @@ const Specialities = ({data,id}) => {
             denyButtonText: `Cancelar`,
           }).then((result) => {
             if (result.isConfirmed) {
-                Axios.delete("http://services.irodum.com:3001/api/delete-especiality" + especialityToDelete,
+                Axios.delete("https://www.services.irodum.com/api/delete-especiality" + especialityToDelete,
                 {
                     headers: {
                     'authorization': `${token}`
@@ -44,7 +44,7 @@ const Specialities = ({data,id}) => {
                         confirmButtonText: 'Aceptar'
                       }).then((result) => {
                         if(result.isConfirmed){
-                            Axios.get("http://services.irodum.com:3001/api/download/speciality/" + id,
+                            Axios.get("https://www.services.irodum.com/api/download/speciality/" + id,
                                 { headers: {
                                     'Content-Type': 'multipart/form-data;',
                                     'Authorization': `${token}`
@@ -103,7 +103,7 @@ const Specialities = ({data,id}) => {
                     return(
                         <>
                             <td >{values.descript}</td>
-                            <td ><a href={"http://services.irodum.com:3001/" + values.image.originalname} 
+                            <td ><a href={"https://www.services.irodum.com/" + values.image.originalname} 
                             target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }} >{values.image.originalname}</a></td>
                             <td className="text-center">
                                 <i id={values.idEspeciality} className='fas fa-trash-alt' onClick={(e) => deleteEspeciality(e)} 

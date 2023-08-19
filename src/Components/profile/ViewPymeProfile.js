@@ -336,13 +336,13 @@ const ViewPymeProfile = () => {
 
             arrayValues.push(dataUser[0].email,dataUser[0].rutUser,dataUser[0].razonSocial,id,dataUser[0].emailEmployed)
 
-            Axios.post('http://services.irodum.com:3001/api/request-work',arrayValues)
+            Axios.post('https://www.services.irodum.com/api/request-work',arrayValues)
             .then((result) => {
                 if(result.status === 200){
                     setResponseRequest(result.status)
                     setShowAlert(true)
                     clearForm()
-                    Axios.post('http://services.irodum.com:3001/api/requestEmail',arrayValues)
+                    Axios.post('https://www.services.irodum.com/api/requestEmail',arrayValues)
                     .then((result) => {
                         if(result.status === 200){
                             console.log(result);
@@ -426,7 +426,7 @@ const ViewPymeProfile = () => {
                 }).then((result) => {
                     if(result.isConfirmed){
                         showProgress(false)
-                        Axios.post('http://services.irodum.com:3001/api/rating-worker',formFileMultiple, config)
+                        Axios.post('https://www.services.irodum.com/api/rating-worker',formFileMultiple, config)
                         .then((result) => {
                             if(result.status === 200){
                                 Swal.fire({
@@ -442,7 +442,7 @@ const ViewPymeProfile = () => {
                                         handleCloseComment()
                                     }
                                 })
-                                Axios.get("http://services.irodum.com:3001/api/worker/ratings-comments/" + id)
+                                Axios.get("https://www.services.irodum.com/api/worker/ratings-comments/" + id)
                                 .then((result) => {
                                     if(result.status === 200){
                                         setRatingScore(result.data)
@@ -800,7 +800,7 @@ const ViewPymeProfile = () => {
 
     
     useEffect(() =>{
-        Axios.get("http://services.irodum.com:3001/api/view/profile-pyme/" + id)
+        Axios.get("https://www.services.irodum.com/api/view/profile-pyme/" + id)
         .then((result) => {
             if(result.status === 200){
                   setDataUser(result.data)
@@ -808,10 +808,10 @@ const ViewPymeProfile = () => {
         }).catch(error => {
               setResponse([])
       });
-        Axios.get("http://services.irodum.com:3001/api/localidades").then((res)=>{
+        Axios.get("https://www.services.irodum.com/api/localidades").then((res)=>{
             setLocalidades(res.data);
         }); 
-        Axios.get("http://services.irodum.com:3001/api/download/speciality/" + id)
+        Axios.get("https://www.services.irodum.com/api/download/speciality/" + id)
         .then((result) => {
             if(result.status === 200){
                 setEspecialitiesWorker(result.data)
@@ -819,7 +819,7 @@ const ViewPymeProfile = () => {
         }).catch(error => {
             setEspecialitiesWorker([])
         });
-        Axios.get("http://services.irodum.com:3001/api/worker/ratings/" + id)
+        Axios.get("https://www.services.irodum.com/api/worker/ratings/" + id)
           .then((result) => {
               if(result.status === 200){
                 setRatingScore(result.data)

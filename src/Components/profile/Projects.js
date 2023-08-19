@@ -15,7 +15,7 @@ const Projects = () => {
   const getProjects = () => {
 
     const token = localStorage.getItem('accessToken');
-    Axios.get("http://services.irodum.com:3001/api/image/user-projects",{
+    Axios.get("https://www.services.irodum.com/api/image/user-projects",{
         headers: {
             'authorization': `${token}`
             }
@@ -56,8 +56,8 @@ const Projects = () => {
                       <Col className='col-6 text-end'>{"El dia " + dateFormatted.toLocaleDateString()}</Col>
                   </Row> 
                 </Card.Header>
-                <img src={'http://services.irodum.com:3001/' + value.imageName} 
-                    alt={'project'} style={{height: '200px',cursor: 'pointer'}} onClick={() =>{setImgFullscreen('http://services.irodum.com:3001/' + value.imageName); handleShow()}}/>
+                <img src={'https://www.services.irodum.com/' + value.imageName} 
+                    alt={'project'} style={{height: '200px',cursor: 'pointer'}} onClick={() =>{setImgFullscreen('https://www.services.irodum.com/' + value.imageName); handleShow()}}/>
                 <Card.Body>
                     <Card.Title>Descripción del trabajo</Card.Title>
                     <Card.Text>{value.workResume}</Card.Text>

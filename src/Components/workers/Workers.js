@@ -102,7 +102,7 @@ const Workers = () => {
 
   const  clearFilters = () => {
     if(worksearcher !== ''){
-      Axios.get("http://services.irodum.com:3001/api/usuarios").then((res)=>{
+      Axios.get("https://www.services.irodum.com/api/usuarios").then((res)=>{
         setFiltered(false)
         setUsuarios(res.data[0])
         setWorksearcher("")
@@ -166,7 +166,7 @@ const Workers = () => {
   
   useEffect(() => {
       document.getElementById("menuHolder").scrollIntoView();
-      Axios.get("http://services.irodum.com:3001/api/usuarios").then((res)=>{
+      Axios.get("https://www.services.irodum.com/api/usuarios").then((res)=>{
         if(worksearcher !== ''){
           let filtererFromHome = (res.data[0]).filter(function(params) {
             return params.workArea === worksearcher.oficio
@@ -182,7 +182,7 @@ const Workers = () => {
           setUsuarios(res.data[0]);
         }
       });
-      Axios.get("http://services.irodum.com:3001/api/localidades").then((res)=>{
+      Axios.get("https://www.services.irodum.com/api/localidades").then((res)=>{
             setLocalidades(res.data);
       });  
   },[worksearcher])

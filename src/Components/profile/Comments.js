@@ -49,8 +49,8 @@ const Comments = ({data}) => {
                     return(
                       <>
                         <div className="col-lg-3 col-md-4 col-6">
-                          <img key={idx} className='img-fluid img-thumbnail' src={'http://services.irodum.com:3001/' + image.originalname} 
-                                alt={'project'} id={`${image.originalname}`} style={{cursor: 'pointer'}} onClick={() =>{setImgFullscreen('http://services.irodum.com:3001/' + image.originalname); handleShow()}}/>
+                          <img key={idx} className='img-fluid img-thumbnail' src={'https://www.services.irodum.com/' + image.originalname} 
+                                alt={'project'} id={`${image.originalname}`} style={{cursor: 'pointer'}} onClick={() =>{setImgFullscreen('https://www.services.irodum.com/' + image.originalname); handleShow()}}/>
                         </div>
                       </>
                     )

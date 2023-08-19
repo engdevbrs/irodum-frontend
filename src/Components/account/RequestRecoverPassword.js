@@ -35,7 +35,7 @@ const RequestRecoverPassword = () => {
     }
 
     const recoverPass = (mailValue) =>{
-        Axios.post("http://services.irodum.com:3001/api/recover-password", {mailValue})
+        Axios.post("https://www.services.irodum.com/api/recover-password", {mailValue})
           .then((result) => {
               if(result.status === 200){
                 setUserValid(true)

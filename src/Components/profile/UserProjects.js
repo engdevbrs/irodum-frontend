@@ -44,7 +44,7 @@ const UserProjects = () => {
             denyButtonText: `Cancelar`,
             }).then((result) => {
                 if(result.isConfirmed){
-                    Axios.delete("http://services.irodum.com:3001/api/image/delete-project" + parseInt(e[1].value,10), 
+                    Axios.delete("https://www.services.irodum.com/api/image/delete-project" + parseInt(e[1].value,10), 
                     {
                         headers: {
                         'authorization': `${token}`
@@ -92,7 +92,7 @@ const UserProjects = () => {
             }).then((result) => {
                 if(result.isConfirmed){
                     showProgress(false)
-                    Axios.post("http://services.irodum.com:3001/api/image/upload-project/"+userData.idEmployed,formFile,config)
+                    Axios.post("https://www.services.irodum.com/api/image/upload-project/"+userData.idEmployed,formFile,config)
                     .then((result) => {
                         if(result.status === 200){
                             setResponse(result.status)
@@ -179,7 +179,7 @@ const UserProjects = () => {
     
     const getProjects = () => {
         const token = localStorage.getItem('accessToken');
-        Axios.get("http://services.irodum.com:3001/api/image/user-projects",{
+        Axios.get("https://www.services.irodum.com/api/image/user-projects",{
             headers: {
                 'authorization': `${token}`
                 }
@@ -195,7 +195,7 @@ const UserProjects = () => {
 
     const getAccess = async (token) =>{
         const ispyme = JSON.parse(localStorage.getItem('ispyme'));
-        await Axios.post(ispyme ? "http://services.irodum.com:3001/api/user-info-pyme" : "http://services.irodum.com:3001/api/user-info", {
+        await Axios.post(ispyme ? "https://www.services.irodum.com/api/user-info-pyme" : "https://www.services.irodum.com/api/user-info", {
             'authorization' : `${token}`
         })
           .then((result) => {
@@ -409,7 +409,7 @@ const UserProjects = () => {
                                                                     <Col className='col-12 text-start'>{"El dia " + dateFormatted.toLocaleDateString()}</Col>
                                                                 </Row> 
                                                             </Card.Header>
-                                                                <img src={'http://services.irodum.com:3001/' + value.imageName} 
+                                                                <img src={'https://www.services.irodum.com/' + value.imageName} 
                                                                 alt={'project'} style={{height: '200px'}}/>
                                                             <i className='deletephoto fas fa-trash' value={value.id_img} key={value.id_img} onClick={e => deleteUserProject(e.target.attributes)}></i>
                                                             <Card.Body>
